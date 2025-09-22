@@ -1,0 +1,67 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f4f6fa;
+  color: #0a0f2c;
+}
+
+.fund-container {
+  padding: 20px;
+  max-width: 1600px;
+  margin: auto;
+}
+
+.fund-container h1 {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.fund-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+  background-color: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  table-layout: fixed;
+}
+
+.fund-table thead {
+  background-color: #0a1f5c; /* koyu mavi başlık */
+  color: white;
+}
+
+.fund-table th {
+  white-space: normal;   /* tek satıra sıkıştırma, alt satıra geçir */
+  word-break: break-word; /* kelimeyi böl */
+  font-weight: 600;
+  padding: 10px;
+}
+.fund-table td {
+  padding: 8px 10px;
+  text-align: left;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis; /* Uzun yazılar "..." olur */
+  white-space: nowrap;
+}
+
+.fund-table tbody tr.even {
+  background-color: #ffffff; /* beyaz satır */
+}
+
+.fund-table tbody tr.odd {
+  background-color: #f2f4f8; /* gri satır */
+}
+
+.fund-table tbody tr:hover {
+  background-color: #e6eefc; /* hover efekti */
+  cursor: pointer;
+}
+
+.fund-table th {
+  font-weight: 600;
+}

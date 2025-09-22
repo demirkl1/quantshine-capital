@@ -1,0 +1,356 @@
+/* src/pages/LandingPage.css */
+
+/*
+  Bu dosya, QuantShine Capital web sitesinin ana sayfa (landing page)
+  tasarımı için gerekli stilleri içerir.
+*/
+
+/* Genel sayfa kapsayıcısı ve temel stil ayarları */
+body, html {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden;
+}
+.landing-page-container {
+  min-height: 100vh;
+  background-color: var(--secondary-white); 
+  color: var(--text-dark-gray);
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center; 
+}
+
+/* Hero (Kahraman) Bölümü Stilleri */
+.hero-section {
+  display: flex;
+  flex-direction: row; 
+  justify-content: center;
+  align-items: center;
+  padding: 6rem 2rem;
+  background-color: var(--secondary-white);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 100vh; /* Sayfanın yüksekliğini tamamen doldurur */
+  width: 100vw;       /* Sayfanın genişliğini tamamen doldurur */
+  position: relative; /* Overlay için gerekli */
+  gap: 4rem;
+  box-sizing: border-box;
+}
+
+
+/* Küçük ekranlar için responsive ayar (Dikey düzen) */
+@media (max-width: 900px) {
+  .hero-section {
+    flex-direction: column; 
+    text-align: center;
+    padding: 3rem 1rem; 
+    min-height: auto; 
+  }
+  .hero-content {
+    max-width: 100%; 
+    margin-bottom: 2rem; 
+  }
+  .hero-title {
+    font-size: 2.5rem; 
+  }
+  .hero-description {
+    font-size: 1rem; 
+  }
+}
+
+/* Hero Bölümü Metin İçerik Stilleri */
+.hero-content {
+  flex: 1;
+  max-width: 500px; 
+}
+
+.hero-title {
+  font-family: 'Poppins', sans-serif;
+  font-size: 4rem; 
+  font-weight: 800;
+  margin-bottom: 1.5rem;
+  line-height: 1.1;
+  color: #ffffff; /* Beyaz */
+  letter-spacing: -2px;
+} 
+.hero-description {
+  font-size: 1.3rem;
+  line-height: 1.6;
+  margin-bottom: 2.5rem;
+  color: #ffffff; /* Beyaz */
+}
+
+/* Hero Bölümü Buton Stilleri */
+.hero-btn {
+  padding: 1.2rem 3rem; /* Daha büyük bir buton */
+  font-size: 1.1rem;
+  border-radius: 9999px; /* Tam yuvarlak buton */
+  background-color: var(--primary-dark-blue);
+  color: var(--secondary-white);
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15); /* Hafif gölge */
+}
+
+.hero-btn:hover {
+  background-color: #0d121c;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
+}
+
+/* Hero Bölümü Görsel İçerik Stilleri */
+.hero-image-container { 
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15); /* Daha belirgin gölge */
+  border-radius: 20px; /* Daha belirgin yuvarlaklık */
+  overflow: hidden; 
+  max-width: 600px;
+  width: 100%;
+}
+
+.hero-image {
+  width: 100%; 
+  height: auto; 
+  display: block;
+  border-radius: 20px; /* Container ile aynı yuvarlaklık */
+}
+.hero-overlay {
+  background: rgba(0, 0, 0, 0.4); /* okunabilirlik için karartma */
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2rem;
+}
+
+
+/* Hakkımızda (About) Bölümü Stilleri */
+.about-section {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  padding: 4rem 2rem;
+  background-color: var(--secondary-white);
+  border-top: 1px solid #e0e0e0;
+  color: var(--text-dark-gray);
+  max-width: 1200px;
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0 auto;
+  text-align: left;
+}
+
+/* Hakkımızda Kart Stilleri */
+.about-card {
+  background-color: #f8f8f8;
+  padding: 2.5rem; /* İç boşluğu artır */
+  border-radius: 12px; /* Daha modern yuvarlaklık */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08); /* Daha belirgin gölge */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 1px solid #e0e0e0;
+}
+
+.about-card:hover {
+  transform: translateY(-8px); /* Daha belirgin yukarı kayma */
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12);
+}
+
+.about-card h3 {
+  font-family: 'Poppins', sans-serif; /* Fontu Poppins olarak değiştir */
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  color: var(--primary-dark-blue);
+  letter-spacing: -0.5px;
+}
+
+.about-card p {
+  font-size: 1rem;
+  line-height: 1.6; /* Satır aralığını artırarak okunabilirliği iyileştir */
+  color: var(--text-dark-gray);
+}
+
+/* İkincil Buton Stilleri (Kartların içindeki butonlar) */
+.about-card .btn.secondary {
+  margin-top: 1.5rem; /* Boşluğu artır */
+  padding: 0.8rem 1.8rem;
+  font-size: 0.9rem;
+  background-color: transparent;
+  border: 2px solid var(--primary-dark-blue);
+  color: var(--primary-dark-blue);
+  transition: all 0.3s ease;
+  border-radius: 9999px; /* Tam yuvarlak kenarlar */
+}
+
+.about-card .btn.secondary:hover {
+  background-color: var(--primary-dark-blue);
+  color: var(--secondary-white);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+/* Markets Section Ana Kapsayıcı */
+/* Markets Section Ana Kapsayıcı */
+.markets-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 6rem 2rem; /* Dikey boşluk artırılarak daha ferah bir his sağlar */
+  background-color: #f4f7f9; /* Hafif, modern bir gri tonu */
+  max-width: 100%; /* Kapsayıcının tam genişlikte olmasını sağlar */
+  box-sizing: border-box;
+  margin: 0 auto;
+}
+
+.markets-section h2 {
+  font-family: 'Poppins', sans-serif;
+  font-size: 3rem; /* Başlık daha büyük ve cesur */
+  font-weight: 700;
+  margin-bottom: 2rem;
+  color: #0b1120; /* Daha derin bir lacivert tonu */
+  letter-spacing: -1.5px;
+  text-align: center;
+}
+
+.markets-section .card-grid {
+  max-width: 1200px;
+  width: 100%;
+  /* 2x2 düzeni için tekrar eden 2 sütun */
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); 
+  gap: 2.5rem; /* Kartlar arası boşluk artırılarak daha temiz bir düzen sağlar */
+}
+
+.market-card {
+  background-color: #ffffff; /* Tam beyaz arka plan */
+  padding: 3rem; /* İç boşluklar artırıldı */
+  border-radius: 16px; /* Daha belirgin yuvarlak kenarlar */
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.1); /* Daha yumuşak ve belirgin bir gölge */
+  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Daha akıcı ve profesyonel bir geçiş */
+  border: none; /* Sade bir görünüm için kenarlık kaldırıldı */
+  text-align: center;
+}
+
+.market-card:hover {
+  transform: translateY(-12px); /* Yukarı doğru daha belirgin bir hareket */
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15); /* Gölge daha belirgin ve yaygın hale gelir */
+}
+
+.market-card h3 {
+  font-family: 'Poppins', sans-serif;
+  font-size: 2.2rem; /* Sayısal değerler için daha büyük boyut */
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: #0d1a26;
+  letter-spacing: -0.5px;
+}
+
+.market-card p {
+  font-size: 1.1rem; /* Okunurluk için font boyutu artırıldı */
+  line-height: 1.7;
+  color: #555; /* Daha yumuşak bir gri tonu */
+}
+
+/* Mobil için 1x4 düzeni */
+@media (max-width: 768px) {
+    .markets-section .card-grid {
+        grid-template-columns: 1fr;
+    }
+}
+.blog-section {
+  width: 100%;                 
+  background-color: #1a2a44;   /* Lacivert arka plan */
+  color: white;
+  padding: 60px 20px;
+}
+
+.blog-container {
+  max-width: 1200px;
+  margin: 0 auto;      /* Ortalar */
+  text-align: center;  /* İçindeki başlık ve metni ortalar */
+  display: flex;       /* Flex kullan */
+  flex-direction: column;
+  align-items: center; /* Yatayda ortala */
+}
+.blog-section h2 {
+  font-size: 2rem;
+  margin-bottom: 40px;
+  width: 100%;
+  display: block;
+  text-align: center;
+}
+
+
+
+.blog-grid {
+  display: flex;
+  flex-wrap: wrap;          /* Kartlar taşarsa alt satıra geçer */
+  justify-content: center;  /* Kartları yatayda ortalar */
+  gap: 20px;                /* Kartlar arası boşluk */
+}
+
+
+.blog-card {
+  background: white;
+  color: #1a202c;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  transition: transform 0.3s;
+  display: flex;            /* Kart içeriğini flex yap */
+  flex-direction: column;   /* Resim ve metin dikey */
+  align-items: center;      /* İçeriği yatayda ortala */
+  text-align: center;       /* Metni ortala */
+  width: 280px;             /* Kart genişliği */
+}
+
+
+.blog-card:hover {
+  transform: translateY(-5px);
+}
+
+.blog-image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.blog-content {
+  padding: 15px;
+  font-size: 1rem;
+  text-align: center;
+}
+
+.blog-button-container {
+  margin-top: 30px;
+  text-align: center;
+}
+
+.blog-button-container .btn.secondary {
+  padding: 0.8rem 1.8rem;
+  font-size: 0.9rem;
+  background-color: var(--primary-dark-blue); 
+  color: var(--secondary-white);
+  border: none;
+  transition: all 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+  border-radius: 9999px;
+  font-weight: 600;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+}
+
+.blog-button-container .btn.secondary:hover {
+  background-color: #0d121c; 
+  color: var(--secondary-white);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+}

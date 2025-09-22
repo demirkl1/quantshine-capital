@@ -1,0 +1,39 @@
+/* Butonun ana stili */
+.scroll-to-top-button {
+  /* Konumlandırma */
+  position: fixed;
+  bottom: 30px; /* Biraz daha yukarı çekildi */
+  right: 30px;  /* Biraz daha içeri çekildi */
+  z-index: 1000;
+
+  /* Şekil ve Arka Plan */
+  background-color: #f8f8f8; /* Daha açık, hafif kırık beyaz bir arka plan */
+  border-radius: 50%;
+  width: 55px; /* Boyut biraz büyütüldü */
+  height: 55px; /* Boyut biraz büyütüldü */
+
+  /* Okun Hizalanması */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  /* Diğer Stiller */
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Daha yumuşak ve yaygın bir gölge */
+  transition: all 0.3s ease-in-out;
+  border: 1px solid #e0e0e0; /* İnce, açık gri bir kenarlık eklendi */
+}
+
+/* Butonun üzerine gelindiğinde */
+.scroll-to-top-button:hover {
+  background-color: #ffffff; /* Üzerine gelince tam beyaz olsun */
+  transform: translateY(-5px) scale(1.05); /* Yukarı doğru hafif bir hareket ve büyüme */
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15); /* Gölge daha belirginleşsin */
+}
+
+/* SVG ikonunun stili */
+.scroll-to-top-button svg {
+  stroke: #333333; /* Oku koyu gri yaptım, siyah yerine daha yumuşak durur */
+  stroke-width: 2; /* SVG içindeki strokeWidth ile aynı olmalı */
+  /* Okun yukarı baktığından emin olmak için herhangi bir rotate olmamalıdır */
+}

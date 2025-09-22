@@ -1,0 +1,172 @@
+/* src/components/Header.css */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&display=swap');
+/* Genel Stil Sıfırlama */
+body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    /* Ekranın yatayda kaydırılmasını önlemek için */
+    overflow-x: hidden; 
+}
+
+/* Header Kapsayıcısı */
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 40px;
+    background-color: var(--primary-dark-blue);
+    border-bottom: 1px solid var(--border-color);
+    color: var(--secondary-white);
+    width: 100%;
+    box-sizing: border-box; /* Önemli: Padding'i genişliğe dahil eder */
+}
+
+/* Diğer stilleriniz aynı kalabilir */
+.logo-link {
+  text-decoration: none; /* Altındaki çizgiyi kaldırır */
+  color: inherit;       /* Üst elemandan rengi miras alır */
+}
+
+.logo {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin: 0;
+    color: var(--secondary-white);
+    letter-spacing: -0.5px;
+    transition: transform 0.2s ease;
+    cursor: pointer;
+}
+
+.nav-section ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: 2.5rem;
+}
+
+.nav-section ul li a {
+    color: var(--text-light-gray);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease, transform 0.2s ease;
+    position: relative;
+}
+
+.nav-section ul li a:hover {
+    color: var(--secondary-white);
+    transform: translateY(-2px);
+}
+/* Üst dropdown başlıkları */
+.nav-section ul li.dropdown > span {
+  color: var(--text-light-gray);
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.nav-section ul li.dropdown:hover > span {
+  color: var(--secondary-white);
+}
+
+/* Dropdown kapsayıcı */
+.nav-section ul li.dropdown {
+  position: relative;
+}
+
+/* Dropdown alt menü - animasyonlu */
+.nav-section ul li.dropdown .dropdown-content {
+  display: block; /* fallback */
+  position: absolute;
+  top: 100%; /* başlığın hemen altına yerleşir */
+  left: 0;
+  background-color: #ffffff;
+  min-width: 200px;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+  border-radius: 8px;
+  z-index: 1000;
+
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(10px);
+  transition: all 0.3s ease;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+
+/* Alt menü öğeleri */
+.nav-section ul li.dropdown .dropdown-content li {
+  padding: 0;
+}
+
+/* Alt menü linkleri */
+.nav-section ul li.dropdown .dropdown-content li a {
+  color: #000;
+  text-decoration: none;
+  display: block;
+  padding: 12px 16px;
+  border-radius: 6px;
+  transition: background-color 0.2s ease;
+}
+
+.nav-section ul li.dropdown .dropdown-content li a:hover {
+  background-color: #f0f0f0;
+}
+
+/* Hover ile görünür hale gelir */
+.nav-section ul li.dropdown:hover .dropdown-content {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+/* Buton stilleri */
+.auth-buttons-section .btn {
+  padding: 0.8rem 1.8rem;
+  border: none;
+  border-radius: 9999px; /* Tam yuvarlak butonlar için */
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.auth-buttons-section .btn.primary {
+  background-color: var(--secondary-white);
+  color: var(--primary-dark-blue);
+}
+
+.auth-buttons-section .btn.primary:hover {
+  background-color: #f0f0f0;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+}
+
+.auth-buttons-section .btn.secondary {
+  background-color: transparent;
+  border: 2px solid var(--secondary-white);
+  color: var(--secondary-white);
+}
+
+.auth-buttons-section .btn.secondary:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Kullanıcı ikonları */
+.user-icons-section i {
+  font-size: 1.5rem; /* İkon boyutunu büyüt */
+  color: var(--text-light-gray);
+  margin-left: 1.5rem; /* İkonlar arasına daha fazla boşluk */
+  transition: color 0.3s ease, transform 0.2s ease;
+  cursor: pointer;
+}
+
+.user-icons-section i:hover {
+  color: var(--secondary-white);
+  transform: scale(1.1); /* Hover'da hafif büyütme efekti */
+}
