@@ -8,7 +8,33 @@
   --success: #16a34a;
   --danger: #ef4444;
 }
+.auth-buttons-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px; 
+}
 
+.btn {
+  display: inline-flex;
+  justify-content: center;
+  align-items: left;
+  padding: 10px 20px;
+  background-color: #1a1a2e; /* Koyu arka plan rengi */
+  color: #fff; /* Yazı rengi */
+  font-size: 16px;
+  font-weight: 500;
+  text-decoration: none; /* Alt çizgiyi kaldırır */
+  border-radius: 999px; /* Köşeleri tamamen yuvarlar */
+  border: 2px solid #fff; /* Beyaz kenarlık */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Hafif gölge efekti */
+  transition: all 0.3s ease; /* Yumuşak geçiş efekti */
+}
+
+.btn:hover {
+  background-color: #2e2e4e; /* Fare üzerine gelince arka plan rengini değiştirir */
+  border-color: #f0f0f0;
+}
 /* Genel gövde konteyner */
 .fund-detail-container{
   background: var(--bg);

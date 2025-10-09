@@ -152,3 +152,57 @@ body {
     min-width: unset;
   }
 }
+.page-title-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 10px 0px;
+  background: linear-gradient(135deg, #1f2a41, #2e435b); /* Hafif gradyanlı koyu arka plan */
+  color: #ffffff;
+  position: relative;
+  overflow: hidden; /* Animasyonlar için */
+}
+
+/* Arka plan animasyonu - hafif hareketli soyut şekiller */
+.page-title-section::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.05) 10%, transparent 20%);
+  animation: move-background 20s infinite linear;
+  opacity: 0.5;
+  z-index: 0;
+}
+
+@keyframes move-background {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.page-title-container {
+  position: relative;
+  z-index: 1; /* İçeriğin animasyonun üzerinde durmasını sağlar */
+}
+
+.page-title {
+  font-size: 2.5rem; /* Başlık boyutunu büyüttük */
+  font-weight: 700;
+  letter-spacing: 2px;
+  margin-bottom: 5px;
+  text-transform: uppercase;
+  /* Başlığa hafif bir metin gölgesi ekleyelim */
+  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.page-subtitle {
+  font-size: 1.25rem;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.8); /* Alt başlığı biraz daha soluk yapalım */
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
