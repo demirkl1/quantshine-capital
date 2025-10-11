@@ -1,52 +1,72 @@
-import React from 'react';
-import { NavLink } from 'react-router-dom';
-import { MdDashboard, MdPerson, MdCreditCard, MdReport, MdAccountCircle } from 'react-icons/md';
-import './Sidebar.css';
+import React from "react";
+import { NavLink } from "react-router-dom";
+import {
+  MdDashboard,
+  MdTrendingUp,
+  MdCreditCard,
+  MdReport,
+  MdAccountCircle,
+  MdMenu,
+} from "react-icons/md";
+import "./Sidebar.css";
 
-// Dashboard.jsx'ten gelen isOpen prop'unu alıyoruz
-const Sidebar = ({ isOpen }) => {
-    return (
-        // isOpen durumuna göre 'collapsed' sınıfını ekle veya kaldır
-        <div className={`sidebar ${isOpen ? '' : 'collapsed'}`}>
-            <div className="sidebar-header">
-                <h2>Dashboard</h2>
-            </div>
-            <nav className="sidebar-nav">
-                <ul>
-                    <li>
-                        <NavLink to="/dashboard" className={({ isActive }) => isActive ? "active" : ""}>
-                            <MdDashboard />
-                            <span>Dashboard</span>
-                        </NavLink>
-                    </li>
-                    <li>
-                        <NavLink to="/investors" className={({ isActive }) => isActive ? "active" : ""}>
-                            <MdPerson />
-                            <span>Investor Management</span>
-                        </NavLink>
-                    </li>
-                    <li>
-                        <NavLink to="/transactions" className={({ isActive }) => isActive ? "active" : ""}>
-                            <MdCreditCard />
-                            <span>Transaction Management</span>
-                        </NavLink>
-                    </li>
-                    <li>
-                        <NavLink to="/reports" className={({ isActive }) => isActive ? "active" : ""}>
-                            <MdReport />
-                            <span>Reports</span>
-                        </NavLink>
-                    </li>
-                    <li>
-                        <NavLink to="/profile" className={({ isActive }) => isActive ? "active" : ""}>
-                            <MdAccountCircle />
-                            <span>Profile</span>
-                        </NavLink>
-                    </li>
-                </ul>
-            </nav>
-        </div>
-    );
+const Sidebar = ({ isOpen, toggleSidebar }) => {
+  return (
+    <aside className={`sidebar ${isOpen ? "open" : "collapsed"}`}>
+      {/* Üst kısım (başlık + menü butonu) */}
+      <div className="sidebar-header">
+        <h2 className="sidebar-title">{isOpen ? "QuantShine" : "QS"}</h2>
+        <button className="sidebar-toggle" onClick={toggleSidebar}>
+          <MdMenu />
+        </button>
+      </div>
+
+      {/* Menü */}
+      <nav className="sidebar-nav">
+        <ul>
+          <li>
+            <NavLink
+              to="/portfoyum"
+              className={({ isActive }) => (isActive ? "active" : "")}
+            >
+              <MdDashboard className="icon" />
+              {isOpen && <span>Portföyüm</span>}
+            </NavLink>
+          </li>
+
+          <li>
+            <NavLink
+              to="/yatirim-gecmisim"
+              className={({ isActive }) => (isActive ? "active" : "")}
+            >
+              <MdTrendingUp className="icon" />
+              {isOpen && <span>Yatırım Geçmişim</span>}
+            </NavLink>
+          </li>
+
+          <li>
+            <NavLink
+              to="/danisman-bilgileri"
+              className={({ isActive }) => (isActive ? "active" : "")}
+            >
+              <MdCreditCard className="icon" />
+              {isOpen && <span>Danışman Bilgileri</span>}
+            </NavLink>
+          </li>
+
+          <li>
+            <NavLink
+              to="/haftalik-rapor"
+              className={({ isActive }) => (isActive ? "active" : "")}
+            >
+              <MdReport className="icon" />
+              {isOpen && <span>Haftalık Rapor</span>}
+            </NavLink>
+          </li>
+        </ul>
+      </nav>
+    </aside>
+  );
 };
 
 export default Sidebar;

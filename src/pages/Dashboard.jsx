@@ -1,15 +1,18 @@
 import React, { useState } from "react";
 import "./Dashboard.css";
 import Chart from "react-apexcharts";
-import { useAuth } from "../context/AuthContext"; // AuthContext
+import { useAuth } from "../context/AuthContext";
+import Sidebar from "../components/Sidebar"; // Sidebar bileşeni
 
 const Dashboard = () => {
   const [darkMode, setDarkMode] = useState(false);
-  const { user } = useAuth(); 
+  const [isSidebarOpen, setSidebarOpen] = useState(true);
+  const { user } = useAuth();
 
   const toggleTheme = () => setDarkMode(!darkMode);
+  const toggleSidebar = () => setSidebarOpen(!isSidebarOpen);
 
-  // Yapay veriler
+  // Yapay veri
   const chartData = [
     { month: "Jan", value: 12000 },
     { month: "Feb", value: 14000 },
@@ -19,50 +22,29 @@ const Dashboard = () => {
     { month: "Jun", value: 16000 },
   ];
 
-  const series = [
-    {
-      name: "Fund Performance",
-      data: chartData.map((d) => d.value),
-    },
-  ];
+  const series = [{ name: "Fon Performansı", data: chartData.map((d) => d.value) }];
 
   const options = {
-    chart: {
-      id: "fund-chart",
-      toolbar: { show: false },
-      zoom: { enabled: false },
-      animations: { enabled: true },
-    },
-    xaxis: {
-      categories: chartData.map((d) => d.month),
-      labels: { style: { colors: "#888", fontSize: "12px" } },
-    },
+    chart: { id: "fund-chart", toolbar: { show: false }, zoom: { enabled: false } },
+    xaxis: { categories: chartData.map((d) => d.month) },
     stroke: { curve: "smooth", width: 3 },
-    fill: {
-      type: "gradient",
-      gradient: { shade: "light", type: "vertical", opacityFrom: 0.7, opacityTo: 0.2 },
-    },
+    fill: { type: "gradient", gradient: { shade: "light", opacityFrom: 0.7, opacityTo: 0.2 } },
     tooltip: { theme: darkMode ? "dark" : "light" },
   };
 
   return (
-    <div className={`dashboard-container ${darkMode ? "dark" : ""}`}>
-      <aside className="sidebar">
-        <div className="sidebar-header">QuantShine Capital</div>
-        <nav className="sidebar-nav">
-          <ul>
-            <li><a href="#" className="active">Dashboard</a></li>
-            <li><a href="#">Investors</a></li>
-            <li><a href="#">Transactions</a></li>
-            <li><a href="#">Reports</a></li>
-            <li><a href="#">Settings</a></li>
-          </ul>
-        </nav>
-      </aside>
+    <div className={`dashboard-wrapper ${darkMode ? "dark" : ""}`}>
+      {/* Sidebar */}
+      <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
 
-      <main className="main-content">
+      {/* Main Content */}
+      <main className={`dashboard-main ${isSidebarOpen ? "sidebar-open" : "sidebar-collapsed"}`}>
+        {/* Header */}
         <header className="dashboard-header">
-          <h1 className="dashboard-title">Dashboard Overview</h1>
+          <div className="header-left">
+            <h1 className="dashboard-title">Portföyüm</h1>
+          </div>
+
           <div className="header-right">
             <button className="theme-toggle" onClick={toggleTheme}>
               {darkMode ? "☀️ Light Mode" : "🌙 Dark Mode"}
@@ -74,70 +56,61 @@ const Dashboard = () => {
           </div>
         </header>
 
+        {/* Welcome */}
         <section className="welcome-section">
-          <h2>Welcome back, {user ? user.name : "Investor"}!</h2>
+          <h2>Hoşgeldin, {user ? user.name : "Investor"}!</h2>
         </section>
 
+        {/* Kartlar */}
         <section className="overview-cards-container">
           <div className="stat-card">
-            <p className="card-title">Total Investors</p>
+            <p className="card-title">Yatırımcı Toplam Lot Sayısı</p>
             <h3 className="card-value">325</h3>
             <p className="card-percentage positive">+12.4%</p>
           </div>
           <div className="stat-card">
-            <p className="card-title">Active Funds</p>
-            <h3 className="card-value">18</h3>
+            <p className="card-title">Portföy Büyüklüğü (TL)</p>
+            <h3 className="card-value">120.000</h3>
             <p className="card-percentage positive">+3.2%</p>
           </div>
           <div className="stat-card">
-            <p className="card-title">Monthly Revenue</p>
-            <h3 className="card-value">$42,000</h3>
-            <p className="card-percentage negative">-2.1%</p>
+            <p className="card-title">Toplam Kar/Zarar (TL)</p>
+            <h3 className="card-value">150.000</h3>
+            <p className="card-percentage positive">+5.4%</p>
           </div>
+
         </section>
 
+        {/* Grafik */}
         <section className="chart-section">
-          <h3>Fund Performance</h3>
+          <h3>Fon Değer Grafiği</h3>
           <div className="chart-wrapper">
             <Chart options={options} series={series} type="line" height={250} />
           </div>
         </section>
 
+        {/* Tablo */}
         <section className="table-section">
           <div className="table-header">
-            <h3>Investor Management</h3>
-            <div className="table-actions">
-              <input type="text" placeholder="Search investor..." className="search-input" />
-              <button className="add-btn">+ Add Investor</button>
-            </div>
+            <h3>Özet Bölüm</h3>
           </div>
           <table>
             <thead>
               <tr>
-                <th>Name</th>
-                <th>Investment</th>
-                <th>Return</th>
-                <th>Status</th>
+                <th>Toplam Yatırım</th>
+                <th>Toplam Lot</th>
+                <th>Güncel Değer</th>
+                <th>Kar/Zarar (TL)</th>
+                <th>Kar/Zarar (%)</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td>John Doe</td>
-                <td>$10,000</td>
-                <td>+12%</td>
-                <td><span className="status active">Active</span></td>
-              </tr>
-              <tr>
-                <td>Sarah Smith</td>
-                <td>$8,500</td>
-                <td>+9%</td>
-                <td><span className="status active">Active</span></td>
-              </tr>
-              <tr>
-                <td>Michael Green</td>
-                <td>$12,000</td>
-                <td>-3%</td>
-                <td><span className="status inactive">Inactive</span></td>
+                <td>150.000 TL</td>
+                <td>150 LOT</td>
+                <td>1.000 TL</td>
+                <td>50.000 TL</td>
+                <td>%50</td>
               </tr>
             </tbody>
           </table>

@@ -51,7 +51,7 @@ const LoginModal = ({ isOpen, onClose }) => {
       setMessage('✅ Giriş başarılı! Uygulamaya yönlendiriliyorsunuz...');
       setTimeout(() => {
         onClose();
-        navigate('/dashboard');
+        navigate('/portfoyum');
       }, 1200);
 
     } catch (error) {

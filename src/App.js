@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
-// AuthProvider'ı import etmeyi unutmayın
 import Header from './components/Header';
 import Footer from './components/Footer'; 
 import LoginModal from './components/LoginModal';
 import RegisterModal from './components/RegisterModal';
 import Dashboard from './pages/Dashboard.jsx'; 
+import YatirimGecmisi from './pages/YatirimGecmisi.jsx';
+import DanismanBilgileri from './pages/DanismanBilgileri.jsx';
+import HaftalıkRaporlandırma from './pages/HaftalıkRaporlandırma.jsx';
 
-// Sayfa Bileşenleri
 import LandingPage from './pages/LandingPage';
 import AboutUs from './pages/AboutUs';
 import Fon from './pages/Fon';
@@ -18,24 +19,30 @@ import Questions from './pages/Questions';
 import AuthProvider, { useAuth } from './context/AuthContext';
 
 
-
-// Yeni bileşen: Header ve Footer'ı koşullu olarak gösterir
+// ✅ Header ve Footer'ı koşullu olarak gösteren bileşen
 const AppContent = ({ isLoginModalOpen, setLoginModalOpen, isRegisterModalOpen, setRegisterModalOpen }) => {
   const location = useLocation();
-  
-  // Header ve Footer'ı sadece '/dashboard' rotasında gizle
-  const showHeaderAndFooter = location.pathname !== '/dashboard';
 
-  // Modal'ları açma ve kapama fonksiyonları
+  // 🔥 Bu sayfalarda Header ve Footer gizlenecek:
+  const noHeaderFooterRoutes = [
+    "/portfoyum",
+    "/yatirim-gecmisim",
+    "/danisman-bilgileri",
+    "/haftalik-rapor",
+  ];
+
+  const showHeaderAndFooter = !noHeaderFooterRoutes.includes(location.pathname);
+
+  // Modal kontrolü
   const handleOpenLoginModal = () => setLoginModalOpen(true);
   const handleCloseLoginModal = () => setLoginModalOpen(false);
   const handleOpenRegisterModal = () => setRegisterModalOpen(true);
   const handleCloseRegisterModal = () => setRegisterModalOpen(false);
-  const { user, login, logout } = useAuth();
+  const { user } = useAuth();
 
   return (
     <>
-      {/* 1. Header'ı sadece dashboard'da değilsek göster */}
+      {/* ✅ Header sadece belirttiğimiz sayfalar HARİÇ gösterilecek */}
       {showHeaderAndFooter && (
         <Header
           showAuthButtons={true}
@@ -54,12 +61,15 @@ const AppContent = ({ isLoginModalOpen, setLoginModalOpen, isRegisterModalOpen, 
             <Route path="/portfoy-kurumsal" element={<IndividualInvestorPage />} />
             <Route path="/sss" element={<Questions />} />
             <Route path="/fund/:code" element={<FonDetail />} /> 
-            <Route path="/dashboard" element={<Dashboard />} /> 
+            <Route path="/portfoyum" element={<Dashboard />} />
+            <Route path="/yatirim-gecmisim" element={<YatirimGecmisi />} />
+            <Route path="/danisman-bilgileri" element={<DanismanBilgileri />} />
+            <Route path="/haftalik-rapor" element={<HaftalıkRaporlandırma />} /> 
           </Routes>
-        </AuthProvider>
+        </AuthProvider> 
       </main>
 
-      {/* 2. Footer'ı sadece dashboard'da değilsek göster */}
+      {/* ✅ Footer da sadece bu sayfalar HARİÇ gösterilecek */}
       {showHeaderAndFooter && <Footer />}
 
       {/* Modal'lar */}
@@ -69,14 +79,14 @@ const AppContent = ({ isLoginModalOpen, setLoginModalOpen, isRegisterModalOpen, 
   );
 };
 
-// Ana App bileşeni Router'ı sağlar ve durumu yönetir
+
+// 🔧 Router + AuthProvider sarmalayıcı
 function App() {
   const [isLoginModalOpen, setLoginModalOpen] = useState(false);
   const [isRegisterModalOpen, setRegisterModalOpen] = useState(false);
   
   return (
     <Router>
-      {/* KRİTİK ADIM: AuthProvider ile tüm uygulamayı sarmalayın */}
       <AuthProvider>
         <AppContent 
           isLoginModalOpen={isLoginModalOpen}
