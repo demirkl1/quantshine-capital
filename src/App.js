@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, createContext, useContext, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import Header from './components/Header';
 import Footer from './components/Footer'; 
@@ -8,7 +8,6 @@ import Dashboard from './pages/Dashboard.jsx';
 import YatirimGecmisi from './pages/YatirimGecmisi.jsx';
 import DanismanBilgileri from './pages/DanismanBilgileri.jsx';
 import HaftalıkRaporlandırma from './pages/HaftalıkRaporlandırma.jsx';
-
 import LandingPage from './pages/LandingPage';
 import AboutUs from './pages/AboutUs';
 import Fon from './pages/Fon';
@@ -18,12 +17,36 @@ import InstitutionalInvestorPage from './pages/InstitutionalInvestorPage';
 import Questions from './pages/Questions';
 import AuthProvider, { useAuth } from './context/AuthContext';
 
+// 🌗 Tema context'i oluştur
+const ThemeContext = createContext();
+export const useTheme = () => useContext(ThemeContext);
+
+const ThemeProvider = ({ children }) => {
+  const [theme, setTheme] = useState(() => {
+    return localStorage.getItem("theme") || "light";
+  });
+
+  useEffect(() => {
+    document.documentElement.setAttribute("data-theme", theme);
+    localStorage.setItem("theme", theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme((prev) => (prev === "light" ? "dark" : "light"));
+  };
+
+  return (
+    <ThemeContext.Provider value={{ theme, toggleTheme }}>
+      {children}
+    </ThemeContext.Provider>
+  );
+};
 
 // ✅ Header ve Footer'ı koşullu olarak gösteren bileşen
 const AppContent = ({ isLoginModalOpen, setLoginModalOpen, isRegisterModalOpen, setRegisterModalOpen }) => {
   const location = useLocation();
+  const { user } = useAuth();
 
-  // 🔥 Bu sayfalarda Header ve Footer gizlenecek:
   const noHeaderFooterRoutes = [
     "/portfoyum",
     "/yatirim-gecmisim",
@@ -38,11 +61,9 @@ const AppContent = ({ isLoginModalOpen, setLoginModalOpen, isRegisterModalOpen, 
   const handleCloseLoginModal = () => setLoginModalOpen(false);
   const handleOpenRegisterModal = () => setRegisterModalOpen(true);
   const handleCloseRegisterModal = () => setRegisterModalOpen(false);
-  const { user } = useAuth();
 
   return (
     <>
-      {/* ✅ Header sadece belirttiğimiz sayfalar HARİÇ gösterilecek */}
       {showHeaderAndFooter && (
         <Header
           showAuthButtons={true}
@@ -69,18 +90,15 @@ const AppContent = ({ isLoginModalOpen, setLoginModalOpen, isRegisterModalOpen, 
         </AuthProvider> 
       </main>
 
-      {/* ✅ Footer da sadece bu sayfalar HARİÇ gösterilecek */}
       {showHeaderAndFooter && <Footer />}
 
-      {/* Modal'lar */}
       <LoginModal isOpen={isLoginModalOpen} onClose={handleCloseLoginModal} />
       <RegisterModal isOpen={isRegisterModalOpen} onClose={handleCloseRegisterModal} />
     </>
   );
 };
 
-
-// 🔧 Router + AuthProvider sarmalayıcı
+// 🔧 Router + AuthProvider + ThemeProvider sarmalayıcı
 function App() {
   const [isLoginModalOpen, setLoginModalOpen] = useState(false);
   const [isRegisterModalOpen, setRegisterModalOpen] = useState(false);
@@ -88,12 +106,14 @@ function App() {
   return (
     <Router>
       <AuthProvider>
-        <AppContent 
-          isLoginModalOpen={isLoginModalOpen}
-          setLoginModalOpen={setLoginModalOpen}
-          isRegisterModalOpen={isRegisterModalOpen}
-          setRegisterModalOpen={setRegisterModalOpen}
-        />
+        <ThemeProvider>
+          <AppContent 
+            isLoginModalOpen={isLoginModalOpen}
+            setLoginModalOpen={setLoginModalOpen}
+            isRegisterModalOpen={isRegisterModalOpen}
+            setRegisterModalOpen={setRegisterModalOpen}
+          />
+        </ThemeProvider>
       </AuthProvider>
     </Router>
   );

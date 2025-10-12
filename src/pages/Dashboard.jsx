@@ -1,15 +1,16 @@
-import React, { useState } from "react";
+import React from "react";
 import "./Dashboard.css";
 import Chart from "react-apexcharts";
 import { useAuth } from "../context/AuthContext";
-import Sidebar from "../components/Sidebar"; // Sidebar bileşeni
+import Sidebar from "../components/Sidebar";
+import { useTheme } from "../App"; // ✅ App.js’te oluşturduğumuz ThemeContext'i import ettik
 
 const Dashboard = () => {
-  const [darkMode, setDarkMode] = useState(false);
-  const [isSidebarOpen, setSidebarOpen] = useState(true);
+  const { theme, toggleTheme } = useTheme(); // ✅ Global tema durumu
+  const isDark = theme === "dark";
+  const [isSidebarOpen, setSidebarOpen] = React.useState(true);
   const { user } = useAuth();
 
-  const toggleTheme = () => setDarkMode(!darkMode);
   const toggleSidebar = () => setSidebarOpen(!isSidebarOpen);
 
   // Yapay veri
@@ -29,11 +30,11 @@ const Dashboard = () => {
     xaxis: { categories: chartData.map((d) => d.month) },
     stroke: { curve: "smooth", width: 3 },
     fill: { type: "gradient", gradient: { shade: "light", opacityFrom: 0.7, opacityTo: 0.2 } },
-    tooltip: { theme: darkMode ? "dark" : "light" },
+    tooltip: { theme: isDark ? "dark" : "light" },
   };
 
   return (
-    <div className={`dashboard-wrapper ${darkMode ? "dark" : ""}`}>
+    <div className={`dashboard-wrapper ${isDark ? "dark" : ""}`}>
       {/* Sidebar */}
       <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
 
@@ -46,9 +47,11 @@ const Dashboard = () => {
           </div>
 
           <div className="header-right">
+            {/* ✅ Global tema butonu */}
             <button className="theme-toggle" onClick={toggleTheme}>
-              {darkMode ? "☀️ Light Mode" : "🌙 Dark Mode"}
+              {isDark ? "☀️ Light Mode" : "🌙 Dark Mode"}
             </button>
+
             <div className="user-profile">
               <img src="https://i.pravatar.cc/35" alt="User" className="avatar" />
               <span>{user ? `${user.name} ${user.surname}` : "Misafir"}</span>
@@ -78,7 +81,6 @@ const Dashboard = () => {
             <h3 className="card-value">150.000</h3>
             <p className="card-percentage positive">+5.4%</p>
           </div>
-
         </section>
 
         {/* Grafik */}

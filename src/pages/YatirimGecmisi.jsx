@@ -2,14 +2,15 @@ import React, { useState } from "react";
 import "./YatirimGecmisi.css";
 import Sidebar from "../components/Sidebar";
 import { useAuth } from "../context/AuthContext";
+import { useTheme } from "../App"; // ✅ Global tema hook'u eklendi
 
 const YatirimGecmisi = () => {
   const { user } = useAuth();
+  const { theme, toggleTheme } = useTheme(); // ✅ Global tema bilgisi
+  const isDark = theme === "dark";
   const [isSidebarOpen, setSidebarOpen] = useState(true);
-  const [darkMode, setDarkMode] = useState(false);
 
   const toggleSidebar = () => setSidebarOpen(!isSidebarOpen);
-  const toggleTheme = () => setDarkMode(!darkMode);
 
   const investmentData = [
     { date: "2025-01-10", amount: 10000, lots: 10, fundValueAtDate: 1000, currentFundValue: 1200 },
@@ -18,16 +19,19 @@ const YatirimGecmisi = () => {
   ];
 
   return (
-    <div className={`dashboard-wrapper ${darkMode ? "dark" : ""}`}>
+    <div className={`dashboard-wrapper ${isDark ? "dark" : ""}`}>
       <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
 
       <div className={`dashboard-main ${isSidebarOpen ? "sidebar-open" : "sidebar-collapsed"}`}>
         <header className="dashboard-header">
           <h1 className="dashboard-title">Yatırım Geçmişim</h1>
+
           <div className="header-right">
+            {/* ✅ Global tema düğmesi */}
             <button className="theme-toggle" onClick={toggleTheme}>
-              {darkMode ? "☀️ Light Mode" : "🌙 Dark Mode"}
+              {isDark ? "☀️ Light Mode" : "🌙 Dark Mode"}
             </button>
+
             <div className="user-profile">
               <img src="https://i.pravatar.cc/35" alt="User" className="avatar" />
               <span>{user ? `${user.name} ${user.surname}` : "Misafir"}</span>

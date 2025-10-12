@@ -1,36 +1,36 @@
-import React, { useState } from "react";
+import React from "react";
 import { useAuth } from "../context/AuthContext";
 import Sidebar from "../components/Sidebar";
 import "./HaftalıkRaporlandırma.css";
+import { useTheme } from "../App"; // ✅ ThemeContext'i App.js'ten alıyoruz
 
 const HaftalikRaporlandırma = () => {
-  const [darkMode, setDarkMode] = useState(false);
-  const [isSidebarOpen, setSidebarOpen] = useState(true);
+  const { theme, toggleTheme } = useTheme(); // ✅ Global tema durumu
+  const isDark = theme === "dark";
+  const [isSidebarOpen, setSidebarOpen] = React.useState(true);
   const { user } = useAuth();
 
-  const toggleTheme = () => setDarkMode(!darkMode);
   const toggleSidebar = () => setSidebarOpen(!isSidebarOpen);
 
-  // Müşteri/patron kontrolü için örnek (true = patron)
+  // Müşteri/patron kontrolü (örnek)
   const isPatron = user?.role === "patron";
 
   return (
-    <div className={`rapor-wrapper ${darkMode ? "dark" : ""}`}>
+    <div className={`rapor-wrapper ${isDark ? "dark" : ""}`}>
       <Sidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
 
       <main className={`rapor-main ${isSidebarOpen ? "sidebar-open" : "sidebar-collapsed"}`}>
         <header className="rapor-header">
           <h1>Haftalık Raporlar</h1>
+
           <div className="header-right">
+            {/* ✅ Global tema butonu */}
             <button className="theme-toggle" onClick={toggleTheme}>
-              {darkMode ? "☀️ Light Mode" : "🌙 Dark Mode"}
+              {isDark ? "☀️ Light Mode" : "🌙 Dark Mode"}
             </button>
+
             <div className="user-profile">
-              <img
-                src="https://i.pravatar.cc/35"
-                alt="User"
-                className="avatar"
-              />
+              <img src="https://i.pravatar.cc/35" alt="User" className="avatar" />
               <span>{user ? `${user.name} ${user.surname}` : "Misafir"}</span>
             </div>
           </div>
@@ -41,7 +41,11 @@ const HaftalikRaporlandırma = () => {
             <p className="card-title">Haftalık Rapor</p>
             <textarea
               readOnly={!isPatron}
-              placeholder={isPatron ? "Raporunuzu buraya yazın..." : "Bu alan sadece görüntülenebilir."}
+              placeholder={
+                isPatron
+                  ? "Raporunuzu buraya yazın..."
+                  : "Bu alan sadece görüntülenebilir."
+              }
             />
           </div>
         </section>

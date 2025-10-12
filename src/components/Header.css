@@ -1,172 +1,192 @@
-/* src/components/Header.css */
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800;900&display=swap');
-/* Genel Stil Sıfırlama */
-body, html {
-    margin: 0;
-    padding: 0;
-    width: 100%;
-    /* Ekranın yatayda kaydırılmasını önlemek için */
-    overflow-x: hidden; 
-}
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;900&display=swap");
+@import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css");
 
-/* Header Kapsayıcısı */
+/* Header Ana Yapısı */
 .header-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px 40px;
-    background-color: var(--primary-dark-blue);
-    border-bottom: 1px solid var(--border-color);
-    color: var(--secondary-white);
-    width: 100%;
-    box-sizing: border-box; /* Önemli: Padding'i genişliğe dahil eder */
+  position: sticky;
+  top: 0;
+  width: 100%;
+  padding: 1.2rem 3rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 1000;
+  backdrop-filter: blur(12px);
+  transition: all 0.4s ease;
+  background: rgba(10, 20, 45, 0.65);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
 }
 
-/* Diğer stilleriniz aynı kalabilir */
+/* Cam efekti (glassmorphism) */
+.glass-effect {
+  background: rgba(17, 25, 40, 0.8);
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+}
+
+/* LOGO */
 .logo-link {
-  text-decoration: none; /* Altındaki çizgiyi kaldırır */
-  color: inherit;       /* Üst elemandan rengi miras alır */
+  text-decoration: none;
 }
 
 .logo {
-    font-family: 'Montserrat', sans-serif;
-    font-size: 1.8rem;
-    font-weight: 700;
-    margin: 0;
-    color: var(--secondary-white);
-    letter-spacing: -0.5px;
-    transition: transform 0.2s ease;
-    cursor: pointer;
-}
-
-.nav-section ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    gap: 2.5rem;
-}
-
-.nav-section ul li a {
-    color: var(--text-light-gray);
-    text-decoration: none;
-    font-weight: 500;
-    transition: color 0.3s ease, transform 0.2s ease;
-    position: relative;
-}
-
-.nav-section ul li a:hover {
-    color: var(--secondary-white);
-    transform: translateY(-2px);
-}
-/* Üst dropdown başlıkları */
-.nav-section ul li.dropdown > span {
-  color: var(--text-light-gray);
-  font-weight: 500;
+  font-family: "Montserrat", sans-serif;
+  font-size: 1.9rem;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  background: linear-gradient(90deg, #00c6ff, #0072ff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
   cursor: pointer;
-  transition: color 0.3s ease;
+  transition: transform 0.3s ease;
 }
 
-.nav-section ul li.dropdown:hover > span {
-  color: var(--secondary-white);
+.logo:hover {
+  transform: scale(1.05);
 }
 
-/* Dropdown kapsayıcı */
+.logo .highlight {
+  color: #00c6ff;
+}
+
+/* NAVIGATION */
+.nav-section ul {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: 2.2rem;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-section ul li a,
+.nav-section ul li span {
+  color: rgba(255, 255, 255, 0.85);
+  font-weight: 500;
+  text-decoration: none;
+  font-size: 1rem;
+  letter-spacing: 0.3px;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.nav-section ul li a::after,
+.nav-section ul li span::after {
+  content: "";
+  position: absolute;
+  width: 0%;
+  height: 2px;
+  bottom: -4px;
+  left: 0;
+  background: linear-gradient(90deg, #00c6ff, #0072ff);
+  transition: width 0.3s ease;
+}
+
+.nav-section ul li:hover a::after,
+.nav-section ul li:hover span::after {
+  width: 100%;
+}
+
+.nav-section ul li:hover a,
+.nav-section ul li:hover span {
+  color: #fff;
+}
+
+/* DROPDOWN MENÜ */
 .nav-section ul li.dropdown {
   position: relative;
 }
 
-/* Dropdown alt menü - animasyonlu */
-.nav-section ul li.dropdown .dropdown-content {
-  display: block; /* fallback */
+.dropdown-content {
   position: absolute;
-  top: 100%; /* başlığın hemen altına yerleşir */
+  top: 2.5rem;
   left: 0;
-  background-color: #ffffff;
-  min-width: 200px;
-  box-shadow: 0 8px 16px rgba(0,0,0,0.2);
-  border-radius: 8px;
-  z-index: 1000;
-
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(12px);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
   opacity: 0;
   visibility: hidden;
   transform: translateY(10px);
   transition: all 0.3s ease;
-  padding: 0;
-  margin: 0;
-  list-style: none;
+  min-width: 210px;
 }
 
-/* Alt menü öğeleri */
-.nav-section ul li.dropdown .dropdown-content li {
-  padding: 0;
-}
-
-/* Alt menü linkleri */
-.nav-section ul li.dropdown .dropdown-content li a {
-  color: #000;
-  text-decoration: none;
+.dropdown-content li a {
+  color: #fff;
   display: block;
-  padding: 12px 16px;
-  border-radius: 6px;
-  transition: background-color 0.2s ease;
+  padding: 12px 18px;
+  font-size: 0.95rem;
+  transition: background 0.3s ease;
 }
 
-.nav-section ul li.dropdown .dropdown-content li a:hover {
-  background-color: #f0f0f0;
+.dropdown-content li a:hover {
+  background: rgba(255, 255, 255, 0.15);
 }
 
-/* Hover ile görünür hale gelir */
 .nav-section ul li.dropdown:hover .dropdown-content {
   opacity: 1;
   visibility: visible;
   transform: translateY(0);
 }
 
-/* Buton stilleri */
+/* AUTH BUTTONS */
+.auth-buttons-section {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
 .auth-buttons-section .btn {
-  padding: 0.8rem 1.8rem;
   border: none;
-  border-radius: 9999px; /* Tam yuvarlak butonlar için */
+  outline: none;
+  font-size: 0.95rem;
   font-weight: 600;
+  padding: 0.75rem 1.8rem;
+  border-radius: 999px;
   cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+  letter-spacing: 0.3px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
-.auth-buttons-section .btn.primary {
-  background-color: var(--secondary-white);
-  color: var(--primary-dark-blue);
+.btn.primary {
+  background: linear-gradient(90deg, #00c6ff, #0072ff);
+  color: #fff;
+  box-shadow: 0 4px 15px rgba(0, 114, 255, 0.4);
 }
 
-.auth-buttons-section .btn.primary:hover {
-  background-color: #f0f0f0;
+.btn.primary:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 6px 20px rgba(0, 114, 255, 0.6);
 }
 
-.auth-buttons-section .btn.secondary {
-  background-color: transparent;
-  border: 2px solid var(--secondary-white);
-  color: var(--secondary-white);
+.btn.secondary {
+  background: transparent;
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  color: #fff;
 }
 
-.auth-buttons-section .btn.secondary:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+.btn.secondary:hover {
+  background: rgba(255, 255, 255, 0.1);
   transform: translateY(-2px);
-  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
 }
 
-/* Kullanıcı ikonları */
-.user-icons-section i {
-  font-size: 1.5rem; /* İkon boyutunu büyüt */
-  color: var(--text-light-gray);
-  margin-left: 1.5rem; /* İkonlar arasına daha fazla boşluk */
-  transition: color 0.3s ease, transform 0.2s ease;
-  cursor: pointer;
-}
-
-.user-icons-section i:hover {
-  color: var(--secondary-white);
-  transform: scale(1.1); /* Hover'da hafif büyütme efekti */
+/* RESPONSIVE */
+@media (max-width: 950px) {
+  .nav-section {
+    display: none;
+  }
+  .auth-buttons-section .btn {
+    padding: 0.6rem 1.2rem;
+  }
+  .logo {
+    font-size: 1.5rem;
+  }
 }
