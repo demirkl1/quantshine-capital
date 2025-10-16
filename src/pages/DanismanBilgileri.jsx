@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Sidebar from "../components/Sidebar";
 import { useAuth } from "../context/AuthContext";
-import { useTheme } from "../App"; // ✅ Global tema context'i eklendi
+import { useTheme } from "../context/ThemeContext";
 import "./DanismanBilgileri.css";
 
 const DanismanBilgileri = () => {

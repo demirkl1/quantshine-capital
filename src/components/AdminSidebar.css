@@ -1,0 +1,31 @@
+.sidebar-nav a {
+  display: flex;
+  align-items: center;
+  color: #ccc;
+  text-decoration: none;
+  padding: 12px 20px;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.sidebar-nav a:hover {
+  background-color: rgba(79, 70, 229, 0.2); /* Daha modern mor hover */
+  color: #fff;
+  transform: translateX(5px);
+}
+
+.sidebar-nav a.active {
+  background-color: #4f46e5; /* Ana renk vurgusu */
+  color: #fff;
+}
+
+.sidebar-nav .icon {
+  font-size: 1.5rem;
+  margin-right: 15px;
+  flex-shrink: 0;
+  transition: transform 0.3s ease;
+}
+
+.sidebar-nav a:hover .icon {
+  transform: scale(1.2); /* Hover’da ikon büyüsün */
+}

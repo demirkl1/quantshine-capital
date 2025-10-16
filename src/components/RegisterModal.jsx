@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import './RegisterModal.css';
-import DatePickerField from './DatePickerField'; // yeni bileşen
+import DatePickerField from './DatePickerField';
 
 const RegisterModal = ({ isOpen, onClose }) => {
   const [formData, setFormData] = useState({
@@ -33,32 +33,66 @@ const RegisterModal = ({ isOpen, onClose }) => {
           : null
       };
 
-      const response = await axios.post('http://localhost:8081/api/auth/register', formattedData);
-      alert(response.data);
+      const response = await axios.post(
+        'http://localhost:8081/api/auth/register',
+        formattedData
+      );
+
+      // Backend'den dönen status değerine göre mesaj göster
+      const { status, message } = response.data;
+
+      if (status === 'pending') {
+        alert('Kayıt isteğiniz gönderildi. Danışman onayı bekleniyor.');
+      } else if (status === 'approved') {
+        alert('Kayıt başarılı! Giriş yapabilirsiniz.');
+      } else if (status === 'rejected') {
+        alert('Kayıt reddedildi. Hesap bulunmamaktadır.');
+      } else {
+        alert(message || 'Kayıt işlemi tamamlandı.');
+      }
+
       onClose();
     } catch (error) {
-      alert('Kayıt işlemi başarısız: ' + (error.response ? error.response.data : 'Sunucuya ulaşılamıyor.'));
+      alert(
+        'Kayıt işlemi başarısız: ' +
+          (error.response ? error.response.data : 'Sunucuya ulaşılamıyor.')
+      );
     }
   };
 
   return (
     <div className="modal-overlay">
       <div className="modal-content">
-        <button className="modal-close-btn" onClick={onClose}>&times;</button>
+        <button className="modal-close-btn" onClick={onClose}>
+          &times;
+        </button>
         <h2 className="modal-title">Hesap Oluştur</h2>
 
         <form className="register-form" onSubmit={handleSubmit}>
           <div className="form-group">
             <label htmlFor="ad">Adınız</label>
-            <input type="text" id="ad" name="ad" value={formData.ad} onChange={handleChange} required />
+            <input
+              type="text"
+              id="ad"
+              name="ad"
+              value={formData.ad}
+              onChange={handleChange}
+              required
+            />
           </div>
 
           <div className="form-group">
             <label htmlFor="soyad">Soyadınız</label>
-            <input type="text" id="soyad" name="soyad" value={formData.soyad} onChange={handleChange} required />
+            <input
+              type="text"
+              id="soyad"
+              name="soyad"
+              value={formData.soyad}
+              onChange={handleChange}
+              required
+            />
           </div>
 
-          {/* DatePickerField kullanımı */}
           <div className="form-group">
             <label htmlFor="dogumTarihi">Doğum Tarihi</label>
             <DatePickerField
@@ -71,15 +105,31 @@ const RegisterModal = ({ isOpen, onClose }) => {
 
           <div className="form-group">
             <label htmlFor="email">E-posta Adresi</label>
-            <input type="email" id="email" name="email" value={formData.email} onChange={handleChange} required />
+            <input
+              type="email"
+              id="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+            />
           </div>
 
           <div className="form-group">
             <label htmlFor="sifre">Şifre</label>
-            <input type="password" id="sifre" name="sifre" value={formData.sifre} onChange={handleChange} required />
+            <input
+              type="password"
+              id="sifre"
+              name="sifre"
+              value={formData.sifre}
+              onChange={handleChange}
+              required
+            />
           </div>
 
-          <button type="submit" className="btn primary register-btn">Kaydol</button>
+          <button type="submit" className="btn primary register-btn">
+            Kaydol
+          </button>
         </form>
       </div>
     </div>

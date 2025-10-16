@@ -2,7 +2,8 @@ import React from "react";
 import { useAuth } from "../context/AuthContext";
 import Sidebar from "../components/Sidebar";
 import "./HaftalıkRaporlandırma.css";
-import { useTheme } from "../App"; // ✅ ThemeContext'i App.js'ten alıyoruz
+import { useTheme } from "../context/ThemeContext";
+
 
 const HaftalikRaporlandırma = () => {
   const { theme, toggleTheme } = useTheme(); // ✅ Global tema durumu

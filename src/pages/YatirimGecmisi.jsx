@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import "./YatirimGecmisi.css";
 import Sidebar from "../components/Sidebar";
 import { useAuth } from "../context/AuthContext";
-import { useTheme } from "../App"; // ✅ Global tema hook'u eklendi
+import { useTheme } from "../context/ThemeContext";
+
 
 const YatirimGecmisi = () => {
   const { user } = useAuth();

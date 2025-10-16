@@ -30,14 +30,25 @@ const LoginModal = ({ isOpen, onClose }) => {
     setErrorMessage('');
 
     try {
-      const response = await axios.post('http://localhost:8081/api/auth/login', formData, {
-        headers: { 'Content-Type': 'application/json' }
-      });
+      const response = await axios.post(
+        'http://localhost:8081/api/auth/login',
+        formData,
+        { headers: { 'Content-Type': 'application/json' } }
+      );
 
       const data = response.data;
       console.log('✅ Backend response:', data);
 
-      // Kullanıcıyı AuthContext'e kaydet
+      // Kullanıcının onay durumu kontrolü
+      if (data.status === 'pending') {
+        setErrorMessage('İsteğiniz bekleniyor. Danışman onayı tamamlandığında giriş yapabilirsiniz.');
+        return;
+      } else if (data.status === 'rejected') {
+        setErrorMessage('Hesap bulunmamaktadır veya reddedildi.');
+        return;
+      }
+
+      // Onaylı kullanıcıyı AuthContext'e kaydet
       login(data);
 
       // Token varsa kaydet
@@ -48,21 +59,27 @@ const LoginModal = ({ isOpen, onClose }) => {
         localStorage.removeItem('token');
       }
 
-      setMessage('✅ Giriş başarılı! Uygulamaya yönlendiriliyorsunuz...');
+      setMessage('✅ Giriş başarılı! Yönlendiriliyorsunuz...');
+
       setTimeout(() => {
         onClose();
-        navigate('/portfoyum');
+
+        // Admin kontrolü
+        if (data.isAdmin === true || data.isAdmin === 'true') {
+          navigate('/admin-anasayfa');
+        } else {
+          navigate('/portfoyum');
+        }
+
       }, 1200);
 
     } catch (error) {
       console.error('❌ Login hatası:', error);
 
       if (error.response) {
-        // Backend hata mesajını al
         const backendMessage = error.response.data?.message || 'Giriş bilgileri hatalı.';
         setErrorMessage(`Hata: ${backendMessage}`);
       } else if (error.request) {
-        // Sunucuya hiç ulaşılamadı
         setErrorMessage('Sunucuya ulaşılamıyor. Lütfen backend\'in çalıştığından emin olun.');
       } else {
         setErrorMessage('Beklenmeyen bir hata oluştu.');

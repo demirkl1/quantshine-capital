@@ -1,14 +1,39 @@
 // src/pages/LandingPage.jsx
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ScrollToTop from "../components/ScrollToTop";
+import { useNavigate } from "react-router-dom";
 import "./LandingPage.css";
 
-
 const LandingPage = () => {
+  const navigate = useNavigate();
+  const [news, setNews] = useState([]);
+
+  // Haberleri API üzerinden çek
+  useEffect(() => {
+    const fetchNews = async () => {
+      try {
+        const response = await fetch(
+          `https://newsapi.org/v2/top-headlines?country=tr&category=business&pageSize=5&apiKey=a0f3363405cf48d19e485ec786581640`
+        );
+        const data = await response.json();
+        setNews(data.articles);
+      } catch (error) {
+        console.error("Haberler yüklenirken hata:", error);
+      }
+    };
+
+    fetchNews();
+
+    // Her gün otomatik güncelleme için interval
+    const interval = setInterval(fetchNews, 24 * 60 * 60 * 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const handleMoreInfoBireysel = () => navigate("/portfoy-bireysel");
+  const handleMoreInfoKurumsal = () => navigate("/portfoy-kurumsal");
+
   return (
     <div className="landing-page-container">
-
-
       {/* Hero Section */}
       <section
         id="anasayfa"
@@ -29,7 +54,6 @@ const LandingPage = () => {
               QuantShine Capital ile finansal hedeflerinize ulaşın. Akıllı yatırım araçları,
               güvenli işlemler ve uzman desteğiyle.
             </p>
-            <button className="btn primary hero-btn">Hemen Keşfet</button>
           </div>
         </div>
       </section>
@@ -42,7 +66,9 @@ const LandingPage = () => {
             Yatırımcılarımızın getiri beklentisi ve risk toleransına uygun portföy çeşitlendirme ve
             küresel fırsatlardan yararlanma imkanı sunmaktayız.
           </p>
-          <button className="btn secondary">Daha Fazla Bilgi</button>
+          <button className="btn secondary" onClick={handleMoreInfoBireysel}>
+            Daha Fazla Bilgi
+          </button>
         </div>
         <div className="about-card">
           <h3>Kurumsal Yatırımcılar</h3>
@@ -51,7 +77,9 @@ const LandingPage = () => {
             gibi kurumsal şirketler için kendi belirledikleri risk/getiri profillerine ve
             sınırlamalarına uygun portföyler oluşturuyoruz.
           </p>
-          <button className="btn secondary">Daha Fazla Bilgi</button>
+          <button className="btn secondary" onClick={handleMoreInfoKurumsal}>
+            Daha Fazla Bilgi
+          </button>
         </div>
       </section>
 
@@ -77,37 +105,36 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* Blog Section */}
+      {/* Blog Section - Haberler */}
       <section id="blog" className="blog-section">
         <h2>Makaleler & Blog</h2>
         <div className="blog-grid">
-          <div className="blog-card">
-            <img src="/blog1.jpg" alt="Blog 1" className="blog-image" />
-            <div className="blog-content">
-              <h3>Ekonomide 2024 beklentileri: Enflasyon, borsa, faiz ne olur?</h3>
-            </div>
-          </div>
-
-          <div className="blog-card">
-            <img src="/blog2.jpg" alt="Blog 2" className="blog-image" />
-            <div className="blog-content">
-              <h3>Borsa yükselir mi? Dolar yılı kaça kapatır? Savaş ekonomiyi nasıl etkiler?</h3>
-            </div>
-          </div>
-
-          <div className="blog-card">
-            <img src="/blog3.jpg" alt="Blog 3" className="blog-image" />
-            <div className="blog-content">
-              <h3>Faiz yine artar mı? Tahvil almak için doğru zaman ne?</h3>
-            </div>
-          </div>
+          {news.length > 0 ? (
+            news.map((article, index) => (
+              <div
+                className="blog-card"
+                key={index}
+                onClick={() => window.open(article.url, "_blank")}
+                style={{ cursor: "pointer" }}
+              >
+                <img
+                  src={article.urlToImage || "/placeholder.jpg"}
+                  alt={article.title}
+                  className="blog-image"
+                />
+                <div className="blog-content">
+                  <h3>{article.title}</h3>
+                </div>
+              </div>
+            ))
+          ) : (
+            <p>Haberler yükleniyor...</p>
+          )}
         </div>
       </section>
 
-      
       {/* Scroll-to-top butonu */}
       <ScrollToTop />
-      {/* Modals */}
     </div>
   );
 };

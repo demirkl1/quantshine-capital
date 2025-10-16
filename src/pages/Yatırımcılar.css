@@ -1,0 +1,89 @@
+.yatirimci-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.yatirimci-table th,
+.yatirimci-table td {
+  border: 1px solid var(--border);
+  padding: 10px 14px;
+  text-align: center;
+}
+
+.yatirimci-table tr:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+  cursor: pointer;
+}
+
+.selected-row {
+  background-color: rgba(0, 120, 255, 0.1);
+  border-left: 4px solid #0078ff;
+}
+
+.profit {
+  color: green;
+  font-weight: bold;
+}
+
+.loss {
+  color: red;
+  font-weight: bold;
+}
+
+.yatirimci-detay {
+  margin-top: 20px;
+  padding: 20px;
+  background-color: var(--bg2);
+  border-radius: 10px;
+  box-shadow: var(--shadow);
+  width: fit-content;
+}
+
+.yatirim-form {
+  margin-top: 20px;
+  padding: 15px;
+  background-color: var(--bg);
+  border-radius: 10px;
+  box-shadow: var(--shadow);
+  max-width: 400px;
+}
+
+.islem-sec {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.form-row {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+}
+
+.form-row label {
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.form-row input {
+  padding: 8px;
+  border-radius: 5px;
+  border: 1px solid var(--border);
+}
+
+.submit-btn {
+  margin-top: 10px;
+  width: 100%;
+  padding: 10px;
+  border: none;
+  background-color: var(--primary);
+  color: white;
+  font-weight: bold;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.submit-btn:hover {
+  opacity: 0.9;
+}

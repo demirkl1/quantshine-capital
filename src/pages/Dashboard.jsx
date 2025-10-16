@@ -3,7 +3,7 @@ import "./Dashboard.css";
 import Chart from "react-apexcharts";
 import { useAuth } from "../context/AuthContext";
 import Sidebar from "../components/Sidebar";
-import { useTheme } from "../App"; // ✅ App.js’te oluşturduğumuz ThemeContext'i import ettik
+import { useTheme } from "../context/ThemeContext";
 
 const Dashboard = () => {
   const { theme, toggleTheme } = useTheme(); // ✅ Global tema durumu

@@ -1,0 +1,124 @@
+.profile-container {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 24px;
+  background-color: var(--card-bg, #ffffff);
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.admin-wrapper.dark .profile-container {
+  background-color: #1e1e2f;
+  color: #f0f0f0;
+}
+
+.profile-card {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+.profile-avatar-section {
+  flex: 0 0 150px;
+  text-align: center;
+}
+
+.profile-avatar-large {
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #007bff;
+}
+
+.avatar-upload {
+  display: block;
+  margin-top: 10px;
+  font-size: 14px;
+  cursor: pointer;
+  color: #007bff;
+}
+
+.avatar-upload input {
+  display: none;
+}
+
+.profile-info {
+  flex: 1;
+  min-width: 300px;
+}
+
+.input-group {
+  margin-bottom: 15px;
+  display: flex;
+  flex-direction: column;
+}
+
+.input-group label {
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.input-group input,
+.input-group textarea {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 15px;
+  background-color: #fff;
+  color: #000;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.admin-wrapper.dark .input-group input,
+.admin-wrapper.dark .input-group textarea {
+  background-color: #2b2b3d;
+  color: #f5f5f5;
+  border: 1px solid #555;
+}
+
+textarea {
+  resize: none;
+  height: 80px;
+}
+
+.edit-btn,
+.save-btn,
+.cancel-btn {
+  padding: 10px 18px;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.edit-btn {
+  background-color: #007bff;
+  color: white;
+}
+
+.save-btn {
+  background-color: #28a745;
+  color: white;
+}
+
+.cancel-btn {
+  background-color: #dc3545;
+  color: white;
+  margin-left: 10px;
+}
+
+.edit-btn:hover {
+  background-color: #0056b3;
+}
+
+.save-btn:hover {
+  background-color: #218838;
+}
+
+.cancel-btn:hover {
+  background-color: #c82333;
+}

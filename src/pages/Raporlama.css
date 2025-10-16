@@ -1,0 +1,117 @@
+.raporlama-container {
+  max-width: 700px;
+  margin: 40px auto;
+  background-color: var(--card-bg, #f9f9f9);
+  padding: 24px;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.admin-wrapper.dark .raporlama-container {
+  background-color: #1e1e2f;
+  color: #f0f0f0;
+}
+
+/* Yatırımcı seçimi */
+.investor-select {
+  margin-bottom: 20px;
+}
+
+.investor-select label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.investor-select select {
+  width: 100%;
+  padding: 10px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  background-color: #ffffff;
+  color: #000;
+  font-size: 15px;
+  transition: background-color 0.3s ease, color 0.3s ease, border 0.3s ease;
+}
+
+.admin-wrapper.dark .investor-select select {
+  background-color: #2b2b3d;
+  color: #f5f5f5;
+  border: 1px solid #444;
+}
+
+/* Yatırımcı bilgileri */
+.investor-info {
+  background: rgba(0, 0, 0, 0.05);
+  padding: 14px 16px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  line-height: 1.6;
+}
+
+.admin-wrapper.dark .investor-info {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* Rapor alanı */
+.report-section label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.report-section textarea {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  background-color: #fff;
+  color: #000;
+  resize: none;
+  font-size: 15px;
+  line-height: 1.5;
+  transition: background-color 0.3s ease, color 0.3s ease, border 0.3s ease;
+}
+
+.admin-wrapper.dark .report-section textarea {
+  background-color: #2b2b3d;
+  color: #f5f5f5;
+  border: 1px solid #555;
+}
+
+/* Gönder butonu */
+.send-report-btn {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.send-report-btn:hover {
+  background-color: #0056b3;
+  transform: translateY(-2px);
+}
+
+.admin-wrapper.dark .send-report-btn {
+  background-color: #2563eb;
+}
+
+.admin-wrapper.dark .send-report-btn:hover {
+  background-color: #1d4ed8;
+}
+
+/* Genel uyum */
+h1 {
+  margin-bottom: 24px;
+  font-size: 26px;
+  text-align: center;
+}
+
+p {
+  margin: 6px 0;
+}
