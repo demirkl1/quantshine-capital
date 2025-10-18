@@ -1,14 +1,25 @@
+/* === TABLO TASARIMI === */
 .yatirimci-table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 20px;
+  margin-top: 25px;
+  background-color: var(--bg);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+
+.yatirimci-table thead {
+  background-color: #4a4ef0;
+  color: #fff;
 }
 
 .yatirimci-table th,
 .yatirimci-table td {
   border: 1px solid var(--border);
-  padding: 10px 14px;
+  padding: 12px 16px;
   text-align: center;
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 .yatirimci-table tr:hover {
@@ -16,35 +27,42 @@
   cursor: pointer;
 }
 
+.dark .yatirimci-table tr:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
 .selected-row {
-  background-color: rgba(0, 120, 255, 0.1);
+  background-color: rgba(0, 120, 255, 0.12);
   border-left: 4px solid #0078ff;
+  font-weight: 600;
 }
 
 .profit {
-  color: green;
+  color: #00b050;
   font-weight: bold;
 }
 
 .loss {
-  color: red;
+  color: #d32f2f;
   font-weight: bold;
 }
 
+/* === DETAY VE FORM BLOKLARI === */
 .yatirimci-detay {
-  margin-top: 20px;
-  padding: 20px;
+  margin-top: 25px;
+  padding: 20px 25px;
   background-color: var(--bg2);
-  border-radius: 10px;
+  border-radius: 12px;
   box-shadow: var(--shadow);
   width: fit-content;
+  min-width: 350px;
 }
 
 .yatirim-form {
-  margin-top: 20px;
-  padding: 15px;
-  background-color: var(--bg);
-  border-radius: 10px;
+  margin-top: 25px;
+  padding: 18px;
+  background-color: var(--bg2);
+  border-radius: 12px;
   box-shadow: var(--shadow);
   max-width: 400px;
 }
@@ -55,6 +73,20 @@
   margin-bottom: 15px;
 }
 
+.islem-sec button {
+  flex: 1;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 8px 10px;
+  background-color: var(--bg);
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.islem-sec button:hover {
+  background-color: rgba(0, 120, 255, 0.15);
+}
+
 .form-row {
   display: flex;
   flex-direction: column;
@@ -62,28 +94,97 @@
 }
 
 .form-row label {
-  font-weight: bold;
-  margin-bottom: 5px;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: var(--text);
 }
 
 .form-row input {
-  padding: 8px;
-  border-radius: 5px;
+  padding: 8px 10px;
+  border-radius: 6px;
   border: 1px solid var(--border);
+  background-color: var(--bg);
+  color: var(--text);
 }
 
+.form-row input:focus {
+  border-color: #0078ff;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(0, 120, 255, 0.2);
+}
+
+/* === BUTON === */
 .submit-btn {
-  margin-top: 10px;
+  margin-top: 15px;
   width: 100%;
-  padding: 10px;
+  padding: 10px 0;
   border: none;
-  background-color: var(--primary);
+  background-color: #4a4ef0;
   color: white;
-  font-weight: bold;
-  border-radius: 5px;
+  font-weight: 600;
+  border-radius: 6px;
   cursor: pointer;
+  transition: background 0.25s ease;
 }
 
 .submit-btn:hover {
-  opacity: 0.9;
+  background-color: #3a3edb;
+}
+
+/* === ÜST BAR === */
+.admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 24px;
+  background-color: var(--bg2);
+  border-radius: 12px;
+  margin-bottom: 25px;
+  box-shadow: var(--shadow);
+  flex-wrap: nowrap;
+}
+
+.page-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  white-space: nowrap;
+}
+
+.theme-toggle {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: var(--text);
+  transition: transform 0.2s ease;
+}
+
+.theme-toggle:hover {
+  transform: rotate(15deg);
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  object-fit: cover;
+}
+
+.username {
+  font-weight: 600;
+  color: var(--text);
+  font-size: 1rem;
 }

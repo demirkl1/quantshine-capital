@@ -2,41 +2,52 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 
 const AuthContext = createContext();
 
-export const useAuth = () => useContext(AuthContext); // named export: hook
+export const useAuth = () => useContext(AuthContext);
 
 const AuthProvider = ({ children }) => {
-  const initialUser = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null;
+    // Local storage'dan initialUser çekilir
+    const initialUser = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null;
 
-  const [user, setUser] = useState(initialUser);
-  const [isAuthenticated, setIsAuthenticated] = useState(!!initialUser);
-  const [loading, setLoading] = useState(false);
+    const [user, setUser] = useState(initialUser);
+    const [isAuthenticated, setIsAuthenticated] = useState(!!initialUser);
+    const [loading, setLoading] = useState(false);
 
-  useEffect(() => {}, []);
+    useEffect(() => {
+        // Güvenlik kontrolü için kullanılabilir.
+    }, []);
 
-  const login = (data) => {
-    const transformedUser = {
-      name: data.user.name || data.user.ad,
-      surname: data.user.surname || data.user.soyad,
-      email: data.user.email
-    };
+    const login = (data) => {
+        // 1. Yeni veriyi, Backend yanıtından (data) alarak hazırlar.
+        const transformedUser = {
+            name: data.user.ad, 
+            surname: data.user.soyad,
+            email: data.user.email, // ⭐️ Doğru yol: data.user.email'den al
+            isAdmin: data.admin || false 
+        };
 
-    localStorage.setItem('token', data.token);
+        // 2. 🚨 KRİTİK: Önce eski veriyi temizle (Kalıntı kalmasını önler)
+        // Bu adım, hatalı e-posta verilerinin kalmasını önler.
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        // 3. Yeni ve doğru veriyi kaydet
+        localStorage.setItem('token', data.token);
     localStorage.setItem('user', JSON.stringify(transformedUser));
 
-    setUser(transformedUser);
-    setIsAuthenticated(true);
-  };
+        // 4. State'leri güncelle
+        setUser(transformedUser);
+        setIsAuthenticated(true);
+    };
 
-  const logout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    setUser(null);
-    setIsAuthenticated(false);
-  };
+    const logout = () => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        setUser(null);
+        setIsAuthenticated(false);
+    };
 
-  const value = { user, isAuthenticated, loading, login, logout };
+    const value = { user, isAuthenticated, loading, login, logout };
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+    return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
-export default AuthProvider; // default export
+export default AuthProvider;

@@ -65,7 +65,7 @@ const LoginModal = ({ isOpen, onClose }) => {
         onClose();
 
         // Admin kontrolü
-        if (data.isAdmin === true || data.isAdmin === 'true') {
+        if (data.admin === true || data.admin === 'true') {
           navigate('/admin-anasayfa');
         } else {
           navigate('/portfoyum');

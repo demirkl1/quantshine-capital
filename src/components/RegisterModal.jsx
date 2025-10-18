@@ -25,6 +25,7 @@ const RegisterModal = ({ isOpen, onClose }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
       const formattedData = {
         ...formData,
@@ -34,11 +35,10 @@ const RegisterModal = ({ isOpen, onClose }) => {
       };
 
       const response = await axios.post(
-        'http://localhost:8081/api/auth/register',
+        'http://localhost:8081/api/auth/pending/register', // <-- Backend ile eşleşiyor
         formattedData
       );
 
-      // Backend'den dönen status değerine göre mesaj göster
       const { status, message } = response.data;
 
       if (status === 'pending') {
@@ -55,7 +55,7 @@ const RegisterModal = ({ isOpen, onClose }) => {
     } catch (error) {
       alert(
         'Kayıt işlemi başarısız: ' +
-          (error.response ? error.response.data : 'Sunucuya ulaşılamıyor.')
+          (error.response ? error.response.data.message : 'Sunucuya ulaşılamıyor.')
       );
     }
   };
@@ -71,65 +71,30 @@ const RegisterModal = ({ isOpen, onClose }) => {
         <form className="register-form" onSubmit={handleSubmit}>
           <div className="form-group">
             <label htmlFor="ad">Adınız</label>
-            <input
-              type="text"
-              id="ad"
-              name="ad"
-              value={formData.ad}
-              onChange={handleChange}
-              required
-            />
+            <input type="text" id="ad" name="ad" value={formData.ad} onChange={handleChange} required />
           </div>
 
           <div className="form-group">
             <label htmlFor="soyad">Soyadınız</label>
-            <input
-              type="text"
-              id="soyad"
-              name="soyad"
-              value={formData.soyad}
-              onChange={handleChange}
-              required
-            />
+            <input type="text" id="soyad" name="soyad" value={formData.soyad} onChange={handleChange} required />
           </div>
 
           <div className="form-group">
             <label htmlFor="dogumTarihi">Doğum Tarihi</label>
-            <DatePickerField
-              id="dogumTarihi"
-              selected={formData.dogumTarihi}
-              onChange={handleDateChange}
-              placeholder="Gün / Ay / Yıl"
-            />
+            <DatePickerField id="dogumTarihi" selected={formData.dogumTarihi} onChange={handleDateChange} placeholder="Gün / Ay / Yıl" />
           </div>
 
           <div className="form-group">
             <label htmlFor="email">E-posta Adresi</label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              required
-            />
+            <input type="email" id="email" name="email" value={formData.email} onChange={handleChange} required />
           </div>
 
           <div className="form-group">
             <label htmlFor="sifre">Şifre</label>
-            <input
-              type="password"
-              id="sifre"
-              name="sifre"
-              value={formData.sifre}
-              onChange={handleChange}
-              required
-            />
+            <input type="password" id="sifre" name="sifre" value={formData.sifre} onChange={handleChange} required />
           </div>
 
-          <button type="submit" className="btn primary register-btn">
-            Kaydol
-          </button>
+          <button type="submit" className="btn primary register-btn">Kaydol</button>
         </form>
       </div>
     </div>

@@ -1,75 +1,146 @@
+/* ===========================================
+   YatırımcıEkleÇıkar.css (TAM CSS VE ŞIK GÖRÜNÜM)
+   Bu kod, tablo hizalama sorunlarını çözer ve modern, koyu temaya uygun bir tasarım sağlar.
+   =========================================== */
+
+/* --- Temel Yapılandırma --- */
+.admin-content {
+    padding: 30px;
+}
+
+/* --- Tablo Temel Yapılandırması ve Konteyner Stili --- */
 .istek-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px;
+    width: 100%;
+    border-collapse: separate; /* Gölgeler ve yuvarlak köşeler için */
+    border-spacing: 0;
+    margin-top: 25px;
+    table-layout: fixed; /* Sütun genişliklerini sabitler */
+    
+    /* Şık Dokunuşlar */
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); 
+    overflow: hidden; /* Köşelerdeki fazlalıkları keser */
 }
 
-.istek-table th,
-.istek-table td {
-  border: 1px solid var(--border);
-  padding: 12px;
-  text-align: center;
-}
-
+/* --- Başlık (th) Stili --- */
 .istek-table th {
-  background-color: var(--bg2);
+    background-color: var(--bg2, #3b3f51); 
+    color: #fff;
+    padding: 15px 12px;
+    text-align: center;
+    font-weight: 600; 
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 2px solid var(--border, #555); /* Temiz ayırıcı çizgi */
 }
 
-.istek-table tr:hover {
-  background-color: rgba(0, 0, 0, 0.05);
+/* --- Veri Hücreleri (td) Stili --- */
+.istek-table td {
+    background-color: var(--bg, #282c37); 
+    color: var(--text, #d0d0d0);
+    padding: 14px 12px;
+    border-bottom: 1px solid var(--border, #3a3f4e); 
+    border-top: none; 
+    text-align: center;
+    
+    /* Metin yönetimi */
+    overflow: hidden; 
+    text-overflow: ellipsis; 
+    white-space: nowrap; 
+    box-sizing: border-box;
 }
 
+/* --- Sütun Genişliklerinin Ayarlanması (4 Sütun) --- */
+/* Toplam %100 yapmalıdır */
+.istek-table tr th:nth-child(1), .istek-table tr td:nth-child(1) { width: 20%; } /* Ad Soyad */
+.istek-table tr th:nth-child(2), .istek-table tr td:nth-child(2) { width: 30%; } /* Email */
+.istek-table tr th:nth-child(3), .istek-table tr td:nth-child(3) { width: 20%; } /* Doğum Tarihi */
+.istek-table tr th:nth-child(4), .istek-table tr td:nth-child(4) { width: 30%; } /* İşlem Butonları */
+
+
+/* --- Satır Hover Efekti --- */
+.istek-table tbody tr:hover td {
+    background-color: rgba(255, 255, 255, 0.08); 
+    transition: background-color 0.3s ease;
+}
+
+
+/* --- Butonları İçeren Hücre ve Hizalama --- */
 .buttons {
-  display: flex;
-  gap: 10px;
-  justify-content: center;
+    display: flex;
+    gap: 12px;
+    justify-content: center; /* Butonları yatayda ortalar */
+    align-items: center;    /* Butonları dikeyde ortalar */
 }
 
+/* --- Buton Stilleri --- */
+/* --- Buton Stilleri (Daha Geniş ve Rahat) --- */
 .accept-btn,
 .reject-btn {
-  padding: 8px 12px;
-  border: none;
-  border-radius: 6px;
-  font-weight: bold;
-  cursor: pointer;
+    /* ⭐️ CRITICAL: Genişliği belirten kısıtlamaları kaldırıyoruz */
+    width: auto; 
+    min-width: 0;
+    max-width: none; 
+    
+    padding: 10px 15px; /* Padding'i koruyoruz */
+    border: none;
+    border-radius: 8px; 
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease; 
+    text-transform: uppercase;
+    font-size: 13px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); 
+    
+    /* Metnin sığması için garanti */
+    white-space: nowrap; 
 }
 
 .accept-btn {
-  background-color: #27ae60;
-  color: white;
+    background-color: #2ecc71; /* Canlı Yeşil */
+    color: white;
 }
 
 .reject-btn {
-  background-color: #e74c3c;
-  color: white;
+    background-color: #e74c3c; /* Canlı Kırmızı */
+    color: white;
 }
 
 .accept-btn:hover {
-  opacity: 0.9;
+    background-color: #27ae60; 
+    transform: translateY(-1px);
 }
 
 .reject-btn:hover {
-  opacity: 0.9;
+    background-color: #c0392b;
+    transform: translateY(-1px);
 }
 
+
+/* --- Mesaj ve Diğer Stiller --- */
 .no-requests {
-  margin-top: 20px;
-  font-style: italic;
-  color: gray;
-  text-align: center;
+    margin-top: 30px;
+    padding: 20px;
+    background-color: var(--bg2, #333);
+    color: var(--text-secondary, #aaa);
+    text-align: center;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    font-size: 1.1em;
+    font-style: italic;
 }
 
 .onaylananlar,
 .reddedilenler {
-  margin-top: 30px;
-  padding: 15px;
-  background-color: var(--bg2);
-  border-radius: 10px;
-  box-shadow: var(--shadow);
-  width: fit-content;
+    margin-top: 30px;
+    padding: 15px;
+    background-color: var(--bg2, #2c2c2c);
+    border-radius: 10px;
+    box-shadow: var(--shadow);
+    width: fit-content;
 }
 
 .onaylananlar h2,
 .reddedilenler h2 {
-  margin-bottom: 10px;
+    margin-bottom: 10px;
 }

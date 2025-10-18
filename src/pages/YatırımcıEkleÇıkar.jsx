@@ -30,18 +30,40 @@ const toggleSidebar = () => setSidebarOpen(!isSidebarOpen);
 
   useEffect(() => {
     fetchPendingUsers();
-  }, []);
+  }, []); 
+  useEffect(() => {
+    console.log("CONTEXT MAIL KONTROLÜ (YatırımcıEkleÇıkar):", user?.email);
+}, [user]);
 
-  const handleKabulEt = async (id) => {
-    try {
-      await axios.post(`http://localhost:8081/api/admin/approve-user/${id}`);
-      setIstekler(istekler.filter((i) => i.id !== id));
-      alert("Yatırımcı onaylandı ve kullanıcı tablosuna eklendi.");
-    } catch (err) {
-      console.error("Kabul işlemi başarısız:", err);
-      alert("Kabul işlemi başarısız.");
+const handleKabulEt = async (id) => {
+    // ⭐️ Adım 1: useAuth hook'undan danışmanın e-posta adresini al
+    // (user objesinin { email: "..." } yapısında olduğunu varsayıyoruz)
+    const danismanEmail = user?.email; // Opsiyonel zincirleme ile güvenli erişim
+    console.log("KABUL ET BASILDIĞINDA MAİL:", danismanEmail);
+    if (!danismanEmail) {
+        alert("Hata: Onaylayan danışmanın e-posta bilgisi bulunamadı. Lütfen tekrar giriş yapın.");
+        return;
     }
-  };
+
+    try {
+        // ⭐️ Adım 2: API isteği gövdesine e-posta adresini ekle
+        const payload = { 
+            danismanEmail: danismanEmail 
+        };
+        
+      await axios.post(
+            `http://localhost:8081/api/admin/approve-user/${id}`, 
+            payload // ⭐️ Payload'ı istek gövdesi olarak gönder
+        );
+        
+      setIstekler(istekler.filter((i) => i.id !== id));
+      alert("Yatırımcı onaylandı ve kullanıcı tablosuna eklendi.");
+      
+    } catch (err) {
+      console.error("Kabul işlemi başarısız:", err);
+      alert("Kabul işlemi başarısız: " + (err.response?.data?.message || "Sunucu hatası."));
+    }
+  };
 
   const handleReddet = async (id) => {
     try {
