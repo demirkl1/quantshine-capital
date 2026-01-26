@@ -1,0 +1,74 @@
+.ticker-container {
+    width: 100%;
+    background-color: #0f172a;
+    /* Senin sitenin koyu lacivert tonu */
+    color: #ffffff;
+    overflow: hidden;
+    /* Taşanı gizle */
+    white-space: nowrap;
+    border-bottom: 1px solid #1e293b;
+    height: 40px;
+    display: flex;
+    align-items: center;
+}
+
+.ticker-wrapper {
+    display: inline-block;
+    padding-left: 100%;
+    /* Başlangıçta ekranın sağından gelsin */
+    animation: ticker 30s linear infinite;
+    /* 30 saniyede bir tur */
+}
+
+.ticker-item {
+    display: inline-block;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 0.9rem;
+    margin-right: 20px;
+}
+
+.symbol {
+    font-weight: bold;
+    color: #94a3b8;
+    margin-right: 8px;
+}
+
+.price {
+    font-weight: 600;
+    margin-right: 8px;
+}
+
+.change {
+    font-size: 0.85rem;
+}
+
+.change.up {
+    color: #22c55e;
+    /* Yeşil */
+}
+
+.change.down {
+    color: #ef4444;
+    /* Kırmızı */
+}
+
+.divider {
+    color: #334155;
+    margin-left: 20px;
+}
+
+/* Kayma Animasyonu */
+@keyframes ticker {
+    0% {
+        transform: translate3d(0, 0, 0);
+    }
+
+    100% {
+        transform: translate3d(-100%, 0, 0);
+    }
+}
+
+/* Fare üzerine gelince dursun (Okumak isteyenler için) */
+.ticker-container:hover .ticker-wrapper {
+    animation-play-state: paused;
+}

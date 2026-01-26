@@ -10,9 +10,9 @@ const Profil = () => {
     const isDark = theme === "dark";
     const [isSidebarOpen, setSidebarOpen] = useState(true);
     const { user, login } = useAuth(); // ⭐️ login fonksiyonu Context'i güncellemek için çekildi
-    
+
     // ⭐️ YENİ STATE'LER: Backend verisini tutmak için
-    const [profile, setProfile] = useState({}); 
+    const [profile, setProfile] = useState({});
     const [loading, setLoading] = useState(true); // Yükleme durumu
     const [isEditing, setIsEditing] = useState(false);
 
@@ -20,49 +20,38 @@ const Profil = () => {
 
     // ⭐️ 1. VERİ ÇEKME FONKSİYONU
     const fetchProfile = async () => {
-        if (!user || !user.email) {
+        // 🚀 DÜZELTME: user objesi yoksa tarayıcı hafızasından al
+        const activeEmail = user?.email || localStorage.getItem("userEmail");
+
+        console.log("İstek atılan email:", activeEmail); // Konsolda bunu kontrol et kanka
+
+        if (!activeEmail) {
             setLoading(false);
             return;
         }
 
         try {
-            // GET /api/profile/{email} rotasından veriyi çek
-            const response = await axios.get(
-                `http://localhost:8081/api/profile/${user.email}`
-            );
-            
+            const response = await axios.get(`http://localhost:8081/api/profile/${activeEmail}`);
             const data = response.data;
-            
-            // Backend'den gelen veriyi Frontend formatına dönüştürerek state'e kaydet
-            setProfile({
-                name: data.ad || user.name, 
-                surname: data.soyad || user.surname,
-                email: data.email,
-                // ⭐️ DB'deki alan adlarını Frontend'deki 'bio' ve 'avatar' ile eşle
-                bio: data.aciklama || 'Açıklama alanı boş.', 
-                avatar: data.avatarUrl || 'https://i.pravatar.cc/100', // Varsayılan avatar
-            });
 
-        } catch (error) {
-            console.error("Profil yüklenirken hata oluştu:", error.response || error);
-            // Hata durumunda Context'teki temel bilgileri göster
+            // 🚀 DÜZELTME: Backend'deki alan isimleriyle eşleştir
             setProfile({
-                name: user.name,
-                surname: user.surname,
-                email: user.email,
-                bio: 'Veri yüklenemedi.',
-                avatar: 'https://i.pravatar.cc/100',
+                name: data.ad || "",
+                surname: data.soyad || "",
+                email: data.email || activeEmail,
+                bio: data.aciklama || "", // Backend'den 'aciklama' geliyor
+                avatar: data.avatarUrl || 'https://i.pravatar.cc/100', // Backend'den 'avatarUrl' geliyor
             });
+        } catch (error) {
+            console.error("Hata:", error);
         } finally {
             setLoading(false);
         }
     };
-    
-    // ⭐️ Sayfa yüklendiğinde veriyi çek
+
     useEffect(() => {
         fetchProfile();
-    }, [user]);
-
+    }, [user?.email]); // Sadece email değiştiğinde veya geldiğinde çalışır
     const handleChange = (e) => {
         const { name, value } = e.target;
         setProfile((prev) => ({ ...prev, [name]: value }));
@@ -70,40 +59,42 @@ const Profil = () => {
 
     // ⭐️ 2. VERİ KAYDETME FONKSİYONU
     const handleSave = async () => {
-        setIsEditing(false);
+        // 🚀 LOG: Fonksiyonun içine girdiğimizi görelim
+        console.log("Kaydet butona basıldı!");
 
         try {
-            // Backend'e gönderilecek veri yapısı (DTO ile eşleşmeli)
+            const activeEmail = user?.email || localStorage.getItem("userEmail");
+
+            if (!activeEmail) {
+                alert("Hata: Oturum bilgisi bulunamadı!");
+                return;
+            }
+
             const payload = {
                 ad: profile.name,
                 soyad: profile.surname,
-                bio: profile.bio, // DB'deki aciklama alanına gidecek
-                avatar: profile.avatar, // DB'deki avatarUrl alanına gidecek
+                bio: profile.bio, // TextArea'dan gelen veri
+                avatar: profile.avatar
             };
-            
-            await axios.put(
-                `http://localhost:8081/api/profile/update/${user.email}`, 
+
+            console.log("Axios isteği atılıyor... Veri:", payload);
+
+            // 🚀 URL'nin doğruluğundan emin ol (AdminInvestorController değil ProfileController yolu)
+            const response = await axios.put(
+                `http://localhost:8081/api/profile/update/${activeEmail}`,
                 payload
             );
-            
-            // Başarılı kayıttan sonra Auth Context'i de güncelle (Ad/Soyad değişmiş olabilir)
-            login({
-                token: localStorage.getItem('token'),
-                user: { ad: profile.name, soyad: profile.surname, email: profile.email },
-                admin: user.isAdmin,
-                message: 'Profil güncellendi',
-                status: 'approved'
-            });
 
-            alert("Profil bilgileri başarıyla güncellendi!");
+            if (response.status === 200) {
+                alert("Profil başarıyla güncellendi!");
+                setIsEditing(false); // Düzenleme modundan çık
+            }
+
         } catch (error) {
-             console.error("Kaydetme hatası:", error.response || error);
-             alert("Profil kaydı başarısız oldu. Lütfen tekrar deneyin.");
-             // Hata durumunda veriyi yeniden çekmek mantıklı olabilir
-             fetchProfile();
+            console.error("Kaydetme sırasında hata oluştu:", error);
+            alert("Kaydedilemedi: " + (error.response?.data?.message || "Sunucu hatası"));
         }
     };
-
     const handleCancel = () => {
         setIsEditing(false);
         fetchProfile(); // İptal edildiğinde eski veriyi geri yükle
@@ -133,9 +124,8 @@ const Profil = () => {
             <AdminSidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
 
             <main
-                className={`admin-main ${
-                    isSidebarOpen ? "sidebar-open" : "sidebar-collapsed"
-                }`}
+                className={`admin-main ${isSidebarOpen ? "sidebar-open" : "sidebar-collapsed"
+                    }`}
             >
                 <header className="admin-header">
                     {/* ... (Header içeriği) ... */}
@@ -174,9 +164,9 @@ const Profil = () => {
                                 <label>E-posta</label>
                                 <input type="email" name="email" value={profile.email} onChange={handleChange} disabled={true} /> {/* E-posta düzenlenemez */}
                             </div>
-                            
+
                             {/* ⭐️ TELEFON ALANI KALDIRILDI ⭐️ */}
-                            
+
                             <div className="input-group">
                                 <label>Açıklama</label>
                                 <textarea name="bio" value={profile.bio} onChange={handleChange} disabled={!isEditing} />

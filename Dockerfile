@@ -1,38 +1,22 @@
-# Aşama 1: Uygulamayı oluşturma (build)
-# React uygulaması Node.js ortamında derlendiği için bir Node imajı kullanıyoruz.
-FROM node:20 as build
-
-# Çalışma dizinini belirle
+# 1. Aşama: Build
+FROM node:18-alpine as build
 WORKDIR /app
-
-# package.json ve package-lock.json dosyalarını kopyala
-COPY package*.json ./
-
-# Bağımlılıkları yükle
-# Bu adım, bir sonraki aşamaya geçmeden önce önbelleğe almayı (caching) sağlar.
+COPY package.json .
 RUN npm install
-
-# Kalan tüm frontend kodunu kopyala
 COPY . .
-
-# Uygulamayı derle ve üretim için hazır hale getir
+ENV CI=false
 RUN npm run build
 
-# Aşama 2: Web sunucusunu ayarlama (run)
-# Oluşturulan statik dosyaları sunmak için hafif bir Nginx imajı kullan.
+# 2. Aşama: Sunucu
 FROM nginx:alpine
 
-# Nginx'in varsayılan konfigürasyonunu kaldır ve yerine
-# React uygulamasının yönlendirmelerini (routing) desteklemesi için
-# bir default.conf dosyası ekle.
-# Eğer uygulamanızda yönlendirme (routing) yoksa bu satırı atlayabilirsiniz.
-# COPY ./nginx/default.conf /etc/nginx/conf.d/default.conf
-
-# Birinci aşamada oluşturulan dosyaları Nginx'in sunucu dizinine kopyala.
+# 🚨 ÖNEMLİ: Eğer Vite kullanıyorsan '/app/dist' yazmalısın. 
+# Create React App (CRA) kullanıyorsan '/app/build' olarak kalsın.
 COPY --from=build /app/build /usr/share/nginx/html
 
-# İmajın 80 numaralı portu dinleyeceğini belirt.
-EXPOSE 80
+# 🛠️ YENİ EKLEDİĞİMİZ SATIR:
+# Kendi nginx.conf dosyamızı Nginx'in yapılandırma klasörüne kopyalıyoruz.
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
-# Nginx sunucusunu başlat.
+EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]

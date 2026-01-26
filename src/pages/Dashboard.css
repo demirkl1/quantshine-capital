@@ -1,5 +1,7 @@
 /* General CSS Reset and Base Styles */
-*, *::before, *::after {
+*,
+*::before,
+*::after {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
@@ -59,7 +61,8 @@ body {
     width: var(--sidebar-width-closed);
     transition: width 0.3s ease;
     /* Gerekli diğer sidebar stilleri */
-    background: var(--card); /* Örnek olarak eklenmiştir */
+    background: var(--card);
+    /* Örnek olarak eklenmiştir */
     position: fixed;
     height: 100vh;
     left: 0;
@@ -151,6 +154,7 @@ body {
     width: 100%;
     margin-bottom: 2rem;
 }
+
 /* Stat Cards */
 .stat-card {
     background-color: var(--card);
@@ -217,9 +221,9 @@ body {
 }
 
 /* ApexCharts specific styling (if used) */
-.apexcharts-canvas text, 
-.apexcharts-canvas tspan, 
-.apexcharts-yaxis-label, 
+.apexcharts-canvas text,
+.apexcharts-canvas tspan,
+.apexcharts-yaxis-label,
 .apexcharts-xaxis-label {
     fill: var(--text-secondary) !important;
     font-weight: 500;
@@ -288,7 +292,8 @@ table {
     table-layout: auto;
 }
 
-th, td {
+th,
+td {
     text-align: left;
     padding: 1rem;
     word-wrap: break-word;
@@ -328,6 +333,7 @@ tbody tr:last-child td {
 
 /* Responsive Design */
 @media (max-width: 768px) {
+
     /* Küçük ekranlarda sidebar'ı üstten bindirmek için ana içeriği tam genişlik yap */
     .dashboard-main {
         padding: 1.5rem;
@@ -355,4 +361,5 @@ tbody tr:last-child td {
         align-items: flex-start;
         gap: 1rem;
     }
+
 }

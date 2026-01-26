@@ -16,17 +16,14 @@ const Yatırımcılar = () => {
   const [aktifYatirimci, setAktifYatirimci] = useState(null);
 
   const toggleSidebar = () => setSidebarOpen(!isSidebarOpen);
+  // Yatırımcılar.jsx
 
   const fetchYatirimcilar = async () => {
-    if (!user || !user.email) {
-      setLoading(false);
-      return;
-    }
+    setLoading(true);
     try {
-      const response = await axios.post(
-        "http://localhost:8081/api/danisman/my-clients",
-        { email: user.email }
-      );
+      // 🚀 DÜZELTME: Artık post ile email göndermek yerine 
+      // tüm yatırımcıları getiren GET isteğini kullanıyoruz
+      const response = await axios.get("http://localhost:8081/api/admin/all-investors");
       setYatirimcilar(response.data);
     } catch (error) {
       console.error("Yatırımcılar alınamadı:", error);
@@ -36,32 +33,33 @@ const Yatırımcılar = () => {
     }
   };
 
+  // useEffect içinde user bağımlılığını kaldırabiliriz çünkü filtreleme yapmıyoruz
   useEffect(() => {
     fetchYatirimcilar();
-  }, [user]);
+  }, []);
 
   return (
     <div className={`admin-wrapper ${isDark ? "dark" : ""}`}>
       <AdminSidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
 
-<main className={`admin-main ${isSidebarOpen ? "sidebar-open" : "sidebar-collapsed"}`}>
-  {/* === ÜST BAR === */}
-  <div className="admin-header">
-    <h1 className="page-title">Yatırımcılar</h1>
-    <div className="header-right">
-      <button className="theme-toggle" onClick={toggleTheme}>
-        {isDark ? "🌞 Light Mode" : "🌙 Dark Mode"}
-      </button>
-      <div className="user-info">
-        <img
-          src={user?.avatar || "/default-avatar.png"} // Diğer sayfalarla aynı fallback
-          alt="avatar"
-          className="avatar"
-        />
-        <span className="username">{user?.ad || user?.name || "Kullanıcı"}</span>
-      </div>
-    </div>
-  </div>
+      <main className={`admin-main ${isSidebarOpen ? "sidebar-open" : "sidebar-collapsed"}`}>
+        {/* === ÜST BAR === */}
+        <div className="admin-header">
+          <h1 className="page-title">Yatırımcılar</h1>
+          <div className="header-right">
+            <button className="theme-toggle" onClick={toggleTheme}>
+              {isDark ? "🌞 Light Mode" : "🌙 Dark Mode"}
+            </button>
+            <div className="user-info">
+              <img
+                src={user?.avatar || "/default-avatar.png"} // Diğer sayfalarla aynı fallback
+                alt="avatar"
+                className="avatar"
+              />
+              <span className="username">{user?.ad || user?.name || "Kullanıcı"}</span>
+            </div>
+          </div>
+        </div>
 
 
         {/* İÇERİK */}
@@ -80,6 +78,7 @@ const Yatırımcılar = () => {
                   <th>Lot</th>
                   <th>Şu An Değeri (₺)</th>
                   <th>Kâr / Zarar (%)</th>
+                  <th>Sorumlu Danışman</th> {/* 🚀 YENİ SÜTUN BAŞLIĞI */}
                 </tr>
               </thead>
               <tbody>
@@ -104,6 +103,10 @@ const Yatırımcılar = () => {
                       <td>{suanDeger.toLocaleString()}</td>
                       <td className={karZarar >= 0 ? "profit" : "loss"}>
                         {karZarar}%
+                      </td>
+                      {/* 🚀 YENİ VERİ HÜCRESİ */}
+                      <td style={{ fontSize: '0.85rem', color: isDark ? '#94a3b8' : '#64748b' }}>
+                        {y.danismanEmail || "Atanmamış"}
                       </td>
                     </tr>
                   );

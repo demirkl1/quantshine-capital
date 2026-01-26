@@ -36,22 +36,21 @@ const LoginModal = ({ isOpen, onClose }) => {
         { headers: { 'Content-Type': 'application/json' } }
       );
 
+      // LoginModal.jsx içindeki ilgili kısım
+      // ✅ DÜZELTİLMİŞ KISIM
       const data = response.data;
-      console.log('✅ Backend response:', data);
+      console.log('✅ Giriş başarılı, gelen veri:', data);
 
-      // Kullanıcının onay durumu kontrolü
-      if (data.status === 'pending') {
-        setErrorMessage('İsteğiniz bekleniyor. Danışman onayı tamamlandığında giriş yapabilirsiniz.');
-        return;
-      } else if (data.status === 'rejected') {
-        setErrorMessage('Hesap bulunmamaktadır veya reddedildi.');
-        return;
+      // 🚀 DÜZELTME: data.userDetails yerine data.user kontrolü yapıyoruz
+      if (data.user && data.user.id) {
+        // Backend 'user' objesi gönderdiği için data.user üzerinden okuyoruz
+        localStorage.setItem('userId', data.user.id.toString());
+        localStorage.setItem('userEmail', data.user.email);
+        console.log('💾 ID ve Email başarıyla kaydedildi:', data.user.id);
+      } else {
+        // Eğer burası çalışıyorsa, backend response yapısını konsoldan tekrar kontrol etmelisin
+        console.error('❌ Kayıt başarısız! data.user objesi bulunamadı. Gelen veri:', data);
       }
-
-      // Onaylı kullanıcıyı AuthContext'e kaydet
-      login(data);
-
-      // Token varsa kaydet
       if (data.token && data.token.trim() !== '') {
         localStorage.setItem('token', data.token);
       } else {
@@ -112,7 +111,7 @@ const LoginModal = ({ isOpen, onClose }) => {
           </div>
 
           <div className="form-group">
-            <label htmlFor="sifre">Şifre</label>
+            <label htmlFor="password">Şifre</label>
             <input
               type="password"
               id="sifre"

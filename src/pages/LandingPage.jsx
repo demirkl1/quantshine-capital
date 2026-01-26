@@ -1,8 +1,11 @@
 // src/pages/LandingPage.jsx
 import React, { useEffect, useState } from "react";
 import ScrollToTop from "../components/ScrollToTop";
+import MarketTicker from "../components/MarketTicker"; // ✅ YENİ EKLENEN IMPORT
 import { useNavigate } from "react-router-dom";
 import "./LandingPage.css";
+import MarketChart from "../components/MarketChart"; // ✅ EKSİK OLAN SATIR BU
+import NewsSection from '../components/NewsSection';
 
 const LandingPage = () => {
   const navigate = useNavigate();
@@ -34,6 +37,10 @@ const LandingPage = () => {
 
   return (
     <div className="landing-page-container">
+
+      {/* ✅ YENİ EKLENEN: Borsa Bandı (Ticker) En Tepede */}
+      <MarketTicker />
+
       {/* Hero Section */}
       <section
         id="anasayfa"
@@ -85,6 +92,9 @@ const LandingPage = () => {
 
       {/* Markets Section */}
       <section id="markets" className="markets-section">
+        <div style={{ maxWidth: '800px', margin: '0 auto 40px auto' }}>
+          <MarketChart symbol="USD" />
+        </div>
         <div className="card-grid">
           <div className="market-card">
             <h3>₺500M+</h3>
@@ -106,31 +116,20 @@ const LandingPage = () => {
       </section>
 
       {/* Blog Section - Haberler */}
-      <section id="blog" className="blog-section">
-        <h2>Makaleler & Blog</h2>
-        <div className="blog-grid">
-          {news.length > 0 ? (
-            news.map((article, index) => (
-              <div
-                className="blog-card"
-                key={index}
-                onClick={() => window.open(article.url, "_blank")}
-                style={{ cursor: "pointer" }}
-              >
-                <img
-                  src={article.urlToImage || "/placeholder.jpg"}
-                  alt={article.title}
-                  className="blog-image"
-                />
-                <div className="blog-content">
-                  <h3>{article.title}</h3>
-                </div>
-              </div>
-            ))
-          ) : (
-            <p>Haberler yükleniyor...</p>
-          )}
-        </div>
+      <section id="blog" className="blog-section" style={{ padding: '40px 0' }}>
+        {/* Başlığı ortalayıp biraz boşluk bırakalım */}
+        <h2 style={{
+          textAlign: 'center',
+          color: '#f8fafc', // Beyaz tonu
+          marginBottom: '30px',
+          fontSize: '2rem'
+        }}>
+          Makaleler & Blog
+        </h2>
+
+        {/* Tüm mantığı artık bu bileşen hallediyor */}
+        <NewsSection />
+
       </section>
 
       {/* Scroll-to-top butonu */}

@@ -1,16 +1,28 @@
 .admin-content {
   padding: 30px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
+/* Üst kısım: tablo ve fon özeti yan yana */
 .transaction-top {
   display: flex;
-  gap: 30px;
+  gap: 25px;
   margin-top: 20px;
+  align-items: flex-start;
+  justify-content: space-between;
   flex-wrap: wrap;
 }
 
+/* Sol kısım (hisse tablosu) */
 .stock-table-container {
-  flex: 1.5;
+  flex: 0 0 65%;
+  background: var(--card);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  overflow-x: auto;
+  min-width: 350px;
 }
 
 .search-input {
@@ -18,41 +30,39 @@
   padding: 10px;
   border-radius: 8px;
   border: 1px solid var(--border);
-  margin-bottom: 10px;
-}
-
-.stock-table,
-.history-table {
-  width: 100%;
-  border-collapse: collapse;
-  background: var(--card);
-  border-radius: 10px;
-  overflow: hidden;
+  margin-bottom: 12px;
+  background: var(--bg);
   color: var(--text);
 }
 
-.stock-table th,
-.history-table th {
+/* Tablo düzeni */
+.stock-table {
+  width: 100%;
+  border-collapse: collapse;
+  color: var(--text);
+}
+
+.stock-table th {
   background: var(--header);
   color: var(--text-strong);
   padding: 10px;
   text-align: left;
 }
 
-.stock-table td,
-.history-table td {
+.stock-table td {
   padding: 10px;
   border-top: 1px solid var(--border);
 }
 
 .buy-btn,
 .sell-btn {
-  padding: 5px 10px;
-  margin: 0 5px;
+  padding: 6px 12px;
+  margin: 0 4px;
   border: none;
   border-radius: 6px;
   cursor: pointer;
   font-weight: 500;
+  font-size: 0.9rem;
 }
 
 .buy-btn {
@@ -65,29 +75,33 @@
   color: white;
 }
 
+/* Sağ kısım (fon özeti ve grafik) */
 .fund-summary {
-  flex: 1;
+  flex: 0 0 33%;
   background: var(--card);
-  border-radius: 10px;
+  border-radius: 12px;
   padding: 20px;
-  color: var(--text);
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  min-width: 280px;
 }
 
 .balance {
   font-size: 1.4rem;
   font-weight: bold;
   margin-bottom: 15px;
+  color: var(--text-strong);
 }
 
 .chart-container {
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-top: 10px;
 }
 
 .fund-details {
   list-style: none;
-  margin-top: 10px;
+  margin-top: 12px;
   padding: 0;
 }
 
@@ -95,7 +109,8 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  margin: 4px 0;
+  margin: 5px 0;
+  font-size: 0.95rem;
 }
 
 .color-dot {
@@ -106,6 +121,29 @@
 
 .history-section {
   margin-top: 40px;
+  background: var(--card);
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  overflow-x: auto;
+}
+
+.history-table {
+  width: 100%;
+  border-collapse: collapse;
+  color: var(--text);
+}
+
+.history-table th {
+  background: var(--header);
+  color: var(--text-strong);
+  padding: 10px;
+  text-align: left;
+}
+
+.history-table td {
+  padding: 10px;
+  border-top: 1px solid var(--border);
 }
 
 .positive {
@@ -116,40 +154,6 @@
   color: #f44336;
 }
 
-/* 🌙 Dark Mode */
-.dark {
-  --bg: #1a1a1a;
-  --card: #2a2a2a;
-  --border: #444;
-  --text: #ddd;
-  --text-strong: #fff;
-  --header: #333;
-}
-
-/* ☀️ Light Mode */
-:not(.dark) {
-  --bg: #f9f9f9;
-  --card: #fff;
-  --border: #ccc;
-  --text: #333;
-  --text-strong: #111;
-  --header: #eee;
-}
-.search-input {
-  width: 100%;
-  padding: 10px;
-  border-radius: 8px;
-  border: 1px solid var(--border);
-  margin-bottom: 10px;
-  background: var(--card);
-  color: var(--text);
-}
-
-.search-input::placeholder {
-  color: var(--text);
-  opacity: 0.6;
-}
-
 /* Modal */
 .modal-backdrop {
   position: fixed;
@@ -158,6 +162,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 999;
 }
 
 .modal {
@@ -165,8 +170,9 @@
   color: var(--text);
   padding: 20px;
   border-radius: 12px;
-  width: 300px;
+  width: 320px;
   text-align: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.3);
 }
 
 .modal input {
@@ -215,4 +221,37 @@
   border: 1px solid var(--border);
   background: var(--card);
   color: var(--text);
+  width: 250px;
+}
+
+/* 🌙 Dark Mode */
+.dark {
+  --bg: #1a1a1a;
+  --card: #2a2a2a;
+  --border: #444;
+  --text: #ddd;
+  --text-strong: #fff;
+  --header: #333;
+}
+
+/* ☀️ Light Mode */
+:not(.dark) {
+  --bg: #f9f9f9;
+  --card: #fff;
+  --border: #ccc;
+  --text: #333;
+  --text-strong: #111;
+  --header: #eee;
+}
+
+/* Responsive düzen */
+@media (max-width: 992px) {
+  .transaction-top {
+    flex-direction: column;
+  }
+
+  .stock-table-container,
+  .fund-summary {
+    flex: 1 1 100%;
+  }
 }

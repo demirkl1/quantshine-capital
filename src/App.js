@@ -2,11 +2,11 @@ import React, { useState } from "react";
 import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 
 import Header from "./components/Header";
-import Footer from "./components/Footer"; 
+import Footer from "./components/Footer";
 import LoginModal from "./components/LoginModal";
 import RegisterModal from "./components/RegisterModal";
 
-import Dashboard from "./pages/Dashboard.jsx"; 
+import Dashboard from "./pages/Dashboard.jsx";
 import YatirimGecmisi from "./pages/YatirimGecmisi.jsx";
 import DanismanBilgileri from "./pages/DanismanBilgileri.jsx";
 import HaftalıkRaporlandırma from "./pages/HaftalıkRaporlandırma.jsx";
@@ -77,11 +77,11 @@ const AppContent = ({
             <Route path="/portfoy-bireysel" element={<InstitutionalInvestorPage />} />
             <Route path="/portfoy-kurumsal" element={<IndividualInvestorPage />} />
             <Route path="/sss" element={<Questions />} />
-            <Route path="/fund/:code" element={<FonDetail />} /> 
+            <Route path="/fund/:code" element={<FonDetail />} />
             <Route path="/portfoyum" element={<Dashboard />} />
             <Route path="/yatirim-gecmisim" element={<YatirimGecmisi />} />
             <Route path="/danisman-bilgileri" element={<DanismanBilgileri />} />
-            <Route path="/haftalik-rapor" element={<HaftalıkRaporlandırma />} /> 
+            <Route path="/haftalik-rapor" element={<HaftalıkRaporlandırma />} />
             <Route path="/admin-anasayfa" element={<AdminAnasayfa />} />
             <Route path="/islem-sayfasi" element={<İşlemSayfası />} />
             <Route path="/yatirimcilar" element={<Yatırımcılar />} />

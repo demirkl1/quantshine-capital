@@ -1,15 +1,18 @@
 :root {
-  --primary-color: #4f46e5; /* Mor tonları */
+  --primary-color: #4f46e5;
+  /* Mor tonları */
   --secondary-color: #6366f1;
-  --accent-color: #10b981; /* Yeşil tonları */
-  --danger-color: #ef4444; /* Kırmızı tonları */
+  --accent-color: #10b981;
+  /* Yeşil tonları */
+  --danger-color: #ef4444;
+  /* Kırmızı tonları */
   --bg-light: #f9fafb;
   --bg-dark: #1f2937;
   --text-light: #f3f4f6;
   --text-dark: #111827;
   --card-bg: #ffffff;
   --card-bg-dark: #374151;
-  --hover-bg: rgba(79,70,229,0.1);
+  --hover-bg: rgba(79, 70, 229, 0.1);
 }
 
 .admin-wrapper.dark {
@@ -83,7 +86,7 @@
   background-color: var(--card-bg);
   padding: 20px;
   border-radius: 15px;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   text-align: center;
 }
@@ -94,7 +97,7 @@
 
 .stats-cards .card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 12px 24px rgba(0,0,0,0.2);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
 }
 
 .stats-cards h4 {
@@ -114,7 +117,7 @@
   padding: 25px;
   border-radius: 15px;
   margin-bottom: 30px;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
 }
 
@@ -135,7 +138,7 @@
   background: var(--card-bg);
   padding: 20px;
   border-radius: 15px;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
@@ -145,7 +148,7 @@
 
 .table-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0 12px 24px rgba(0,0,0,0.2);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
 }
 
 table {
@@ -154,7 +157,8 @@ table {
   margin-top: 10px;
 }
 
-th, td {
+th,
+td {
   padding: 12px 15px;
   text-align: left;
   border-bottom: 1px solid #ddd;
@@ -190,7 +194,7 @@ th {
   border-radius: 8px;
   white-space: pre-line;
   font-size: 0.85rem;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   z-index: 10;
   opacity: 0;
   animation: fadeIn 0.3s forwards;
@@ -207,7 +211,49 @@ th {
   .stats-cards {
     flex-direction: column;
   }
+
   .tables-container {
     flex-direction: column;
   }
+}
+
+.chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  padding: 0 10px;
+}
+
+.time-filters {
+  display: flex;
+  gap: 8px;
+  background: var(--card-bg);
+  padding: 4px;
+  border-radius: 8px;
+}
+
+.time-filters button {
+  padding: 6px 12px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: #64748b;
+  font-weight: 600;
+  font-size: 13px;
+  transition: all 0.3s;
+  border-radius: 6px;
+}
+
+.time-filters button.active {
+  background: #10b981;
+  color: white;
+}
+
+.chart-container {
+  padding: 10px;
+  background: var(--card-bg);
+  border-radius: 12px;
+  /* Alt taraftaki tabloya çok yapışmaması için */
+  margin-bottom: 30px;
 }
