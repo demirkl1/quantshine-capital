@@ -23,54 +23,37 @@ const LoginModal = ({ isOpen, onClose }) => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e) => {
+const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setMessage('');
     setErrorMessage('');
 
     try {
-      const response = await axios.post(
-        'http://localhost:8081/api/auth/login',
-        formData,
-        { headers: { 'Content-Type': 'application/json' } }
-      );
+        const response = await axios.post(
+            'http://localhost:8081/api/auth/login', // Portu backend ile eşle
+            formData,
+            { headers: { 'Content-Type': 'application/json' } }
+        );
 
-      // LoginModal.jsx içindeki ilgili kısım
-      // ✅ DÜZELTİLMİŞ KISIM
-      const data = response.data;
-      console.log('✅ Giriş başarılı, gelen veri:', data);
+        const data = response.data;
+        console.log('✅ Giriş başarılı:', data);
 
-      // 🚀 DÜZELTME: data.userDetails yerine data.user kontrolü yapıyoruz
-      if (data.user && data.user.id) {
-        // Backend 'user' objesi gönderdiği için data.user üzerinden okuyoruz
-        localStorage.setItem('userId', data.user.id.toString());
-        localStorage.setItem('userEmail', data.user.email);
-        console.log('💾 ID ve Email başarıyla kaydedildi:', data.user.id);
-      } else {
-        // Eğer burası çalışıyorsa, backend response yapısını konsoldan tekrar kontrol etmelisin
-        console.error('❌ Kayıt başarısız! data.user objesi bulunamadı. Gelen veri:', data);
-      }
-      if (data.token && data.token.trim() !== '') {
-        localStorage.setItem('token', data.token);
-      } else {
-        console.warn('⚠️ Token boş geldi, oturum yerel olarak kaydedilmeyecek.');
-        localStorage.removeItem('token');
-      }
+        // ✅ AuthContext'teki login fonksiyonunu çağırıyoruz.
+        // Bu fonksiyon hem state'i günceller hem localStorage'a yazar.
+        login(data); 
 
-      setMessage('✅ Giriş başarılı! Yönlendiriliyorsunuz...');
+        setMessage('✅ Giriş başarılı! Yönlendiriliyorsunuz...');
 
-      setTimeout(() => {
-        onClose();
-
-        // Admin kontrolü
-        if (data.admin === true || data.admin === 'true') {
-          navigate('/admin-anasayfa');
-        } else {
-          navigate('/portfoyum');
-        }
-
-      }, 1200);
+        setTimeout(() => {
+            onClose();
+            // Rol bazlı yönlendirme (data içindeki isAdmin veya admin kontrolü)
+            if (data.isAdmin === true || data.admin === true) {
+                navigate('/admin-anasayfa');
+            } else {
+                navigate('/portfoyum');
+            }
+        }, 1200);
 
     } catch (error) {
       console.error('❌ Login hatası:', error);

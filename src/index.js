@@ -3,36 +3,30 @@ import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import keycloak from './keycloak'; // Az önce oluşturduğumuz dosyayı import ediyoruz
+import keycloak from './keycloak';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
-// Keycloak başlatma ayarları
+// ✅ 1. ADIM: Ayarı 'check-sso' yapıyoruz. 
+// Bu, "giriş yapılmış mı bak ama yapılmadıysa zorlama" demek.
 const initOptions = {
-  onLoad: 'login-required', // Giriş zorunlu olsun
-  checkLoginIframe: false   // Localhost'ta bazen sorun çıkarıyor, kapattık
+  onLoad: 'check-sso', 
+  checkLoginIframe: false
 };
 
-keycloak.init(initOptions).then((authenticated) => {
-  if (authenticated) {
-    // Sadece giriş başarılıysa uygulamayı ekrana bas
-    root.render(
-      <React.StrictMode>
-        <App />
-      </React.StrictMode>
-    );
-  } else {
-    // Giriş başarısızsa sayfayı yenile (Keycloak otomatik login'e atar)
-    window.location.reload();
-  }
+keycloak.init(initOptions).then(() => {
+  // ✅ 2. ADIM: 'authenticated' şartını kaldırıyoruz. 
+  // Artık her durumda Uygulama (App) render edilecek.
+  root.render(
+    <React.StrictMode>
+      <App />
+    </React.StrictMode>
+  );
 }).catch((err) => {
   console.error("Keycloak Başlatma Hatası:", err);
-  root.render(
-    <div style={{ padding: "20px", color: "red", textAlign: "center" }}>
-      <h2>Sisteme Giriş Yapılamadı!</h2>
-      <p>Keycloak servisinin çalıştığından emin olun.</p>
-    </div>
-  );
+  // Hata olsa bile Landing Page'i görmesi için yine App'i render edebilirsin 
+  // veya hata mesajını bırakabilirsin.
+  root.render(<App />); 
 });
 
 reportWebVitals();
