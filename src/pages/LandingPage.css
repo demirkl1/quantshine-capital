@@ -1,356 +1,289 @@
 /* src/pages/LandingPage.css */
 
-/*
-  Bu dosya, QuantShine Capital web sitesinin ana sayfa (landing page)
-  tasarımı için gerekli stilleri içerir.
-*/
+:root {
+  --bg-dark: #0b0e14;
+  --primary-purple: #1e40af;
+  --text-bright: #ffffff;
+  --text-soft: #f1f5f9;
+  --glass-bg: rgba(17, 22, 35, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.1);
+}
 
-/* Genel sayfa kapsayıcısı ve temel stil ayarları */
-body, html {
-  margin: 0;
-  padding: 0;
+.landing-page-container {
+  position: relative;
+  width: 100%;
+  background-color: var(--bg-dark);
+}
+
+/* Üst Ticker */
+.ticker-fixed-wrapper {
+  position: relative;
+  z-index: 50;
+  background: var(--bg-dark);
+  border-bottom: 1px solid var(--glass-border);
+}
+
+/* VİDEO SİSTEMİ: Yanları sıfırlar ve tüm orta alanı kaplar */
+.main-hero-bg {
+  position: absolute; /* Fixed yapmıyoruz ki sadece bu sayfanın arkasında kalsın */
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
-  overflow-x: hidden;
+  z-index: 0;
+  overflow: hidden;
 }
-.landing-page-container {
-  min-height: 100vh;
-  background-color: var(--secondary-white); 
-  color: var(--text-dark-gray);
+
+.video-full-bg {
   width: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center; 
+  height: 100%;
+  object-fit: cover; /* Boşlukları öldüren sihirli komut */
+  opacity: 0.75;
+  filter: brightness(0.8) contrast(1.1);
 }
 
-/* Hero (Kahraman) Bölümü Stilleri */
-.hero-section {
-  display: flex;
-  flex-direction: row; 
-  justify-content: center;
-  align-items: center;
-  padding: 6rem 2rem;
-  background-color: var(--secondary-white);
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  min-height: 100vh; /* Sayfanın yüksekliğini tamamen doldurur */
-  width: 100vw;       /* Sayfanın genişliğini tamamen doldurur */
-  position: relative; /* Overlay için gerekli */
-  gap: 4rem;
-  box-sizing: border-box;
-}
-
-
-/* Küçük ekranlar için responsive ayar (Dikey düzen) */
-@media (max-width: 900px) {
-  .hero-section {
-    flex-direction: column; 
-    text-align: center;
-    padding: 3rem 1rem; 
-    min-height: auto; 
-  }
-  .hero-content {
-    max-width: 100%; 
-    margin-bottom: 2rem; 
-  }
-  .hero-title {
-    font-size: 2.5rem; 
-  }
-  .hero-description {
-    font-size: 1rem; 
-  }
-}
-
-/* Hero Bölümü Metin İçerik Stilleri */
-.hero-content {
-  flex: 1;
-  max-width: 500px; 
-}
-
-.hero-title {
-  font-family: 'Poppins', sans-serif;
-  font-size: 4rem; 
-  font-weight: 800;
-  margin-bottom: 1.5rem;
-  line-height: 1.1;
-  color: #ffffff; /* Beyaz */
-  letter-spacing: -2px;
-} 
-.hero-description {
-  font-size: 1.3rem;
-  line-height: 1.6;
-  margin-bottom: 2.5rem;
-  color: #ffffff; /* Beyaz */
-}
-
-/* Hero Bölümü Buton Stilleri */
-.hero-btn {
-  padding: 1.2rem 3rem; /* Daha büyük bir buton */
-  font-size: 1.1rem;
-  border-radius: 9999px; /* Tam yuvarlak buton */
-  background-color: var(--primary-dark-blue);
-  color: var(--secondary-white);
-  border: none;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
-  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15); /* Hafif gölge */
-}
-
-.hero-btn:hover {
-  background-color: #0d121c;
-  transform: translateY(-2px);
-  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.2);
-}
-
-/* Hero Bölümü Görsel İçerik Stilleri */
-.hero-image-container { 
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15); /* Daha belirgin gölge */
-  border-radius: 20px; /* Daha belirgin yuvarlaklık */
-  overflow: hidden; 
-  max-width: 600px;
-  width: 100%;
-}
-
-.hero-image {
-  width: 100%; 
-  height: auto; 
-  display: block;
-  border-radius: 20px; /* Container ile aynı yuvarlaklık */
-}
-.hero-overlay {
-  background: rgba(0, 0, 0, 0.4); /* okunabilirlik için karartma */
+.video-overlay-pro {
   position: absolute;
-  inset: 0;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  /* Yazıların okunması için merkeze odaklı koyulaştırma */
+  background: radial-gradient(circle, transparent 20%, var(--bg-dark) 90%);
+}
+
+/* İÇERİK KATMANI */
+.main-content-scroll {
+  position: relative;
+  z-index: 10;
+}
+
+.hero-section {
+  height: 90vh;
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding: 2rem;
 }
 
+.hero-main-title {
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  font-weight: 800;
+  color: var(--text-bright);
+  background: linear-gradient(to bottom, #fff, #94a3b8);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+}
 
-/* Hakkımızda (About) Bölümü Stilleri */
-.about-section {
+.hero-sub-text {
+  color: var(--text-soft);
+  font-size: 1.2rem;
+  margin-bottom: 30px;
+}
+
+/* GRAFİK VE KUTULAR: Cam Efekti */
+.chart-container-premium, .grid-item {
+  background: var(--glass-bg) !important;
+  backdrop-filter: blur(20px); /* Videoyu arkada yumuşatır */
+  border: 1px solid var(--glass-border);
+  border-radius: 24px;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+  padding: 40px;
+}
+
+.chart-split-section {
+  padding: 40px 10% 100px;
+}
+
+.social-proof-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 2rem;
-  padding: 4rem 2rem;
-  background-color: var(--secondary-white);
-  border-top: 1px solid #e0e0e0;
-  color: var(--text-dark-gray);
-  max-width: 1200px;
-  width: 100%;
-  box-sizing: border-box;
-  margin: 0 auto;
-  text-align: left;
+  gap: 30px;
+  padding: 0 10% 100px;
 }
 
-/* Hakkımızda Kart Stilleri */
-.about-card {
-  background-color: #f8f8f8;
-  padding: 2.5rem; /* İç boşluğu artır */
-  border-radius: 12px; /* Daha modern yuvarlaklık */
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08); /* Daha belirgin gölge */
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  border: 1px solid #e0e0e0;
-}
-
-.about-card:hover {
-  transform: translateY(-8px); /* Daha belirgin yukarı kayma */
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12);
-}
-
-.about-card h3 {
-  font-family: 'Poppins', sans-serif; /* Fontu Poppins olarak değiştir */
-  font-size: 1.5rem;
-  font-weight: 700;
-  margin-bottom: 1rem;
-  color: var(--primary-dark-blue);
-  letter-spacing: -0.5px;
-}
-
-.about-card p {
-  font-size: 1rem;
-  line-height: 1.6; /* Satır aralığını artırarak okunabilirliği iyileştir */
-  color: var(--text-dark-gray);
-}
-
-/* İkincil Buton Stilleri (Kartların içindeki butonlar) */
-.about-card .btn.secondary {
-  margin-top: 1.5rem; /* Boşluğu artır */
-  padding: 0.8rem 1.8rem;
-  font-size: 0.9rem;
-  background-color: transparent;
-  border: 2px solid var(--primary-dark-blue);
-  color: var(--primary-dark-blue);
-  transition: all 0.3s ease;
-  border-radius: 9999px; /* Tam yuvarlak kenarlar */
-}
-
-.about-card .btn.secondary:hover {
-  background-color: var(--primary-dark-blue);
-  color: var(--secondary-white);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-/* Markets Section Ana Kapsayıcı */
-/* Markets Section Ana Kapsayıcı */
-.markets-section {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 6rem 2rem; /* Dikey boşluk artırılarak daha ferah bir his sağlar */
-  background-color: #f4f7f9; /* Hafif, modern bir gri tonu */
-  max-width: 100%; /* Kapsayıcının tam genişlikte olmasını sağlar */
-  box-sizing: border-box;
-  margin: 0 auto;
-}
-
-.markets-section h2 {
-  font-family: 'Poppins', sans-serif;
-  font-size: 3rem; /* Başlık daha büyük ve cesur */
-  font-weight: 700;
-  margin-bottom: 2rem;
-  color: #0b1120; /* Daha derin bir lacivert tonu */
-  letter-spacing: -1.5px;
-  text-align: center;
-}
-
-.markets-section .card-grid {
-  max-width: 1200px;
-  width: 100%;
-  /* 2x2 düzeni için tekrar eden 2 sütun */
-  display: grid;
-  grid-template-columns: repeat(2, 1fr); 
-  gap: 2.5rem; /* Kartlar arası boşluk artırılarak daha temiz bir düzen sağlar */
-}
-
-.market-card {
-  background-color: #ffffff; /* Tam beyaz arka plan */
-  padding: 3rem; /* İç boşluklar artırıldı */
-  border-radius: 16px; /* Daha belirgin yuvarlak kenarlar */
-  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.1); /* Daha yumuşak ve belirgin bir gölge */
-  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Daha akıcı ve profesyonel bir geçiş */
-  border: none; /* Sade bir görünüm için kenarlık kaldırıldı */
-  text-align: center;
-}
-
-.market-card:hover {
-  transform: translateY(-12px); /* Yukarı doğru daha belirgin bir hareket */
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15); /* Gölge daha belirgin ve yaygın hale gelir */
-}
-
-.market-card h3 {
-  font-family: 'Poppins', sans-serif;
-  font-size: 2.2rem; /* Sayısal değerler için daha büyük boyut */
-  font-weight: 700;
-  margin-bottom: 0.5rem;
-  color: #0d1a26;
-  letter-spacing: -0.5px;
-}
-
-.market-card p {
-  font-size: 1.1rem; /* Okunurluk için font boyutu artırıldı */
-  line-height: 1.7;
-  color: #555; /* Daha yumuşak bir gri tonu */
-}
-
-/* Mobil için 1x4 düzeni */
-@media (max-width: 768px) {
-    .markets-section .card-grid {
-        grid-template-columns: 1fr;
-    }
-}
-.blog-section {
-  width: 100%;                 
-  background-color: #1a2a44;   /* Lacivert arka plan */
+.cta-button {
+  background: var(--primary-purple);
   color: white;
-  padding: 60px 20px;
-}
-
-.blog-container {
-  max-width: 1200px;
-  margin: 0 auto;      /* Ortalar */
-  text-align: center;  /* İçindeki başlık ve metni ortalar */
-  display: flex;       /* Flex kullan */
-  flex-direction: column;
-  align-items: center; /* Yatayda ortala */
-}
-.blog-section h2 {
-  font-size: 2rem;
-  margin-bottom: 40px;
-  width: 100%;
-  display: block;
-  text-align: center;
-}
-
-
-
-.blog-grid {
-  display: flex;
-  flex-wrap: wrap;          /* Kartlar taşarsa alt satıra geçer */
-  justify-content: center;  /* Kartları yatayda ortalar */
-  gap: 20px;                /* Kartlar arası boşluk */
-}
-
-
-.blog-card {
-  background: white;
-  color: #1a202c;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-  transition: transform 0.3s;
-  display: flex;            /* Kart içeriğini flex yap */
-  flex-direction: column;   /* Resim ve metin dikey */
-  align-items: center;      /* İçeriği yatayda ortala */
-  text-align: center;       /* Metni ortala */
-  width: 280px;             /* Kart genişliği */
-}
-
-
-.blog-card:hover {
-  transform: translateY(-5px);
-}
-
-.blog-image {
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
-}
-
-.blog-content {
-  padding: 15px;
-  font-size: 1rem;
-  text-align: center;
-}
-
-.blog-button-container {
-  margin-top: 30px;
-  text-align: center;
-}
-
-.blog-button-container .btn.secondary {
-  padding: 0.8rem 1.8rem;
-  font-size: 0.9rem;
-  background-color: var(--primary-dark-blue); 
-  color: var(--secondary-white);
+  padding: 16px 48px;
+  border-radius: 50px;
+  font-weight: 700;
   border: none;
-  transition: all 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
-  border-radius: 9999px;
-  font-weight: 600;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   cursor: pointer;
+  box-shadow: 0 10px 30px rgba(124, 58, 237, 0.4);
+  transition: 0.3s;
 }
 
-.blog-button-container .btn.secondary:hover {
-  background-color: #0d121c; 
-  color: var(--secondary-white);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+.cta-button:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 45px rgba(124, 58, 237, 0.6);
+}
+/* --- KUTUCUK İÇİ YAZI VE OKUNABİLİRLİK DÜZENLEMESİ --- */
+
+/* Grafik Panelinin İçindeki Başlıklar */
+.chart-header-info h3 {
+  color: var(--text-bright) !important; /* Saf Beyaz */
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+  letter-spacing: -0.5px;
+}
+
+.chart-subtitle {
+  color: #cbd5e1; /* Açık gri/mavi tonu - Okunabilirliği yüksektir */
+  font-size: 1rem;
+  opacity: 0.9;
+}
+
+/* Bilgi Kutucukları (Grid Items) İçindeki Yazılar */
+.grid-item h4 {
+  color: var(--text-bright) !important; /* Başlıklar parlasın */
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-top: 15px;
+  margin-bottom: 12px;
+}
+
+.grid-item p {
+  color: #cbd5e1 !important; /* Açıklama metinleri için en iyi kontrast */
+  font-size: 1.05rem;
+  line-height: 1.6;
+  font-weight: 400;
+}
+
+/* İkonların Parlaması İçin (Opsiyonel) */
+.grid-icon-box {
+  font-size: 2.5rem;
+  filter: drop-shadow(0 0 10px rgba(124, 58, 237, 0.3)); /* Mor hafif ışıltı */
+  margin-bottom: 10px;
+}
+
+/* Canlı Veri Etiketi */
+.live-tag {
+  color: #ffffff !important;
+  font-weight: 800;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+}
+/* --- BLOG VE MAKALE ALANI --- */
+
+.landing-blog-section {
+  padding: 80px 10%;
+  margin-top: 50px;
+}
+
+.blog-section-header {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.section-title {
+  color: var(--text-bright) !important;
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin-bottom: 15px;
+}
+
+.section-subtitle {
+  color: #cbd5e1 !important; /* Açık ve okunaklı gri */
+  font-size: 1.1rem;
+}
+
+/* Makale Kartları Grid Yapısı */
+.article-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+  margin-top: 40px;
+}
+
+.article-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+  border-radius: 24px;
+  padding: 35px;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.article-card:hover {
+  transform: translateY(-8px);
+  border-color: var(--primary-purple);
+}
+
+.article-tag {
+  background: var(--primary-purple);
+  color: white;
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  display: inline-block;
+  margin-bottom: 20px;
+}
+
+.article-card h3 {
+  color: var(--text-bright) !important;
+  font-size: 1.5rem;
+  margin-bottom: 15px;
+  line-height: 1.3;
+}
+
+.article-card p {
+  color: #cbd5e1 !important; /* Okunması kolay açık renk */
+  line-height: 1.6;
+  font-size: 1rem;
+  margin-bottom: 25px;
+}
+
+.article-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #94a3b8;
+  font-size: 0.85rem;
+}
+
+.read-more-link {
+  background: transparent;
+  border: none;
+  color: var(--primary-purple);
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.read-more-link:hover {
+  color: #a78bfa;
+  text-decoration: underline;
+}
+.news-component-wrapper {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px 0;
+}
+
+/* NewsSection içindeki grid yapısının LandingPage ile uyumlu olması için */
+.article-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 25px;
+    width: 100%;
+}
+.news-component-wrapper {
+    width: 100%;
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+/* NewsSection içindeki kartların dizilimi */
+.article-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 30px;
+    width: 100%;
 }

@@ -1,0 +1,140 @@
+/* src/pages/CorporateInvestorPage.css */
+
+:root {
+  --navy-deep: #0b0e14;
+  --navy-corp: #1e3a8a;
+  --blue-accent: #3b82f6;
+  --text-white: #ffffff;
+  --text-slate: #cbd5e1;
+}
+
+.corporate-container {
+  background-color: var(--navy-deep);
+  min-height: 100vh;
+  width: 100%;
+}
+
+/* ÜST BAŞLIK ALANI */
+.page-header-section {
+  padding: 140px 0 80px;
+  background: linear-gradient(180deg, rgba(30, 58, 138, 0.15) 0%, transparent 100%);
+  text-align: center;
+}
+
+.header-title {
+  font-size: 3.2rem;
+  font-weight: 800;
+  color: var(--text-white);
+  letter-spacing: 2px;
+  margin-bottom: 15px;
+}
+
+.accent-line {
+  width: 80px;
+  height: 4px;
+  background: var(--blue-accent);
+  margin: 20px auto;
+  border-radius: 2px;
+  box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
+}
+
+.header-subtitle {
+  color: var(--text-slate);
+  font-size: 1.25rem;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+/* İÇERİK BÖLÜMÜ */
+.corporate-content-section {
+  padding: 60px 10% 120px;
+}
+
+.corporate-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 80px;
+  max-width: 1250px;
+  margin: 0 auto;
+}
+
+/* GÖRSEL ALANI (GLASSMORPHISM) */
+.corporate-media-box {
+  flex: 1;
+}
+
+.glass-frame {
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 20px;
+  border-radius: 40px;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
+}
+
+.glass-frame img {
+  width: 100%;
+  height: auto;
+  border-radius: 25px;
+  filter: brightness(0.85) contrast(1.1);
+}
+
+/* METİN ALANI */
+.corporate-text-box {
+  flex: 1;
+}
+
+.content-heading {
+  color: var(--text-white);
+  font-size: 2.4rem;
+  font-weight: 700;
+  margin-bottom: 25px;
+  line-height: 1.2;
+}
+
+.description-text {
+  color: var(--text-slate);
+  font-size: 1.15rem;
+  line-height: 1.8;
+  margin-bottom: 20px;
+}
+
+.description-text strong {
+  color: var(--blue-accent);
+  font-weight: 600;
+}
+
+/* KURUMSAL ÖZELLİK ETİKETLERİ */
+.corporate-features {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 15px;
+  margin-top: 35px;
+}
+
+.feature-pill {
+  background: rgba(59, 130, 246, 0.1);
+  color: var(--blue-accent);
+  padding: 10px 22px;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* RESPONSIVE AYARLAR */
+@media (max-width: 1024px) {
+  .corporate-wrapper {
+    flex-direction: column;
+    text-align: center;
+    gap: 50px;
+  }
+  .corporate-features {
+    justify-content: center;
+  }
+  .header-title {
+    font-size: 2.5rem;
+  }
+}

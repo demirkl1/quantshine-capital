@@ -1,0 +1,69 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&display=swap');
+
+.actions-cell {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+.btn-approve {
+  background-color: #26a69a;
+  color: white;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 11px;
+  font-family: 'JetBrains Mono', monospace;
+  transition: all 0.15s;
+}
+
+.btn-approve:hover {
+  background-color: #2bbbaf;
+}
+
+.btn-reject {
+  background-color: #ef5350;
+  color: white;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 11px;
+  font-family: 'JetBrains Mono', monospace;
+  transition: all 0.15s;
+}
+
+.btn-reject:hover {
+  background-color: #f45c59;
+}
+
+.no-data-msg {
+  text-align: center;
+  padding: 40px;
+  color: #434651;
+}
+
+.custom-table td {
+  vertical-align: middle;
+}
+
+.role-badge {
+  padding: 2px 8px;
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.role-badge.investor {
+  background-color: rgba(41, 98, 255, 0.12);
+  color: #2962ff;
+}
+
+.role-badge.advisor {
+  background-color: rgba(240, 185, 11, 0.12);
+  color: #f0b90b;
+}

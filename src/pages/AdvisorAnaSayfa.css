@@ -1,0 +1,104 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&display=swap');
+
+.admin-wrapper {
+  display: flex;
+  background-color: #0e1117;
+  min-height: 100vh;
+  color: #d1d4dc;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+}
+
+.admin-main {
+  flex: 1;
+  padding: 20px 24px;
+  box-sizing: border-box;
+}
+
+.advisor-stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.stat-card {
+  background: #131722;
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid #2a2e39;
+  transition: border-color 0.2s;
+}
+
+.stat-card:hover { border-color: #2962ff; }
+
+.stat-card h3 {
+  color: #787b86;
+  font-size: 11px;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 700;
+}
+
+.stat-value {
+  color: #ffffff;
+  font-size: 1.5rem;
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.chart-section {
+  background: #131722;
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid #2a2e39;
+}
+
+.chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.live-indicator {
+  color: #26a69a;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.time-filter-group {
+  display: flex;
+  background-color: #1c2030;
+  padding: 3px;
+  border-radius: 6px;
+  gap: 2px;
+  border: 1px solid #2a2e39;
+}
+
+.filter-btn {
+  background: transparent;
+  border: none;
+  color: #787b86;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.filter-btn:hover { color: #d1d4dc; }
+
+.filter-btn.active {
+  background-color: #2962ff;
+  color: #fff;
+}

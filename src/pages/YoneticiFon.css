@@ -1,0 +1,141 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&display=swap');
+
+/* Fonlar Sayfası */
+.btn-transfer-action {
+  background-color: #2962ff;
+  color: white;
+  border: none;
+  padding: 4px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 11px;
+  font-family: 'JetBrains Mono', monospace;
+  transition: 0.15s;
+}
+
+.btn-transfer-action:hover {
+  background-color: #1e53e5;
+}
+
+/* Modal Tab */
+.modal-tabs {
+  display: flex;
+  border-bottom: 1px solid #2a2e39;
+  margin-bottom: 16px;
+}
+
+.modal-tab {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: #787b86;
+  padding: 10px;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 11px;
+  font-family: 'JetBrains Mono', monospace;
+  transition: 0.15s;
+  letter-spacing: 0.06em;
+}
+
+.modal-tab.active {
+  color: #2962ff;
+  border-bottom: 2px solid #2962ff;
+}
+
+.fon-modal {
+  background: #131722;
+  width: 420px;
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid #2a2e39;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+}
+
+.modal-body h3 {
+  font-size: 12px;
+  margin-bottom: 12px;
+  color: #d1d4dc;
+  font-weight: 700;
+}
+
+.btn-confirm {
+  background: #26a69a;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+}
+
+.btn-close {
+  background: transparent;
+  color: #787b86;
+  border: 1px solid #2a2e39;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+}
+
+/* Başlık */
+.header-flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.btn-add-fund {
+  background-color: #2962ff;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  transition: 0.15s;
+}
+
+.btn-add-fund:hover {
+  background-color: #1e53e5;
+}
+
+.modal-input {
+  width: 100%;
+  padding: 10px 12px;
+  background-color: #1c2030;
+  border: 1px solid #2a2e39;
+  border-radius: 6px;
+  color: #d1d4dc;
+  margin-top: 4px;
+  font-size: 12px;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.modal-input:focus {
+  outline: none;
+  border-color: #2962ff;
+  box-shadow: 0 0 0 2px rgba(41, 98, 255, 0.2);
+}
+
+.form-group {
+  margin-bottom: 14px;
+}
+
+.form-group label {
+  display: block;
+  color: #787b86;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 700;
+  margin-bottom: 4px;
+}

@@ -1,0 +1,92 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&display=swap');
+
+.advisor-sidebar {
+  width: 240px;
+  min-width: 240px;
+  height: 100vh;
+  background-color: #131722;
+  color: #d1d4dc;
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  top: 0;
+  padding: 16px;
+  box-sizing: border-box;
+  z-index: 100;
+  overflow-y: auto;
+  border-right: 1px solid #2a2e39;
+}
+
+.sidebar-logo {
+  text-align: center;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #2a2e39;
+}
+
+.sidebar-logo h2 {
+  color: #2962ff;
+  margin: 0;
+  font-size: 1.3rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+}
+
+.sidebar-logo span {
+  font-size: 10px;
+  color: #787b86;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  color: #787b86;
+  text-decoration: none;
+  padding: 10px 14px;
+  border-radius: 6px;
+  transition: all 0.15s;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.nav-item:hover {
+  background-color: rgba(41, 98, 255, 0.08);
+  color: #d1d4dc;
+}
+
+.nav-item.active {
+  background-color: rgba(41, 98, 255, 0.15);
+  color: #2962ff;
+  border-left: 2px solid #2962ff;
+}
+
+.nav-icon {
+  font-size: 1.2rem;
+  margin-right: 10px;
+  flex-shrink: 0;
+  display: flex;
+}
+
+.sidebar-footer {
+  margin-top: auto;
+  padding-top: 12px;
+  border-top: 1px solid #2a2e39;
+}
+
+.logout-btn {
+  color: #ef5350 !important;
+}
+
+.logout-btn:hover {
+  background-color: rgba(239, 83, 80, 0.08) !important;
+}

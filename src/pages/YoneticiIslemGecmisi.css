@@ -1,0 +1,91 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&display=swap');
+
+.search-container {
+  margin-bottom: 16px;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.search-box {
+  position: relative;
+  width: 300px;
+}
+
+.search-box input {
+  width: 100%;
+  padding: 10px 12px 10px 38px;
+  background: #1c2030;
+  border: 1px solid #2a2e39;
+  border-radius: 6px;
+  color: #d1d4dc;
+  font-size: 12px;
+  font-family: 'JetBrains Mono', monospace;
+  transition: 0.15s;
+}
+
+.search-box input:focus {
+  outline: none;
+  border-color: #2962ff;
+  box-shadow: 0 0 0 2px rgba(41, 98, 255, 0.2);
+}
+
+.search-icon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #787b86;
+  font-size: 1.1rem;
+}
+
+/* İşlem Rozetleri */
+.islem-badge {
+  padding: 2px 8px;
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.islem-badge.alim {
+  background: rgba(38, 166, 154, 0.12);
+  color: #26a69a;
+}
+
+.islem-badge.satim {
+  background: rgba(239, 83, 80, 0.12);
+  color: #ef5350;
+}
+
+.no-result {
+  text-align: center;
+  padding: 40px;
+  color: #434651;
+}
+
+.price-stack {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.3;
+}
+
+.old-price {
+  font-size: 10px;
+  color: #787b86;
+}
+
+.new-price {
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.badge-fund {
+  padding: 2px 8px;
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.badge-fund.TEK { background: rgba(41, 98, 255, 0.12); color: #2962ff; }
+.badge-fund.HSF { background: rgba(38, 166, 154, 0.12); color: #26a69a; }

@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
-import './Questions.css'; // CSS dosyanızın yolu
+import './Questions.css';
 import ScrollToTop from "../components/ScrollToTop";
-
 
 const FaqPage = () => {
   const [openIndex, setOpenIndex] = useState(null);
@@ -12,16 +11,16 @@ const FaqPage = () => {
 
   const faqData = [
     {
-      question: "Paramı İstanbul Portföy Yönetimi A.Ş.'nin hesabına mı gönderiyorum?",
-      answer: "Hayır. İstanbul Portföy Yönetimi A.Ş.'nin anlaşmalı olduğu Türkiye İş Bankası A.Ş. veya Akbank takas saklama bankalarına müşteri adına açılan müşteri hesaplarına gönderilir ve yatırım yapılan finansal varlıklar müşteri adına takas saklama bankası tarafından saklanır."
+      question: "Paramı Quant&Shine Capital A.Ş'nin hesabına mı gönderiyorum?",
+      answer: "Hayır. Quant&Shine Capital A.Ş.'nin anlaşmalı olduğu Türkiye İş Bankası A.Ş. veya Akbank takas saklama bankalarına müşteri adına açılan müşteri hesaplarına gönderilir ve yatırım yapılan finansal varlıklar müşteri adına takas saklama bankası tarafından saklanır."
     },
     {
-      question: "İstanbul Portföy Yönetimi A.Ş. paramı veya yatırımlarımı üçüncü şahıslara transfer edebilir mi?",
-      answer: "Hayır. Müşteri varlıkları, müşterilerin kendi adlarına açılan saklama hesaplarında, İstanbul Portföy Yönetimi A.Ş.'nin varlıklarından ayrı bir şekilde saklanır."
+      question: "Quant&Shine Capital A.Ş. paramı veya yatırımlarımı üçüncü şahıslara transfer edebilir mi?",
+      answer: "Hayır. Müşteri varlıkları, müşterilerin kendi adlarına açılan saklama hesaplarında, Quant&Shine Capital A.Ş.'nin varlıklarından ayrı bir şekilde saklanır."
     },
     {
-      question: "İstanbul Portföy Yönetimi A.Ş. müşteri adına açılan hesap üzerinden istediği şekilde yatırım yapabilir mi?",
-      answer: "Hayır. İstanbul Portföy Yönetimi A.Ş. ancak yatırım fonu tüzüğünde belirtilen yatırım stratejileri doğrultusunda işlem yapabilir."
+      question: "Quant&Shine Capital A.Ş. müşteri adına açılan hesap üzerinden istediği şekilde yatırım yapabilir mi?",
+      answer: "Hayır. Quant&Shine Capital A.Ş. ancak yatırım fonu tüzüğünde belirtilen yatırım stratejileri doğrultusunda işlem yapabilir."
     },
     {
       question: "Yatırım fonu nedir?",
@@ -43,30 +42,31 @@ const FaqPage = () => {
 
   return (
     <div className="faq-page-container">
-      <section className="faq-section">
-        <div className="faq-container">
-          <h2>Sıkça Sorulan Sorular</h2>
-          
-          <div className="accordion">
-            {faqData.map((item, index) => (
-              <div key={index} className="accordion-item">
-                <button
-                  className={`accordion-header ${openIndex === index ? 'active' : ''}`}
-                  onClick={() => toggleAccordion(index)}
-                >
-                  <span className="accordion-title">
-                    {item.question}
-                  </span>
-                  <span className="accordion-icon"></span>
-                </button>
-                <div className={`accordion-content ${openIndex === index ? 'open' : ''}`}>
+      <main className="faq-hero">
+        <div className="faq-header-content">
+          <h1 className="faq-main-title">Sıkça Sorulan Sorular</h1>
+          <p className="faq-subtitle">QuantShine Capital hakkında merak ettiğiniz tüm soruların yanıtları.</p>
+        </div>
+
+        <div className="accordion-wrapper">
+          {faqData.map((item, index) => (
+            <div key={index} className={`faq-item ${openIndex === index ? 'active' : ''}`}>
+              <button
+                className="faq-question-btn"
+                onClick={() => toggleAccordion(index)}
+              >
+                <span className="faq-question-text">{item.question}</span>
+                <span className="faq-arrow-icon"></span>
+              </button>
+              <div className="faq-answer-container">
+                <div className="faq-answer-content">
                   <p>{item.answer}</p>
                 </div>
               </div>
-            ))}
-          </div>
+            </div>
+          ))}
         </div>
-      </section>
+      </main>
       <ScrollToTop />
     </div>
   );

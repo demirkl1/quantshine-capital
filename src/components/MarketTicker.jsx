@@ -1,51 +1,63 @@
-import React, { useEffect, useState } from 'react';
-import './MarketTicker.css'; // Birazdan bu CSS dosyasını da oluşturacağız
+import React from 'react';
 
-const MarketTicker = () => {
-    const [marketData, setMarketData] = useState([]);
-    const [loading, setLoading] = useState(true);
+// TVC:GOLD / TVC:SILVER → spot fiyat (COMEX futures free tier'da görünmüyor)
+// SP:SPX yerine FOREXCOM:SPXUSD → daha geniş erişim
+const TICKER_HTML = `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { background: transparent; overflow: hidden; }
+  </style>
+</head>
+<body>
+  <div class="tradingview-widget-container">
+    <div class="tradingview-widget-container__widget"></div>
+    <script type="text/javascript"
+      src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js"
+      async>
+    {
+      "symbols": [
+        { "proName": "BIST:XU100",         "title": "BIST 100"  },
+        { "proName": "FX_IDC:USDTRY",      "title": "USD/TRY"   },
+        { "proName": "FX_IDC:EURTRY",      "title": "EUR/TRY"   },
+        { "proName": "FX_IDC:GBPTRY",      "title": "GBP/TRY"   },
+        { "proName": "TVC:GOLD",           "title": "Altın"     },
+        { "proName": "TVC:SILVER",         "title": "Gümüş"     },
+        { "proName": "FOREXCOM:SPXUSD",    "title": "S&P 500"   },
+        { "proName": "FOREXCOM:NSXUSD",    "title": "NASDAQ"    },
+        { "proName": "COINBASE:BTCUSD",    "title": "Bitcoin"   },
+        { "proName": "COINBASE:ETHUSD",    "title": "Ethereum"  },
+        { "proName": "BIST:THYAO",         "title": "THY"       },
+        { "proName": "BIST:GARAN",         "title": "GARAN"     }
+      ],
+      "showSymbolLogo": true,
+      "isTransparent": true,
+      "displayMode": "adaptive",
+      "colorTheme": "dark",
+      "locale": "tr"
+    }
+    </script>
+  </div>
+</body>
+</html>`;
 
-    useEffect(() => {
-        // Backend'den veriyi çeken fonksiyon
-        const fetchData = async () => {
-            try {
-                // Dikkat: Port 8081 (IntelliJ ile çalıştırıyorsan)
-                const response = await fetch('http://localhost:8081/api/market/summary');
-                const data = await response.json();
-                setMarketData(data);
-                setLoading(false);
-            } catch (error) {
-                console.error("Piyasa verileri alınamadı:", error);
-                setLoading(false);
-            }
-        };
-
-        fetchData();
-
-        // Her 60 saniyede bir veriyi tazele (Canlılık hissi için)
-        const interval = setInterval(fetchData, 60000);
-        return () => clearInterval(interval);
-    }, []);
-
-    if (loading) return null; // Yüklenirken boş dönsün veya spinner koyabilirsin
-
-    return (
-        <div className="ticker-container">
-            <div className="ticker-wrapper">
-                {/* Sonsuz döngü hissi için veriyi iki kere basıyoruz */}
-                {[...marketData, ...marketData].map((item, index) => (
-                    <div key={index} className="ticker-item">
-                        <span className="symbol">{item.symbol}</span>
-                        <span className="price">{item.price.toFixed(2)} ₺</span>
-                        <span className={`change ${item.rising ? 'up' : 'down'}`}>
-                            {item.rising ? '▲' : '▼'} %{Math.abs(item.changeRate)}
-                        </span>
-                        <span className="divider">|</span>
-                    </div>
-                ))}
-            </div>
-        </div>
-    );
-};
+const MarketTicker = () => (
+    <iframe
+        srcDoc={TICKER_HTML}
+        frameBorder="0"
+        scrolling="no"
+        allowTransparency="true"
+        style={{
+            width: '100%',
+            height: '46px',
+            border: 'none',
+            background: 'transparent',
+            display: 'block',
+        }}
+        title="Piyasa Ticker"
+    />
+);
 
 export default MarketTicker;

@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import api from '../api';
+import toast from 'react-hot-toast';
 import './RegisterModal.css';
-import DatePickerField from './DatePickerField';
 
 const RegisterModal = ({ isOpen, onClose }) => {
   const [formData, setFormData] = useState({
-    ad: '',
-    soyad: '',
-    dogumTarihi: null,
+    firstName: '',
+    lastName: '',
+    tcNo: '',
     email: '',
-    sifre: ''
+    password: '',
+    phoneNumber: '',
+    role: 'INVESTOR' // Varsayılan rol eklendi
   });
 
   if (!isOpen) return null;
@@ -19,69 +21,60 @@ const RegisterModal = ({ isOpen, onClose }) => {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleDateChange = (date) => {
-    setFormData({ ...formData, dogumTarihi: date });
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    // Telefon numarasındaki boşluk, tire vb. karakterleri temizle
+    const payload = {
+      ...formData,
+      phoneNumber: formData.phoneNumber.replace(/\D/g, '') || null,
+    };
+
     try {
-      const formattedData = {
-        ...formData,
-        dogumTarihi: formData.dogumTarihi
-          ? formData.dogumTarihi.toISOString().split('T')[0]
-          : null
-      };
+      const response = await api.post('/auth/pending/register', payload);
 
-      const response = await axios.post(
-        'http://localhost:8081/api/auth/pending/register', // <-- Backend ile eşleşiyor
-        formattedData
-      );
-
-      const { status, message } = response.data;
-
-      if (status === 'pending') {
-        alert('Kayıt isteğiniz gönderildi. Danışman onayı bekleniyor.');
-      } else if (status === 'approved') {
-        alert('Kayıt başarılı! Giriş yapabilirsiniz.');
-      } else if (status === 'rejected') {
-        alert('Kayıt reddedildi. Hesap bulunmamaktadır.');
-      } else {
-        alert(message || 'Kayıt işlemi tamamlandı.');
-      }
-
+      toast.success('Kayıt isteğiniz gönderildi. Admin onayı bekleniyor.');
       onClose();
     } catch (error) {
-      alert(
-        'Kayıt işlemi başarısız: ' +
-          (error.response ? error.response.data.message : 'Sunucuya ulaşılamıyor.')
-      );
+      const message = error.response?.data?.error || error.response?.data?.message || error.response?.data || "Sunucuya ulaşılamıyor.";
+      toast.error('Kayıt başarısız: ' + message);
     }
   };
 
   return (
     <div className="modal-overlay">
       <div className="modal-content">
-        <button className="modal-close-btn" onClick={onClose}>
-          &times;
-        </button>
-        <h2 className="modal-title">Hesap Oluştur</h2>
+        <button className="modal-close-btn" onClick={onClose}>&times;</button>
+        <h2 className="modal-title">QuantShine Capital - Hesap Oluştur</h2>
 
         <form className="register-form" onSubmit={handleSubmit}>
           <div className="form-group">
-            <label htmlFor="ad">Adınız</label>
-            <input type="text" id="ad" name="ad" value={formData.ad} onChange={handleChange} required />
+            <label htmlFor="firstName">Adınız</label>
+            <input type="text" id="firstName" name="firstName" value={formData.firstName} onChange={handleChange} required />
           </div>
 
           <div className="form-group">
-            <label htmlFor="soyad">Soyadınız</label>
-            <input type="text" id="soyad" name="soyad" value={formData.soyad} onChange={handleChange} required />
+            <label htmlFor="lastName">Soyadınız</label>
+            <input type="text" id="lastName" name="lastName" value={formData.lastName} onChange={handleChange} required />
+          </div>
+
+          {/* ROL SEÇİMİ BURAYA EKLENDİ */}
+          <div className="form-group">
+            <label htmlFor="role">Kayıt Türü</label>
+            <select id="role" name="role" value={formData.role} onChange={handleChange} required>
+                <option value="INVESTOR">Yatırımcı</option>
+                <option value="ADVISOR">Danışman</option>
+            </select>
           </div>
 
           <div className="form-group">
-            <label htmlFor="dogumTarihi">Doğum Tarihi</label>
-            <DatePickerField id="dogumTarihi" selected={formData.dogumTarihi} onChange={handleDateChange} placeholder="Gün / Ay / Yıl" />
+            <label htmlFor="tcNo">TC Kimlik Numarası</label>
+            <input type="text" id="tcNo" name="tcNo" maxLength="11" value={formData.tcNo} onChange={handleChange} required />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="phoneNumber">Telefon Numarası</label>
+            <input type="tel" id="phoneNumber" name="phoneNumber" value={formData.phoneNumber} onChange={handleChange} required />
           </div>
 
           <div className="form-group">
@@ -90,8 +83,8 @@ const RegisterModal = ({ isOpen, onClose }) => {
           </div>
 
           <div className="form-group">
-            <label htmlFor="sifre">Şifre</label>
-            <input type="password" id="sifre" name="sifre" value={formData.sifre} onChange={handleChange} required />
+            <label htmlFor="password">Şifre</label>
+            <input type="password" id="password" name="password" value={formData.password} onChange={handleChange} required />
           </div>
 
           <button type="submit" className="btn primary register-btn">Kaydol</button>

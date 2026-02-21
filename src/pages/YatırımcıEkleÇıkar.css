@@ -1,230 +1,239 @@
-/* ===========================================
-   YatırımcıEkleÇıkar.css - FİNAL VERSİYON
-   =========================================== */
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&display=swap');
 
-/* --- Genel Sayfa Yapısı --- */
-.admin-wrapper {
-    display: flex;
-    min-height: 100vh;
-    background-color: #f1f5f9;
+/* --- Avatar --- */
+.avatar-initials {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: #3b82f6;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.8rem;
+  flex-shrink: 0;
+  letter-spacing: 0.5px;
+  user-select: none;
 }
 
-.admin-wrapper.dark {
-    background-color: #0f172a;
-    color: white;
+/* --- Genel Sayfa Yapisi --- */
+.admin-wrapper {
+  display: flex;
+  min-height: 100vh;
+  background-color: #0e1117;
+  color: #d1d4dc;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
 }
 
 .admin-main {
-    flex: 1;
-    padding: 20px;
+  flex: 1;
+  padding: 20px 24px;
+  box-sizing: border-box;
 }
 
 .admin-content {
-    padding: 30px;
-    margin-top: 20px;
+  padding: 20px 0;
 }
 
-/* --- Tablo Temel Yapılandırması --- */
+/* --- Tablo Temel --- */
 .istek-table {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
-    margin-top: 25px;
-    border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    background-color: white;
-    /* overflow: hidden; SİLİNDİ - Dropdownların taşması için */
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 16px;
+  background-color: #131722;
+  border-radius: 8px;
+  overflow: visible;
+  border: 1px solid #2a2e39;
 }
 
-.dark .istek-table {
-    background-color: #1e293b;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
-}
-
-/* --- Başlık (th) ve Hücre (td) Stili --- */
+/* --- Baslik (th) ve Hucre (td) Stili --- */
 .istek-table th,
 .istek-table td {
-    padding: 15px;
-    text-align: left;
-    border-bottom: 1px solid #e2e8f0;
-    vertical-align: middle;
-}
-
-.dark .istek-table th,
-.dark .istek-table td {
-    border-bottom: 1px solid #334155;
-    color: #cbd5e1;
+  padding: 9px 12px;
+  text-align: left;
+  border-bottom: 1px solid #2a2e39;
+  vertical-align: middle;
 }
 
 .istek-table th {
-    background-color: #f8fafc;
-    color: #334155;
-    font-weight: 700;
-    text-transform: uppercase;
-    font-size: 0.8rem;
-    letter-spacing: 0.5px;
+  background-color: #0e1117;
+  color: #787b86;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  font-family: 'JetBrains Mono', monospace;
 }
 
-.dark .istek-table th {
-    background-color: #0f172a;
+.istek-table td {
+  color: #d1d4dc;
+  font-size: 12px;
+  font-family: 'JetBrains Mono', monospace;
+  border-bottom: 1px solid #434651;
 }
 
-/* --- Buton ve Dropdown Konteynırları --- */
+/* --- Buton ve Dropdown Konteynerlari --- */
 .flex,
 .transfer-container {
-    display: flex;
-    gap: 8px;
-    align-items: center;
-    justify-content: flex-start;
-    flex-wrap: nowrap;
-    /* Yan yana kalmalarını sağlar */
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: flex-start;
+  flex-wrap: nowrap;
 }
 
-/* İşlem sütunları (Son sütunlar) için özel genişlik */
 .istek-table th:last-child,
 .istek-table td:last-child {
-    min-width: 220px;
-    /* Butonlar ve select sığsın diye */
-    width: auto;
+  min-width: 220px;
+  width: auto;
 }
 
 /* --- Buton Stilleri --- */
 .accept-btn,
 .reject-btn,
 .transfer-btn {
-    padding: 8px 14px;
-    border: none;
-    border-radius: 6px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    font-size: 13px;
-    color: white;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    white-space: nowrap;
-    flex-shrink: 0;
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-size: 11px;
+  color: white;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  flex-shrink: 0;
+  font-family: 'JetBrains Mono', monospace;
 }
 
 .accept-btn {
-    background-color: #22c55e;
+  background-color: rgba(38, 166, 154, 0.15);
+  color: #26a69a;
+  border: 1px solid #26a69a;
 }
 
 .accept-btn:hover {
-    background-color: #16a34a;
-    transform: translateY(-1px);
+  background-color: rgba(38, 166, 154, 0.25);
 }
 
 .reject-btn {
-    background-color: #ef4444;
+  background-color: rgba(239, 83, 80, 0.15);
+  color: #ef5350;
+  border: 1px solid #ef5350;
 }
 
 .reject-btn:hover {
-    background-color: #dc2626;
-    transform: translateY(-1px);
+  background-color: rgba(239, 83, 80, 0.25);
 }
 
 .transfer-btn {
-    background-color: #3b82f6;
-    font-size: 16px;
-    padding: 6px 12px;
+  background-color: rgba(41, 98, 255, 0.15);
+  color: #2962ff;
+  border: 1px solid #2962ff;
+  font-size: 14px;
+  padding: 5px 10px;
 }
 
 .transfer-btn:hover {
-    background-color: #2563eb;
-    transform: scale(1.1);
+  background-color: rgba(41, 98, 255, 0.25);
 }
 
 /* --- Select (ComboBox) Stili --- */
 .istek-table select {
-    padding: 8px;
-    border: 1px solid #cbd5e1;
-    border-radius: 6px;
-    background-color: white;
-    color: #334155;
-    outline: none;
-    cursor: pointer;
-    min-width: 160px;
-    /* Yarım kalmayı engeller */
-    font-size: 13px;
+  padding: 6px 10px;
+  border: 1px solid #2a2e39;
+  border-radius: 4px;
+  background-color: #1c2030;
+  color: #d1d4dc;
+  outline: none;
+  cursor: pointer;
+  min-width: 150px;
+  font-size: 11px;
+  font-family: 'JetBrains Mono', monospace;
 }
 
-.dark .istek-table select {
-    background-color: #0f172a;
-    border-color: #475569;
-    color: white;
+.istek-table select:focus {
+  border-color: #2962ff;
 }
 
-/* --- Satır Hover Efekti --- */
+/* --- Satir Hover Efekti --- */
+.istek-table tbody tr {
+  transition: background 0.1s;
+}
+
 .istek-table tbody tr:hover td {
-    background-color: #f8fafc;
+  background-color: rgba(41, 98, 255, 0.06);
 }
 
-.dark .istek-table tbody tr:hover td {
-    background-color: #334155;
-}
-
-/* Metinlerin okunurluğu için */
+/* Metin kesme */
 .istek-table td {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 200px;
-    /* Çok uzun emailler tabloyu bozmasın */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
 }
 
-/* İşlem sütununda metin kesilmesini kapat (Butonlar görünmeli) */
 .istek-table td:last-child {
-    overflow: visible;
-    max-width: none;
+  overflow: visible;
+  max-width: none;
 }
 
+/* Modal */
 .modal-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.7);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
 }
 
 .modal-content {
-    background: white;
-    padding: 25px;
-    border-radius: 12px;
-    width: 400px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
-}
-
-.dark .modal-content {
-    background: #1e293b;
-    color: white;
+  background: #131722;
+  padding: 24px;
+  border-radius: 8px;
+  width: 400px;
+  border: 1px solid #2a2e39;
 }
 
 .modal-input {
-    width: 100%;
-    padding: 12px;
-    margin: 15px 0;
-    border: 1px solid #cbd5e1;
-    border-radius: 6px;
-    font-size: 16px;
+  width: 100%;
+  padding: 10px;
+  margin: 12px 0;
+  border: 1px solid #2a2e39;
+  border-radius: 6px;
+  font-size: 13px;
+  background: #1c2030;
+  color: #d1d4dc;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.modal-input:focus {
+  outline: none;
+  border-color: #2962ff;
 }
 
 .modal-header {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 15px;
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
 }
 
 .close-x {
-    background: none;
-    border: none;
-    font-size: 24px;
-    cursor: pointer;
-    color: #64748b;
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: #787b86;
+}
+
+.close-x:hover {
+  color: #ef5350;
 }

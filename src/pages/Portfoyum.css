@@ -1,0 +1,173 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&display=swap');
+
+.admin-wrapper {
+  display: flex;
+  background-color: #0e1117;
+  min-height: 100vh;
+  color: #d1d4dc;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+}
+
+.admin-main {
+  flex: 1;
+  padding: 20px 24px;
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+
+/* Header ve Fon Seçici */
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.fon-selector-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #1c2030;
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: 1px solid #2a2e39;
+}
+
+.fon-selector-container label {
+  color: #787b86;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.combobox {
+  background: #1c2030;
+  color: #d1d4dc;
+  border: 1px solid #2a2e39;
+  padding: 8px 12px;
+  border-radius: 6px;
+  outline: none;
+  cursor: pointer;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+}
+
+/* 4'lü Grid Kartları */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 20px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.stat-card {
+  background: #131722;
+  padding: 16px;
+  border-radius: 8px;
+  min-width: 0;
+  border: 1px solid #2a2e39;
+  transition: border-color 0.2s;
+}
+
+.stat-card:hover { border-color: #2962ff; }
+
+.stat-card h3 {
+  color: #787b86;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.stat-value {
+  color: #ffffff;
+  font-size: 1.3rem;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.static-total-card {
+  border-top: 3px solid #26a69a !important;
+}
+
+/* Grafik */
+.chart-section {
+  background: #131722;
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid #2a2e39;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.chart-header h3 {
+  color: #d1d4dc;
+  margin: 0;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-weight: 700;
+}
+
+.chart-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.live-indicator {
+  color: #26a69a;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.text-profit { color: #26a69a !important; font-weight: 700; }
+.text-loss { color: #ef5350 !important; font-weight: 700; }
+
+.time-filter-group {
+  display: flex;
+  background-color: #1c2030;
+  padding: 3px;
+  border-radius: 6px;
+  gap: 2px;
+  border: 1px solid #2a2e39;
+}
+
+.filter-btn {
+  background: transparent;
+  border: none;
+  color: #787b86;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.filter-btn:hover { color: #d1d4dc; }
+
+.filter-btn.active {
+  background-color: #2962ff;
+  color: #fff;
+}
+
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.5; }
+  100% { opacity: 1; }
+}

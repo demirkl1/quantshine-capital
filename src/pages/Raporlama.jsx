@@ -1,202 +1,114 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import "./Raporlama.css";
-import { useAuth } from "../context/AuthContext";
-import { useTheme } from "../context/ThemeContext";
-import AdminSidebar from "../components/AdminSidebar";
+import React, { useState, useEffect } from 'react'; 
+import api from '../api';
+import { useAuth } from '../context/AuthContext'; 
+import AdminSidebar from '../components/AdminSidebar';
+import './Raporlama.css';
+import { MdSend } from 'react-icons/md';
+import toast from 'react-hot-toast';
 
 const Raporlama = () => {
-    const { theme, toggleTheme } = useTheme();
-    const isDark = theme === "dark";
-    const [isSidebarOpen, setSidebarOpen] = useState(true);
-    const { user } = useAuth();
+  const { token } = useAuth();
+  const [investors, setInvestors] = useState([]); 
+  const [selectedYatirimciId, setSelectedYatirimciId] = useState(""); 
+  const [raporNotu, setRaporNotu] = useState("");
+  const [title, setTitle] = useState("Haftalık Portföy Analizi");
 
-    // ⭐️ DİNAMİK STATE'LER ⭐️
-    const [investors, setInvestors] = useState([]); // Atanmış yatırımcı listesi
-    const [loading, setLoading] = useState(true); // Yüklenme durumu
-    const [selectedInvestor, setSelectedInvestor] = useState(null); // Seçili yatırımcı objesi
-    const [reportText, setReportText] = useState("");
+  useEffect(() => {
+    if (token) {
+      api.get('/users/my-investors')
+      .then(res => {
+        const unpackedInvestors = res.data.map(item => ({
+          id: item.investor.id,
+          firstName: item.investor.firstName,
+          lastName: item.investor.lastName,
+          tcNo: item.investor.tcNo
+        }));
+        setInvestors(unpackedInvestors);
+      })
+      .catch(err => console.error("Yatırımcılar çekilemedi:", err));
+    }
+  }, [token]);
 
-    const toggleSidebar = () => setSidebarOpen(!isSidebarOpen);
+  const handleGonder = async (e) => {
+    e.preventDefault();
+    if (!selectedYatirimciId || !raporNotu) {
+      toast.error("Lütfen yatırımcı seçin ve rapor içeriğini doldurun.");
+      return;
+    }
 
-    // ⭐️ YENİ: Backend'den, sadece bu danışmana ait olan yatırımcıları çeken fonksiyon
-    const fetchInvestors = async () => {
-        // 🚀 Debug: Fonksiyon tetikleniyor mu gör
-        console.log("Yatırımcı listesi çekilmeye çalışılıyor...");
+    try {
+      await api.post('/reports/send', {
+        investorId: parseInt(selectedYatirimciId, 10),
+        title: title,
+        content: raporNotu
+      });
 
-        // useAuth'dan gelmezse localden al kanka
-        const activeEmail = user?.email || localStorage.getItem("userEmail");
+      toast.success("Rapor başarıyla iletildi!");
+      setRaporNotu("");
+      setSelectedYatirimciId("");
+    } catch (err) {
+      const msg = err.response?.data?.message
+        || err.response?.data?.error
+        || (typeof err.response?.data === 'string' ? err.response.data : null)
+        || err.message
+        || "İşlem başarısız";
+      console.error("Rapor gönderme hatası:", err.response || err);
+      toast.error("Hata: " + msg);
+    }
+  };
 
-        if (!activeEmail) {
-            setLoading(false);
-            console.warn("Email bulunamadı!");
-            return;
-        }
+  return (
+    <div className="admin-wrapper">
+      <AdminSidebar />
+      <main className="admin-main">
+        <header className="page-header">
+          <h1>Raporlama ve Mesajlaşma</h1>
+          <p>Yatırımcılara özel analiz raporlarını ve bilgilendirme notlarını buradan iletebilirsin.</p>
+        </header>
 
-        setLoading(true);
-        try {
-            // ⚠️ URL'yi senin AdminInvestorController'daki path ile eşitledik
-            const response = await axios.get(
-                `http://localhost:8081/api/admin/my-investors`,
-                { params: { adminEmail: activeEmail } } // RequestParam olarak gönderiyoruz
-            );
+        <div className="admin-content">
+          <div className="report-form-container">
+            <form className="report-form" onSubmit={handleGonder}>
+              
+              <div className="form-group">
+                <label htmlFor="yatirimci-sec">Yatırımcı Seçiniz</label>
+                <select
+                  id="yatirimci-sec"
+                  className="combobox"
+                  value={selectedYatirimciId}
+                  onChange={(e) => setSelectedYatirimciId(e.target.value)}
+                  required
+                >
+                  <option value="">Rapor gönderilecek yatırımcıyı seçin...</option>
+                  {investors.map(y => (
+                    <option key={y.id} value={y.id}>
+                      {y.firstName} {y.lastName} ({y.tcNo})
+                    </option>
+                  ))}
+                </select>
+              </div>
 
-            console.log("Backend'den gelen yatırımcılar:", response.data);
-            setInvestors(response.data);
+              <div className="form-group">
+                <label htmlFor="rapor-text">Rapor İçeriği / Mesaj</label>
+                <textarea 
+                  id="rapor-text"
+                  className="report-textarea"
+                  placeholder="Yatırımcıya iletilecek rapor detaylarını buraya yazınız..."
+                  value={raporNotu}
+                  onChange={(e) => setRaporNotu(e.target.value)}
+                  required
+                />
+              </div>
 
-            if (response.data.length > 0) {
-                setSelectedInvestor(response.data[0]);
-            }
-        } catch (error) {
-            console.error("Hata detayı:", error.response || error);
-            setInvestors([]);
-        } finally {
-            setLoading(false);
-        }
-    };
-
-    useEffect(() => {
-        fetchInvestors(); // Sayfa yüklendiğinde verileri çek
-    }, [user]);
-
-    // ⭐️ GEREKLİ FONKSİYON: Seçim kutusunda seçilen yatırımcı ID'sine göre objeyi bulur
-    const handleInvestorChange = (e) => {
-        const investorId = parseInt(e.target.value);
-        // Eğer ID geçerliyse objeyi bulur, değilse null döner
-        const selected = investors.find((inv) => inv.id === investorId) || null;
-        setSelectedInvestor(selected);
-        setReportText(""); // Yeni seçimde eski raporu temizle
-    };
-
-    // ⭐️ DÜZELTİLMİŞ RAPOR GÖNDERME FONKSİYONU (ASYNC EKLENDİ)
-    const handleSendReport = async () => {
-        // 1. Zorunlu Alan Kontrolü
-        if (!selectedInvestor || !reportText.trim()) {
-            alert("Lütfen yatırımcı seçip rapor giriniz.");
-            return;
-        }
-
-        // 🚀 DÜZELTME: user.email yoksa localStorage'dan alıyoruz
-        const advisorEmail = user?.email || localStorage.getItem("userEmail");
-        const investorEmail = selectedInvestor.email;
-
-        // 🚀 LOG EKLE: Console'da kimin gönderdiğini görelim
-        console.log("Gönderen Danışman:", advisorEmail);
-        console.log("Alıcı Yatırımcı:", investorEmail);
-
-        if (!advisorEmail) {
-            alert("Hata: Danışman kimliği doğrulanamadı. Lütfen sayfayı yenileyip tekrar deneyin.");
-            return;
-        }
-
-        try {
-            await axios.post("http://localhost:8081/api/reports/send", {
-                investorEmail: investorEmail,
-                advisorEmail: advisorEmail,
-                reportText: reportText,
-            });
-
-            alert(`${selectedInvestor.ad || selectedInvestor.name} için rapor başarıyla gönderildi.`);
-            setReportText("");
-
-        } catch (error) {
-            console.error("Rapor gönderme başarısız:", error.response || error);
-            alert("Hata: " + (error.response?.data?.message || 'Rapor gönderilemedi.'));
-        }
-    };
-
-
-    return (
-        <div className={`admin-wrapper ${isDark ? "dark" : ""}`}>
-            <AdminSidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
-
-            <main
-                className={`admin-main ${isSidebarOpen ? "sidebar-open" : "sidebar-collapsed"
-                    }`}
-            >
-                <header className="admin-header">
-                    <div className="header-right">
-                        <button className="theme-toggle" onClick={toggleTheme}>
-                            {isDark ? "☀️ Light Mode" : "🌙 Dark Mode"}
-                        </button>
-                        <div className="user-profile">
-                            <img
-                                src="https://i.pravatar.cc/40"
-                                alt="Admin Avatar"
-                                className="avatar"
-                            />
-                            <span>{user ? `${user.name} ${user.surname}` : "Admin"}</span>
-                        </div>
-                    </div>
-                </header>
-
-                <div className="admin-content raporlama-container">
-                    <h1>Raporlama</h1>
-
-                    {/* Yatırımcı Seçimi */}
-                    <div className="investor-select">
-                        <label>Yatırımcı Seç:</label>
-                        <select
-                            onChange={handleInvestorChange}
-                            value={selectedInvestor ? selectedInvestor.id : ''}
-                            disabled={loading || investors.length === 0}
-                        >
-                            {loading && <option value="">Yükleniyor...</option>}
-                            {!loading && investors.length === 0 && <option value="">Atanmış Yatırımcı Yok</option>}
-
-                            <option value="" disabled={investors.length > 0}>
-                                Seçiniz...
-                            </option>
-                            {investors.map((inv) => (
-                                <option key={inv.id} value={inv.id}>
-                                    {inv.ad} {inv.soyad} ({inv.email})
-                                </option>
-                            ))}
-                        </select>
-                    </div>
-
-                    {loading && <p>Yükleniyor...</p>}
-
-                    {/* Yatırımcı Bilgileri */}
-                    {selectedInvestor && (
-                        <div className="investor-info">
-                            <p>
-                                <strong>Ad Soyad:</strong> {selectedInvestor.ad} {selectedInvestor.soyad}
-                            </p>
-                            <p>
-                                <strong>Email:</strong> {selectedInvestor.email}
-                            </p>
-                            <p>
-                                <strong>Toplam Yatırım:</strong>{" "}
-                                {selectedInvestor.toplamYatirim ? selectedInvestor.toplamYatirim.toLocaleString() : '0'} ₺
-                            </p>
-                            <p>
-                                <strong>Kâr/Zarar:</strong> {selectedInvestor.profitLoss || '0%'}
-                            </p>
-                        </div>
-                    )}
-
-                    {/* Rapor Yazma Alanı */}
-                    {selectedInvestor && (
-                        <div className="report-section">
-                            <label>Haftalık Rapor:</label>
-                            <textarea
-                                value={reportText}
-                                onChange={(e) => setReportText(e.target.value)}
-                                placeholder={`Haftalık raporunuzu ${selectedInvestor.ad} ${selectedInvestor.soyad} için buraya yazınız...`}
-                                rows={6}
-                            />
-                        </div>
-                    )}
-
-
-                    <button className="send-report-btn" onClick={handleSendReport} disabled={!selectedInvestor || !reportText.trim()}>
-                        📤 Raporu Gönder
-                    </button>
-                </div>
-            </main>
+              <button type="submit" className="btn-send-report">
+                <MdSend className="send-icon" /> Raporu Gönder
+              </button>
+            </form>
+          </div>
         </div>
-    );
+      </main>
+    </div>
+  );
 };
 
 export default Raporlama;

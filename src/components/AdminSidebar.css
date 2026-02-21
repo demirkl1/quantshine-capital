@@ -1,31 +1,92 @@
-.sidebar-nav a {
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&display=swap');
+
+.admin-sidebar {
+  width: 240px;
+  min-width: 240px;
+  height: 100vh;
+  background-color: #131722;
+  color: #d1d4dc;
   display: flex;
-  align-items: center;
-  color: #ccc;
-  text-decoration: none;
-  padding: 12px 20px;
-  border-radius: 8px;
-  transition: all 0.3s ease;
+  flex-direction: column;
+  position: sticky;
+  top: 0;
+  padding: 16px;
+  box-sizing: border-box;
+  z-index: 100;
+  overflow-y: auto;
+  border-right: 1px solid #2a2e39;
 }
 
-.sidebar-nav a:hover {
-  background-color: rgba(79, 70, 229, 0.2); /* Daha modern mor hover */
-  color: #fff;
-  transform: translateX(5px);
+.sidebar-logo {
+  text-align: center;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #2a2e39;
+}
+
+.sidebar-logo h2 {
+  color: #2962ff;
+  margin: 0;
+  font-size: 1.3rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+}
+
+.sidebar-logo span {
+  color: #787b86;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.sidebar-nav a, .logout-btn {
+  display: flex;
+  align-items: center;
+  color: #787b86;
+  text-decoration: none;
+  padding: 10px 14px;
+  border-radius: 6px;
+  transition: all 0.15s;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.sidebar-nav a:hover, .logout-btn:hover {
+  background-color: rgba(41, 98, 255, 0.08);
+  color: #d1d4dc;
 }
 
 .sidebar-nav a.active {
-  background-color: #4f46e5; /* Ana renk vurgusu */
-  color: #fff;
+  background-color: rgba(41, 98, 255, 0.15);
+  color: #2962ff;
+  border-left: 2px solid #2962ff;
 }
 
-.sidebar-nav .icon {
-  font-size: 1.5rem;
-  margin-right: 15px;
+.nav-icon {
+  font-size: 1.2rem;
+  margin-right: 10px;
   flex-shrink: 0;
-  transition: transform 0.3s ease;
 }
 
-.sidebar-nav a:hover .icon {
-  transform: scale(1.2); /* Hover’da ikon büyüsün */
+.sidebar-footer {
+  margin-top: auto;
+  padding-top: 12px;
+  border-top: 1px solid #2a2e39;
+}
+
+.logout-btn {
+  margin-top: 0;
+  color: #ef5350;
+}
+
+.logout-btn:hover {
+  background-color: rgba(239, 83, 80, 0.08);
 }

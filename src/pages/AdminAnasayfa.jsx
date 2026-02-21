@@ -1,276 +1,228 @@
-import React, { useState, useEffect, useMemo } from "react"; // useMemo eklendi
-import axios from "axios";
-import "./AdminAnasayfa.css";
-import { useAuth } from "../context/AuthContext";
-import { useTheme } from "../context/ThemeContext";
-import AdminSidebar from "../components/AdminSidebar";
-import { Line } from "react-chartjs-2";
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-  Filler,
-} from "chart.js";
-
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler);
+import React, { useState, useEffect } from 'react';
+import api from '../api';
+import { useAuth } from '../context/AuthContext';
+import AdminSidebar from '../components/AdminSidebar';
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import './AdminAnasayfa.css';
 
 const AdminAnasayfa = () => {
-  const { theme, toggleTheme } = useTheme();
-  const isDark = theme === "dark";
-  const [isSidebarOpen, setSidebarOpen] = useState(true);
-  const { user } = useAuth();
-
-  const [allUsers, setAllUsers] = useState([]);
-  const [fundHistory, setFundHistory] = useState([]);
-  const [currentPrice, setCurrentPrice] = useState(0);
-  const [newPrice, setNewPrice] = useState("");
+  const { token, user } = useAuth();
+  const [activeFilter, setActiveFilter] = useState("1A");
   const [loading, setLoading] = useState(true);
+  const [selectedChartFon, setSelectedChartFon] = useState("HSF");
 
-  const toggleSidebar = () => setSidebarOpen(!isSidebarOpen);
+  const [financials, setFinancials] = useState({
+    sirketFonBuyuklugu: 0,
+    sirketKarZararTl: 0,
+    fonBuyuklugu: 0,
+    fonKarZararTl: 0
+  });
+  const [fonListesi, setFonListesi] = useState([]);
+  const [grafikVerisi, setGrafikVerisi] = useState([]);
 
-  const [historyLog, setHistoryLog] = useState([]); // Yeni State
-
-  const fetchDashboardData = async () => {
-    try {
-      setLoading(true);
-      const [usersRes, priceRes, historyRes, logRes] = await Promise.all([
-        axios.get("http://localhost:8081/api/admin/all-investors"),
-        axios.get("http://localhost:8081/api/admin/fund-price"),
-        axios.get("http://localhost:8081/api/admin/fund-history"),
-        axios.get("http://localhost:8081/api/admin/history-all") // 🚀 Yeni eklediğin endpoint
-      ]);
-
-      setAllUsers(usersRes.data);
-      setCurrentPrice(priceRes.data.price || 1.0);
-      setFundHistory(historyRes.data);
-      setHistoryLog(logRes.data); // 👈 Gelen veriyi buraya yazıyoruz
-    } catch (err) {
-      console.error("Veri çekme hatası:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
-  const [timeRange, setTimeRange] = useState("ALL"); // Varsayılan tümü
-
-  const filteredHistory = useMemo(() => {
-    if (!fundHistory.length) return [];
-
-    const now = new Date();
-    let startDate = new Date();
-
-    if (timeRange === "1W") startDate.setDate(now.getDate() - 7);
-    else if (timeRange === "1M") startDate.setMonth(now.getMonth() - 1);
-    else if (timeRange === "1Y") startDate.setFullYear(now.getFullYear() - 1);
-    else if (timeRange === "3Y") startDate.setFullYear(now.getFullYear() - 3);
-    else return fundHistory; // ALL durumu
-
-    return fundHistory.filter(h => new Date(h.recordedAt) >= startDate);
-  }, [fundHistory, timeRange]);
-
+  // Stats (portföy değeri + K/Z) — her 60 saniyede bir yenilenir
   useEffect(() => {
-    fetchDashboardData();
-  }, []);
+    const fetchStats = async () => {
+      if (!token) return;
+      try {
+        const res = await api.get('/trade/admin-stats');
+        setFinancials(res.data);
+      } catch (e) { console.error("Stats API Hatası:", e.message); }
+    };
 
-  // --- 🧮 HESAPLAMA MOTORU (SENİN FORMÜLLERİN) ---
-  const stats = useMemo(() => {
-    const myAdminEmail = user?.email?.toLowerCase().trim();
+    fetchStats();
+    const interval = setInterval(fetchStats, 60000);
+    return () => clearInterval(interval);
+  }, [token]);
 
-    // 1. Senin Yatırımcılarını Filtrele
-    const myInvestors = allUsers.filter(u => u.danismanEmail?.toLowerCase().trim() === myAdminEmail);
+  // Grafik + fon listesi — filtre veya kullanıcı değişince yenilenir
+  useEffect(() => {
+    const fetchChartAndFunds = async () => {
+      if (!token) return;
+      try {
+        const res = await api.get(`/funds/history/${user?.managedFundCode || 'HSF'}?filter=${activeFilter}`);
+        setGrafikVerisi(res.data.map(item => ({ name: item.date, fiyat: item.price })));
+      } catch (e) { console.error("Grafik API Hatası:", e.message); }
 
-    // 2. Senin Yönettiğin Kısım (YÖNETİLEN FON TOPLAM DEĞERİ)
-    const mTotal = myInvestors.reduce((acc, inv) => acc + (Number(inv.suanDeger) || 0), 0);
-    const mPrincipal = myInvestors.reduce((acc, inv) => acc + (Number(inv.toplamYatirim) || 0), 0);
+      try {
+        const res = await api.get('/funds/all-details');
+        setFonListesi(res.data);
+      } catch (e) { console.error("Tablo API Hatası:", e.message); }
 
-    // Fon Kâr/Zarar: (Son Durum / Anapara) * 100
-    const mPL = mPrincipal > 0 ? (mTotal / mPrincipal) * 100 : 0;
+      setLoading(false);
+    };
 
-    // 3. Şirket Geneli (ŞİRKET FON BÜYÜKLÜĞÜ)
-    const cTotal = allUsers.reduce((acc, inv) => acc + (Number(inv.suanDeger) || 0), 0);
-    const cPrincipal = allUsers.reduce((acc, inv) => acc + (Number(inv.toplamYatirim) || 0), 0);
-    const cPL = cPrincipal > 0 ? (cTotal / cPrincipal) * 100 : 0;
+    fetchChartAndFunds();
+  }, [token, user, activeFilter]);
+  const formatXAxis = (tickItem) => {
+    if (!tickItem) return "";
+    const date = new Date(tickItem);
+    if (isNaN(date.getTime())) return tickItem;
 
-    return { managedTotal: mTotal, managedPL: mPL, companyTotal: cTotal, companyPL: cPL, myInvestors };
-  }, [allUsers, user?.email]);
-  const handleUpdatePrice = async () => {
-    if (!newPrice || newPrice <= 0) return alert("Geçerli bir fiyat gir kanka!");
-    try {
-      await axios.put(`http://localhost:8081/api/admin/update-fund-price?newPrice=${newPrice}`);
-      alert(`✅ Fiyat ${newPrice} ₺ olarak güncellendi!`);
-      setNewPrice("");
-      fetchDashboardData();
-    } catch (err) {
-      alert("Güncelleme başarısız!");
+    if (activeFilter === "1Y" || activeFilter === "6A") {
+      return date.toLocaleDateString('tr-TR', { month: 'short', year: '2-digit' });
     }
-  };
-
-  const chartOptions = {
-    responsive: true,
-    maintainAspectRatio: false,
-    layout: { padding: { left: 10, right: 25, top: 20, bottom: 10 } }, // Kenarlardan boşluk
-    plugins: {
-      legend: { display: false },
-      tooltip: { intersect: false, mode: 'index' }
-    },
-    scales: {
-      x: {
-        grid: { display: false },
-        ticks: {
-          autoSkip: true,
-          maxTicksLimit: 6, // 🚀 Sıkışıklığı önleyen en kritik ayar: Sadece 6 tarih göster
-          maxRotation: 0,
-          color: isDark ? '#94a3b8' : '#64748b',
-          font: { size: 11 }
-        }
-      },
-      y: {
-        position: 'right', // 📈 Borsalardaki gibi fiyatı sağa alalım, alan açılır
-        grid: { color: isDark ? 'rgba(255, 255, 255, 0.05)' : 'rgba(0, 0, 0, 0.05)' },
-        ticks: {
-          color: isDark ? '#94a3b8' : '#64748b',
-          callback: (value) => value.toLocaleString() + ' ₺'
-        }
-      }
+    if (activeFilter === "3A" || activeFilter === "1A") {
+      return date.toLocaleDateString('tr-TR', { day: '2-digit', month: 'short' });
     }
+    return date.toLocaleDateString('tr-TR', { weekday: 'short', day: 'numeric' });
   };
 
-  const chartDataValues = {
-    labels: filteredHistory.map(h => {
-      const d = new Date(h.recordedAt);
-      // 1 haftalıksa saati göster, değilse sadece günü göster (Ferahlık sağlar)
-      return timeRange === "1W"
-        ? d.toLocaleDateString('tr-TR', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' })
-        : d.toLocaleDateString('tr-TR', { day: '2-digit', month: '2-digit', year: '2-digit' });
-    }),
-    datasets: [{
-      label: "Birim Fiyat",
-      data: filteredHistory.map(h => h.price),
-      borderColor: "#10b981",
-      backgroundColor: "rgba(16, 185, 129, 0.1)",
-      fill: true,
-      tension: 0.3,
-      pointRadius: filteredHistory.length > 50 ? 0 : 4, // 🚀 Çok veri varsa noktaları gizle, çizgi kalsın
-      borderWidth: 2,
-    }]
+  const getTickInterval = () => {
+    const len = grafikVerisi.length;
+    if (len <= 7) return 0;
+    return Math.max(0, Math.ceil(len / 6) - 1);
   };
+
+const calculatePerc = (profit, total) => {
+    if (!total || total === 0 || profit === 0) return "0.00";
+    return ((profit / total) * 100).toFixed(2);
+};
+
+  if (loading) return <div className="loading-screen"><div className="spinner"></div><p>Gerçek Zamanlı Veriler Bağlanıyor...</p></div>;
+
   return (
-    <div className={`admin-wrapper ${isDark ? "dark" : ""}`}>
-      <AdminSidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
-
-      <main className={`admin-main ${isSidebarOpen ? "sidebar-open" : "sidebar-collapsed"}`}>
-        <header className="admin-header">
-          <div className="header-right">
-            <button className="theme-toggle" onClick={toggleTheme}>
-              {isDark ? "☀️ Light Mode" : "🌙 Dark Mode"}
-            </button>
-            <div className="user-profile">
-              <span>{user ? `${user.name} ${user.surname}` : "Admin"}</span>
-            </div>
-          </div>
-        </header>
-
+    <div className="admin-wrapper">
+      <AdminSidebar />
+      <main className="admin-main">
         <div className="admin-content">
-          <div className="stats-cards">
-            <div className="card">
-              <h4>Yönetilen Fon Toplam Değeri</h4>
-              {/* stats?.managedTotal şeklinde ? koyuyoruz ve undefined ise 0 yaz diyoruz */}
-              <p>{(stats?.managedTotal || 0).toLocaleString('tr-TR')} ₺</p>
-            </div>
-
-            <div className="card">
-              <h4>Şirket Fon Büyüklüğü</h4>
-              <p>{(stats?.companyTotal || 0).toLocaleString('tr-TR')} ₺</p>
-            </div>
-
-            <div className="card">
-              <h4>Fon Kâr/Zarar (%)</h4>
-              {/* toFixed öncesinde de değerin varlığını kontrol ediyoruz */}
-              <p className={(stats?.managedPL || 0) >= 100 ? "text-green" : "text-red"}>
-                %{(stats?.managedPL || 0).toFixed(2)}
-              </p>
-            </div>
-
-            <div className="card">
-              <h4>Şirket Kâr/Zarar (%)</h4>
-              <p className={(stats?.companyPL || 0) >= 100 ? "text-green" : "text-red"}>
-                %{(stats?.companyPL || 0).toFixed(2)}
-              </p>
-            </div>
+          
+          <div className="stats-grid">
+            {[
+              {
+                t: "Şirket Fon Büyüklüğü",
+                v: financials.sirketFonBuyuklugu,
+                c: "#4f46e5",
+                kzTl: financials.sirketKarZararTl,
+                kzPct: calculatePerc(financials.sirketKarZararTl, financials.sirketFonBuyuklugu)
+              },
+              {
+                t: "Şirket Kâr/Zarar",
+                v: financials.sirketKarZararTl,
+                p: calculatePerc(financials.sirketKarZararTl, financials.sirketFonBuyuklugu),
+                c: "#10b981"
+              },
+              {
+                t: `Fon Büyüklüğü (${user?.managedFundCode || 'HSF'})`,
+                v: financials.fonBuyuklugu,
+                c: "#6366f1",
+                kzTl: financials.fonKarZararTl,
+                kzPct: calculatePerc(financials.fonKarZararTl, financials.fonBuyuklugu)
+              },
+              {
+                t: "Fon Kâr/Zarar",
+                v: financials.fonKarZararTl,
+                p: calculatePerc(financials.fonKarZararTl, financials.fonBuyuklugu),
+                c: "#ef4444"
+              }
+            ].map((s, i) => (
+              <div key={i} className="stat-card" style={{ borderTop: `4px solid ${s.c}` }}>
+                <h3>{s.t}</h3>
+                <p className="stat-value">₺{s.v?.toLocaleString('tr-TR', { minimumFractionDigits: 2 })}</p>
+                {s.p && (
+                  <span className={parseFloat(s.p) >= 0 ? "text-profit" : "text-loss"}>
+                    {parseFloat(s.p) >= 0 ? '+' : ''}%{s.p}
+                  </span>
+                )}
+                {s.kzTl !== undefined && Number(s.kzTl) !== 0 && (
+                  <div style={{ marginTop: 8, display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'center' }}>
+                    <span style={{ fontSize: 12, fontWeight: 700, color: parseFloat(s.kzTl) >= 0 ? '#26a69a' : '#ef5350' }}>
+                      K/Z&nbsp;{parseFloat(s.kzTl) >= 0 ? '+' : ''}₺{Number(s.kzTl || 0).toLocaleString('tr-TR', { minimumFractionDigits: 2 })}
+                    </span>
+                    <span className={parseFloat(s.kzPct) >= 0 ? "text-profit" : "text-loss"}>
+                      {parseFloat(s.kzPct) >= 0 ? '▲' : '▼'} %{s.kzPct}
+                    </span>
+                  </div>
+                )}
+              </div>
+            ))}
           </div>
 
-          <div className="update-price-panel" style={{ backgroundColor: isDark ? '#1e293b' : 'white' }}>
-            <div>
-              <h3>⚡ Fon Birim Fiyatını Güncelle</h3>
-              <p>Mevcut Fiyat: <strong>{currentPrice} ₺</strong></p>
-            </div>
-            <div className="input-row">
-              <input
-                type="number"
-                value={newPrice}
-                onChange={(e) => setNewPrice(e.target.value)}
-                placeholder="Yeni Fiyat..."
-              />
-              <button onClick={handleUpdatePrice}>GÜNCELLE 🚀</button>
-            </div>
-          </div>
-          <div className="chart-container-wrapper">
-            <div className="chart-header">
-              <h3>📈 Fon Performansı</h3>
-              <div className="time-filters">
-                {["1W", "1M", "1Y", "3Y", "ALL"].map((range) => (
-                  <button
-                    key={range}
-                    className={timeRange === range ? "active" : ""}
-                    onClick={() => setTimeRange(range)}
-                  >
-                    {range === "ALL" ? "Tümü" : range}
+          <div className="chart-section">
+            <div className="chart-header-row">
+              <h3>{user?.managedFundCode || 'HSF'} - Portföy Değeri Gelişimi</h3>
+              <div className="time-filter-group">
+                {["1H", "1A", "3A", "6A", "1Y"].map((f) => (
+                  <button key={f} className={`filter-btn ${activeFilter === f ? 'active' : ''}`} onClick={() => setActiveFilter(f)}>
+                    {f}
                   </button>
                 ))}
               </div>
             </div>
 
-            <div className="chart-container" style={{ height: '400px' }}>
-              <Line data={chartDataValues} options={chartOptions} />
+            <div style={{ width: '100%', height: 350 }}>
+              <ResponsiveContainer>
+                <AreaChart data={grafikVerisi}>
+                  <defs>
+                    <linearGradient id="colorAdmin" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="5%" stopColor="#4f46e5" stopOpacity={0.3}/>
+                      <stop offset="95%" stopColor="#4f46e5" stopOpacity={0}/>
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" stroke="#2d3748" vertical={false} />
+                  <XAxis
+                    dataKey="name"
+                    stroke="#2d3748"
+                    tick={{ fontSize: 11, fill: '#94a3b8' }}
+                    tickMargin={8}
+                    tickFormatter={formatXAxis}
+                    interval={getTickInterval()}
+                    minTickGap={50}
+                    axisLine={{ stroke: '#2d3748' }}
+                    tickLine={false}
+                  />
+                  <YAxis
+                    stroke="#2d3748"
+                    tick={{ fontSize: 11, fill: '#94a3b8' }}
+                    tickFormatter={(v) => {
+                      if (v >= 1_000_000) return `₺${(v / 1_000_000).toFixed(1)}M`;
+                      if (v >= 1_000) return `₺${(v / 1_000).toFixed(1)}K`;
+                      return `₺${v.toFixed(2)}`;
+                    }}
+                    domain={['auto', 'auto']}
+                    width={75}
+                    axisLine={false}
+                    tickLine={false}
+                  />
+                  <Tooltip 
+  contentStyle={{ backgroundColor: '#161b2c', border: 'none', borderRadius: '10px', color: '#fff' }}
+  labelFormatter={(label) => new Date(label).toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' })}
+  formatter={(value) => [`₺${value.toLocaleString('tr-TR', { minimumFractionDigits: 2 })}`, "Birim Fiyat"]}
+/>
+                  <Area type="monotone" dataKey="fiyat" stroke="#4f46e5" fillOpacity={1} fill="url(#colorAdmin)" strokeWidth={3} />
+                </AreaChart>
+              </ResponsiveContainer>
             </div>
           </div>
 
-          <div className="table-card">
-            <h3>Şirket Genel İşlem Geçmişi</h3>
-            <div className="scrollable-table">
-              <table>
-                <thead>
-                  <tr>
-                    <th>TARİH</th>
-                    <th>MÜŞTERİ</th>
-                    <th>İŞLEM</th>
-                    <th>MİKTAR</th>
+          <div className="table-section">
+            <h3>Tüm Fonların Detaylı Durumu</h3>
+            <table className="fon-table">
+              <thead>
+                <tr>
+                  <th>Fon Adı</th>
+                  <th>Kâr/Zarar (%)</th>
+                  <th>Danışman</th>
+                  <th>Yatırımcı</th>
+                  <th>Birim Değer</th>
+                  <th>Toplam Lot</th>
+                </tr>
+              </thead>
+              <tbody>
+                {fonListesi.map((f, idx) => (
+                  <tr key={idx}>
+                    <td>{f.fundName}</td>
+                    <td className={f.profitLossPercentage >= 0 ? 'text-profit' : 'text-loss'}>
+                      {f.profitLossPercentage >= 0 ? '+' : ''}%{f.profitLossPercentage}
+                    </td>
+                    <td>{f.advisorCount}</td>
+                    <td>{f.investorCount}</td>
+                    <td>₺{f.currentPrice?.toFixed(2)}</td>
+                    <td>{f.totalLot?.toLocaleString('tr-TR')}</td>
                   </tr>
-                </thead>
-                <tbody>
-                  {historyLog.length > 0 ? (
-                    historyLog.map((log, i) => (
-                      <tr key={i}>
-                        <td>{new Date(log.transactionDate).toLocaleDateString('tr-TR')}</td>
-                        <td className="font-bold">{log.email}</td>
-                        <td>
-                          <span className={log.transactionType === 'DEPOSIT' ? "text-green" : "text-red"}>
-                            {log.transactionType === 'DEPOSIT' ? 'YATIRMA' : 'ÇEKME'}
-                          </span>
-                        </td>
-                        <td className="font-bold">{(log.amount || 0).toLocaleString()} ₺</td>
-                      </tr>
-                    ))
-                  ) : (
-                    <tr><td colSpan="4" style={{ textAlign: 'center' }}>İşlem kaydı bulunamadı.</td></tr>
-                  )}
-                </tbody>
-              </table>
-            </div>
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
       </main>

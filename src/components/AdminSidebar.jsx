@@ -1,66 +1,61 @@
-import React from "react";
-import { NavLink } from "react-router-dom";
-import {
-  MdDashboard,
-  MdPeople,
-  MdPersonAdd,
-  MdAttachMoney,
-  MdBarChart,
+import React from 'react';
+import { Link, useLocation } from 'react-router-dom';
+import { 
+  MdDashboard, 
+  MdSupportAgent, 
+  MdPeople, 
+  MdPersonAdd, 
+  MdSwapHoriz, 
+  MdPieChart, 
+  MdHistory, 
+  MdAssessment, 
   MdAccountCircle,
-  MdMenu,
-} from "react-icons/md"; // Daha uygun ikonlar
-import "./AdminSidebar.css";
+  MdLogout 
+} from 'react-icons/md';
+import './AdminSidebar.css';
 
-const AdminSidebar = ({ isOpen, toggleSidebar }) => {
+const AdminSidebar = () => {
+  const location = useLocation();
+
+  const menuItems = [
+    { path: '/admin-anasayfa', name: 'Ana Sayfa', icon: <MdDashboard /> },
+    { path: '/danismanlar', name: 'Danışmanlar', icon: <MdSupportAgent /> },
+    { path: '/yatirimcilar', name: 'Yatırımcılar', icon: <MdPeople /> },
+    { path: '/yatirimci-istekleri', name: 'İstekler', icon: <MdPersonAdd /> },
+    { path: '/islem-sayfasi', name: 'İşlem Sayfası', icon: <MdSwapHoriz /> },
+    { path: '/yonetici-fon', name: 'Fonlar', icon: <MdPieChart /> },
+    { path: '/yonetici-islem-gecmisi', name: 'İşlem Geçmişi', icon: <MdHistory /> },
+    { path: '/raporlama', name: 'Raporlama', icon: <MdAssessment /> },
+    { path: '/profil', name: 'Profil', icon: <MdAccountCircle /> },
+  ];
+
   return (
-    <aside className={`sidebar ${isOpen ? "open" : "collapsed"}`}>
-      <div className="sidebar-header">
-        <h2 className="sidebar-title">{isOpen ? "QuantShine" : "QS"}</h2>
-        <button className="sidebar-toggle" onClick={toggleSidebar}>
-          <MdMenu />
-        </button>
+    <div className="admin-sidebar">
+      <div className="sidebar-logo">
+        <h2>Quant&Shine</h2>
+        <span>Yönetim Paneli</span>
       </div>
+      
       <nav className="sidebar-nav">
-        <ul>
-          <li>
-            <NavLink to="/admin-anasayfa">
-              <MdDashboard className="icon" />
-              {isOpen && <span>Ana Sayfa</span>}
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to="/yatirimcilar">
-              <MdPeople className="icon" />
-              {isOpen && <span>Yatırımcılar</span>}
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to="/yatirimci-ekle-cikar">
-              <MdPersonAdd className="icon" />
-              {isOpen && <span>Yatırımcı Ekle/Çıkar</span>}
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to="/islem-sayfasi">
-              <MdAttachMoney className="icon" />
-              {isOpen && <span>İşlem Sayfası</span>}
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to="/raporlama">
-              <MdBarChart className="icon" />
-              {isOpen && <span>Raporlama</span>}
-            </NavLink>
-          </li>
-          <li>
-            <NavLink to="/profil">
-              <MdAccountCircle className="icon" />
-              {isOpen && <span>Profil</span>}
-            </NavLink>
-          </li>
-        </ul>
+        {menuItems.map((item) => (
+          <Link 
+            key={item.path} 
+            to={item.path} 
+            className={`nav-item ${location.pathname === item.path ? 'active' : ''}`}
+          >
+            <span className="nav-icon">{item.icon}</span>
+            <span className="nav-text">{item.name}</span>
+          </Link>
+        ))}
       </nav>
-    </aside>
+
+      <div className="sidebar-footer">
+              <Link to="/" className="nav-item logout-btn">
+                <span className="nav-icon"><MdLogout /></span>
+                <span className="nav-text">Çıkış Yap</span>
+              </Link>
+            </div>
+    </div>
   );
 };
 

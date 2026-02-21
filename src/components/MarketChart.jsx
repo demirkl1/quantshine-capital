@@ -1,198 +1,130 @@
-import React, { useEffect, useState } from 'react';
-import {
-    AreaChart,
-    Area,
-    XAxis,
-    YAxis,
-    Tooltip,
-    ResponsiveContainer,
-    CartesianGrid
-} from 'recharts';
+import React, { useState } from 'react';
+
+const SYMBOLS = [
+    { id: 'FX_IDC:USDTRY',  label: 'USD/TRY'     },
+    { id: 'FX_IDC:EURTRY',  label: 'EUR/TRY'     },
+    { id: 'TVC:GOLD',       label: 'Altın (ONS)' },
+    { id: 'BIST:XU100',     label: 'BIST 100'    },
+    { id: 'BIST:THYAO',     label: 'THY'          },
+    { id: 'TVC:SILVER',     label: 'Gümüş'       },
+];
+
+const btnStyle = (isActive) => ({
+    backgroundColor: isActive ? '#2962ff' : 'rgba(255,255,255,0.05)',
+    color:           isActive ? '#ffffff'  : '#94a3b8',
+    border:          isActive ? 'none'     : '1px solid #334155',
+    padding:         '7px 16px',
+    borderRadius:    '8px',
+    cursor:          'pointer',
+    fontSize:        '0.83rem',
+    fontWeight:      '600',
+    transition:      'all 0.2s ease',
+    whiteSpace:      'nowrap',
+    fontFamily:      "'JetBrains Mono', monospace",
+    flexShrink:      0,
+});
+
+const getChartHtml = (symbolId) => `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { height: 100%; background: #131722; overflow: hidden; }
+    .tradingview-widget-container { height: 100%; width: 100%; }
+    .tradingview-widget-container__widget { height: 100%; width: 100%; }
+  </style>
+</head>
+<body>
+  <div class="tradingview-widget-container">
+    <div class="tradingview-widget-container__widget"></div>
+    <script type="text/javascript"
+      src="https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js"
+      async>
+    {
+      "autosize": true,
+      "symbol": "${symbolId}",
+      "interval": "D",
+      "timezone": "Europe/Istanbul",
+      "theme": "dark",
+      "style": "1",
+      "locale": "tr",
+      "enable_publishing": false,
+      "allow_symbol_change": false,
+      "hide_side_toolbar": false,
+      "save_image": false,
+      "calendar": false,
+      "hide_volume": false,
+      "backgroundColor": "rgba(19,23,34,1)",
+      "gridColor": "rgba(42,46,57,0.8)",
+      "support_host": "https://www.tradingview.com"
+    }
+    </script>
+  </div>
+</body>
+</html>`;
+
+const CHART_HEIGHT = 580;
 
 const MarketChart = () => {
-    // State Tanımları
-    const [activeSymbol, setActiveSymbol] = useState("USD");
-    const [days, setDays] = useState(30); // Varsayılan 30 Gün
-    const [data, setData] = useState([]);
-    const [loading, setLoading] = useState(false);
-
-    // Veri Çekme Fonksiyonu
-    useEffect(() => {
-        const fetchData = async () => {
-            setLoading(true);
-            try {
-                // Backend'den veriyi çek (Parametreler: symbol ve days)
-                const response = await fetch(`http://localhost:8081/api/market/history/${activeSymbol}?days=${days}`);
-                const jsonData = await response.json();
-
-                // Backend Map dönüyor, bunu Recharts için Array'e çeviriyoruz
-                const formattedData = Object.entries(jsonData)
-                    .map(([date, price]) => ({
-                        date: date,
-                        price: price
-                    }))
-                    // Tarihe göre eskiden yeniye sırala (Garanti olsun)
-                    .sort((a, b) => new Date(a.date) - new Date(b.date));
-
-                setData(formattedData);
-            } catch (error) {
-                console.error("Grafik verisi alınamadı:", error);
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        fetchData();
-    }, [activeSymbol, days]); // Sembol veya Gün değişince yeniden çek
-
-    // Buton Stilleri (Dinamik)
-    const btnStyle = (isActive) => ({
-        backgroundColor: isActive ? '#38bdf8' : 'rgba(255, 255, 255, 0.05)',
-        color: isActive ? '#0f172a' : '#94a3b8',
-        border: isActive ? 'none' : '1px solid #334155',
-        padding: '6px 16px',
-        borderRadius: '8px',
-        cursor: 'pointer',
-        fontSize: '0.85rem',
-        fontWeight: '600',
-        transition: 'all 0.2s ease',
-        marginRight: '8px',
-        whiteSpace: 'nowrap' // Yazıların alt satıra düşmesini engeller
-    });
+    const [activeSym, setActiveSym] = useState(SYMBOLS[0]);
 
     return (
         <div style={{
-            width: '100%',
-            backgroundColor: '#1e293b', // Koyu Arkaplan (Slate-800)
-            padding: '24px',
-            borderRadius: '16px',
-            boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)'
+            width:           '100%',
+            backgroundColor: '#0d1117',
+            borderRadius:    '12px',
+            border:          '1px solid #2a2e39',
+            overflow:        'hidden',
         }}>
-
-            {/* Üst Panel: Başlık ve Butonlar */}
+            {/* Sembol seçici */}
             <div style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                marginBottom: '24px',
-                flexWrap: 'wrap',
-                gap: '16px'
+                display:         'flex',
+                overflowX:       'auto',
+                gap:             '8px',
+                padding:         '14px 16px',
+                backgroundColor: '#161b22',
+                borderBottom:    '1px solid #2a2e39',
             }}>
-                {/* Sol: Döviz/Enstrüman Seçimi (SCROLL EKLENDİ) */}
-                <div style={{
-                    display: 'flex',
-                    overflowX: 'auto', // Butonlar sığmazsa kaydırılsın
-                    paddingBottom: '5px', // Scrollbar için biraz boşluk
-                    maxWidth: '100%',
-                    gap: '5px' // Butonlar arası boşluk
-                }} className="custom-scrollbar"> {/* CSS dosyan varsa scrollbar'ı özelleştirebilirsin */}
-
-                    {/* YENİ LİSTE: Altın, BTC, BIST ve THY eklendi */}
-                    {[
-                        { id: 'USD', label: 'USD/TRY' },
-                        { id: 'EUR', label: 'EUR/TRY' },
-                        { id: 'GOLD', label: 'Altın (ONS)' },
-                        { id: 'BIST', label: 'BIST 100' },
-                        { id: 'THYAO', label: 'THY' }
-                    ].map((item) => (
-                        <button
-                            key={item.id}
-                            onClick={() => setActiveSymbol(item.id)}
-                            style={btnStyle(activeSymbol === item.id)}
-                        >
-                            {item.label}
-                        </button>
-                    ))}
-                </div>
-
-                {/* Sağ: Zaman Aralığı */}
-                <div style={{ display: 'flex', flexShrink: 0 }}>
-                    {[
-                        { label: '1 Hafta', val: 7 },
-                        { label: '1 Ay', val: 30 },
-                        { label: '3 Ay', val: 90 },
-                        { label: '1 Yıl', val: 365 }
-                    ].map((item) => (
-                        <button
-                            key={item.val}
-                            onClick={() => setDays(item.val)}
-                            style={btnStyle(days === item.val)}
-                        >
-                            {item.label}
-                        </button>
-                    ))}
-                </div>
+                {SYMBOLS.map(sym => (
+                    <button
+                        key={sym.id}
+                        onClick={() => setActiveSym(sym)}
+                        style={btnStyle(activeSym.id === sym.id)}
+                    >
+                        {sym.label}
+                    </button>
+                ))}
             </div>
 
-            {/* Grafik Alanı */}
-            <div style={{ height: 350, position: 'relative' }}>
+            {/* TradingView Grafik — key ile sembol değişince iframe yeniden yüklenir */}
+            <iframe
+                key={activeSym.id}
+                srcDoc={getChartHtml(activeSym.id)}
+                frameBorder="0"
+                scrolling="no"
+                style={{
+                    width:   '100%',
+                    height:  `${CHART_HEIGHT}px`,
+                    border:  'none',
+                    display: 'block',
+                }}
+                title="Piyasa Grafiği"
+            />
 
-                {/* Yükleniyor Ekranı */}
-                {loading && (
-                    <div style={{
-                        position: 'absolute', inset: 0,
-                        display: 'flex', alignItems: 'center', justifyContent: 'center',
-                        backgroundColor: 'rgba(30, 41, 59, 0.7)', zIndex: 10,
-                        color: '#38bdf8', fontWeight: 'bold', borderRadius: '8px'
-                    }}>
-                        Veriler Yükleniyor...
-                    </div>
-                )}
-
-                <ResponsiveContainer width="100%" height="100%">
-                    <AreaChart data={data} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
-                        <defs>
-                            <linearGradient id="colorPrice" x1="0" y1="0" x2="0" y2="1">
-                                <stop offset="5%" stopColor="#38bdf8" stopOpacity={0.4} />
-                                <stop offset="95%" stopColor="#38bdf8" stopOpacity={0} />
-                            </linearGradient>
-                        </defs>
-
-                        <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false} />
-
-                        <XAxis
-                            dataKey="date"
-                            stroke="#94a3b8"
-                            tick={{ fontSize: 12 }}
-                            minTickGap={30} // Tarihlerin üst üste binmesini engeller
-                            tickFormatter={(str) => {
-                                const d = new Date(str);
-                                return `${d.getDate()}/${d.getMonth() + 1}`;
-                            }}
-                        />
-
-                        <YAxis
-                            stroke="#94a3b8"
-                            tick={{ fontSize: 12 }}
-                            domain={['dataMin', 'dataMax']} // Grafiği veriye göre odaklar (boşluğu alır)
-                            tickFormatter={(number) => `${number.toFixed(2)}`}
-                        />
-
-                        <Tooltip
-                            contentStyle={{
-                                backgroundColor: '#0f172a',
-                                border: '1px solid #334155',
-                                borderRadius: '8px',
-                                color: '#f8fafc'
-                            }}
-                            itemStyle={{ color: '#38bdf8' }}
-                            formatter={(value) => [`${value} ${activeSymbol === 'USD' || activeSymbol === 'EUR' ? '₺' : ''}`, activeSymbol]}
-                            labelFormatter={(label) => new Date(label).toLocaleDateString('tr-TR', {
-                                year: 'numeric', month: 'long', day: 'numeric'
-                            })}
-                        />
-
-                        <Area
-                            type="monotone"
-                            dataKey="price"
-                            stroke="#38bdf8"
-                            strokeWidth={3}
-                            fillOpacity={1}
-                            fill="url(#colorPrice)"
-                            activeDot={{ r: 6, strokeWidth: 0 }}
-                        />
-                    </AreaChart>
-                </ResponsiveContainer>
+            {/* Alt bilgi */}
+            <div style={{
+                display:         'flex',
+                justifyContent:  'space-between',
+                padding:         '8px 16px',
+                backgroundColor: '#161b22',
+                borderTop:       '1px solid #2a2e39',
+                fontSize:        '10px',
+                color:           '#434651',
+                fontFamily:      "'JetBrains Mono', monospace",
+            }}>
+                <span>Kaynak: TradingView</span>
+                <span>Gecikmeli veri · Yatırım tavsiyesi değildir</span>
             </div>
         </div>
     );

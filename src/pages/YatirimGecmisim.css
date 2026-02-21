@@ -1,0 +1,105 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&display=swap');
+
+.admin-wrapper {
+  display: flex;
+  background-color: #0e1117;
+  min-height: 100vh;
+  color: #d1d4dc;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+}
+
+.admin-main {
+  flex: 1;
+  padding: 20px 24px;
+  box-sizing: border-box;
+}
+
+.page-header h1 {
+  color: #ffffff;
+  font-size: 1.3rem;
+  margin-bottom: 6px;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.page-header p {
+  color: #787b86;
+  margin-bottom: 20px;
+  font-size: 12px;
+}
+
+.history-table-container {
+  background: #131722;
+  border-radius: 8px;
+  padding: 20px;
+  border: 1px solid #2a2e39;
+  overflow-x: auto;
+}
+
+.history-table-container::-webkit-scrollbar { height: 6px; }
+.history-table-container::-webkit-scrollbar-thumb { background: #2a2e39; border-radius: 3px; }
+
+.custom-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.custom-table th {
+  color: #787b86;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 10px;
+  padding: 8px 12px;
+  text-align: left;
+  border-bottom: 1px solid #2a2e39;
+}
+
+.custom-table tbody tr {
+  transition: background 0.1s;
+  border-bottom: none;
+}
+
+.custom-table tbody tr:hover {
+  background: rgba(41, 98, 255, 0.06);
+}
+
+.custom-table td {
+  padding: 9px 12px;
+  color: #d1d4dc;
+  font-size: 12px;
+  font-family: 'JetBrains Mono', monospace;
+  border-bottom: 1px solid #434651;
+}
+
+/* İşlem Rozetleri */
+.status-badge {
+  padding: 2px 8px;
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: 700;
+  display: inline-block;
+  text-align: center;
+  min-width: 50px;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.status-badge.buy {
+  background: rgba(38, 166, 154, 0.12);
+  color: #26a69a;
+}
+
+.status-badge.sell {
+  background: rgba(239, 83, 80, 0.12);
+  color: #ef5350;
+}
+
+.date-cell {
+  color: #787b86 !important;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.text-highlight { color: #2962ff !important; font-weight: 700; }
+.text-profit { color: #26a69a !important; font-weight: 700; }
+.text-loss { color: #ef5350 !important; font-weight: 700; }
+.text-white { color: #ffffff !important; }
+.font-bold { font-weight: 700; }

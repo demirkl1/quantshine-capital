@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import api from '../api';
+import toast from 'react-hot-toast';
 import "./YatırımcıEkleÇıkar.css";
 import { useAuth } from "../context/AuthContext";
 import { useTheme } from "../context/ThemeContext";
@@ -23,7 +24,7 @@ const YatırımcıEkleÇıkar = () => {
 
   const [selectedInvestor, setSelectedInvestor] = useState(null);
   const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false);
-  const [withdrawAmount, setWithdrawAmount] = useState(""); // 🚀 Para çekme miktarı için
+  const [withdrawAmount, setWithdrawAmount] = useState("");
   const openWithdrawModal = (targetInvestor) => {
     setSelectedInvestor(targetInvestor);
     setIsWithdrawModalOpen(true);
@@ -32,24 +33,14 @@ const YatırımcıEkleÇıkar = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [fundPrice, setFundPrice] = useState(1);
 
-  const currentAdminId = localStorage.getItem('userId');
-  const currentAdminEmail = localStorage.getItem('userEmail');
-
   // --- VERİ ÇEKME FONKSİYONLARI ---
 
   const fetchFundInfo = async () => {
     try {
-      // 🚀 Cache engellemek için timestamp ekliyoruz
-      const response = await axios.get(`http://localhost:8081/api/admin/fund-info?t=${new Date().getTime()}`);
-
-      // Backend'den gelen veriyi konsolda görelim
-      console.log("Backend'den gelen ham veri:", response.data);
+      const response = await api.get(`/admin/fund-info?t=${new Date().getTime()}`);
 
       const rawPrice = response.data.currentPrice !== undefined ? response.data.currentPrice : response.data;
-      const finalPrice = Number(rawPrice);
-
-      setFundPrice(finalPrice);
-      console.log("State güncellendi. Yeni Fiyat:", finalPrice);
+      setFundPrice(Number(rawPrice));
     } catch (err) {
       console.error("Fiyat çekilemedi:", err);
     }
@@ -58,7 +49,7 @@ const YatırımcıEkleÇıkar = () => {
   const fetchPendingUsers = async () => {
     try {
       setLoading(true);
-      const response = await axios.get("http://localhost:8081/api/admin/pending");
+      const response = await api.get('/admin/pending');
       setIstekler(response.data);
     } catch (err) {
       console.error("Bekleyen kullanıcılar yüklenemedi:", err);
@@ -68,22 +59,19 @@ const YatırımcıEkleÇıkar = () => {
   };
 
   const fetchOtherAdmins = async () => {
-    if (!currentAdminId) return;
+    if (!user) return;
     try {
-      const response = await axios.get(`http://localhost:8081/api/admin/list-others`, {
-        params: { currentAdminId: currentAdminId }
-      });
+      const response = await api.get('/admin/list-others');
       setOtherAdvisors(response.data);
     } catch (err) {
       console.error("Admin listesi çekilemedi:", err);
     }
   };
 
-  // 🚀 KRİTİK DÜZELTME: Bağımlılık dizisini temizledik. Sonsuz döngü bitti.
   useEffect(() => {
     fetchPendingUsers();
     fetchFundInfo();
-    if (currentAdminEmail) {
+    if (user) {
       fetchMyInvestors();
       fetchOtherAdmins();
     }
@@ -92,22 +80,19 @@ const YatırımcıEkleÇıkar = () => {
 
   const openInvestModal = (inv) => {
     setSelectedInvestor(inv);
-    fetchFundInfo(); // 🚀 Modal her açıldığında fiyatı tazele
+    fetchFundInfo();
     setIsModalOpen(true);
   };
 
   const handleUpdateAssets = async (email, amount) => {
-    if (!amount || amount <= 0) return alert("Lütfen geçerli bir miktar girin!");
+    if (!amount || amount <= 0) { toast.error("Lütfen geçerli bir miktar girin!"); return; }
 
     try {
-      const response = await axios.put(`http://localhost:8081/api/admin/update-assets-by-email`, null, {
-        params: {
-          email: email,
-          depositAmount: amount
-        }
+      const response = await api.put('/admin/update-assets-by-email', null, {
+        params: { email: email, depositAmount: amount }
       });
 
-      alert("✅ Bakiye Başarıyla Güncellendi!");
+      toast.success("Bakiye başarıyla güncellendi!");
 
       // Modal'ı kapat ve verileri temizle
       setIsModalOpen(false);
@@ -116,69 +101,64 @@ const YatırımcıEkleÇıkar = () => {
 
     } catch (err) {
       console.error("Güncelleme Hatası:", err);
-      alert("Hata: " + (err.response?.data || "Sunucu hatası"));
+      toast.error("Hata: " + (err.response?.data || "Sunucu hatası"));
     }
   };
 
   const handleDecision = async (investorId, status) => {
     try {
-      await axios.put(`http://localhost:8081/api/admin/decision/${investorId}`, null, {
-        params: { status: status, currentAdminId: currentAdminId }
+      await api.put(`/admin/decision/${investorId}`, null, {
+        params: { status: status }
       });
-      alert(status === 'ACCEPTED' ? "✅ Onaylandı!" : "❌ Reddedildi!");
+      status === 'ACCEPTED' ? toast.success("Onaylandı!") : toast.error("Reddedildi!");
       setIstekler(istekler.filter((i) => i.id !== investorId));
       fetchMyInvestors();
     } catch (err) {
-      alert("Hata!");
+      toast.error("İşlem başarısız!");
     }
   };
   const handleWithdraw = async (email, amount) => {
-    if (!amount || amount <= 0) return alert("Lütfen miktar girin!");
+    if (!amount || amount <= 0) { toast.error("Lütfen miktar girin!"); return; }
     try {
-      const response = await axios.put(`http://localhost:8081/api/admin/withdraw-assets-by-email`, null, {
+      const response = await api.put('/admin/withdraw-assets-by-email', null, {
         params: { email: email, withdrawAmount: amount }
-      }); // ✅ api/auth yerine api/admin yaptık!
+      });
 
       if (response.status === 200) {
-        alert("✅ İşlem Başarılı!");
+        toast.success("İşlem başarılı!");
         setIsWithdrawModalOpen(false);
-        fetchMyInvestors(); // ✅ Tabloyu yeniliyoruz
+        fetchMyInvestors();
       }
     } catch (error) {
-      alert("❌ Hata: " + (error.response?.data || "İşlem başarısız"));
+      toast.error("Hata: " + (error.response?.data?.error || error.response?.data?.message || "İşlem başarısız"));
     }
   };
-  // 🚀 1. Yatırımcı listesini çeken fonksiyonu düzelt
   const fetchMyInvestors = async () => {
     try {
-      const response = await axios.get(`http://localhost:8081/api/admin/my-investors`, {
-        params: { adminEmail: currentAdminEmail }
-      });
-      setMyInvestors(response.data); // ✅ setInvestors değil setMyInvestors!
+      const response = await api.get('/admin/my-investors');
+      setMyInvestors(response.data);
     } catch (err) {
       console.error("Liste yüklenemedi:", err);
     }
   };
-  // 🚀 Seçilen admini state'e kaydeden fonksiyon
   const handleSelectChange = (investorId, value) => {
     setTransferSelections(prev => ({ ...prev, [investorId]: value }));
   };
 
-  // 🚀 Transfer işlemini başlatan fonksiyon
   const handleTransfer = async (investorId) => {
     const targetAdminId = transferSelections[investorId];
-    if (!targetAdminId) return alert("Lütfen transfer edilecek admini seçiniz!");
+    if (!targetAdminId) { toast.error("Lütfen transfer edilecek admini seçiniz!"); return; }
 
     try {
-      await axios.put(`http://localhost:8081/api/admin/transfer/${investorId}`, null, {
+      await api.put(`/admin/transfer/${investorId}`, null, {
         params: { newAdminId: targetAdminId }
       });
-      alert("✈️ Transfer Başarılı!");
+      toast.success("Transfer başarılı!");
       // Listeyi güncelle (Transfer edilen yatırımcıyı listeden çıkar)
       setMyInvestors(myInvestors.filter(inv => inv.id !== investorId));
     } catch (err) {
       console.error("Transfer hatası:", err);
-      alert("Transfer işlemi başarısız oldu.");
+      toast.error("Transfer işlemi başarısız oldu.");
     }
   };
 
@@ -204,8 +184,12 @@ const YatırımcıEkleÇıkar = () => {
               {isDark ? "☀️ Light Mode" : "🌙 Dark Mode"}
             </button>
             <div className="user-profile">
-              <img src="https://i.pravatar.cc/40" alt="Avatar" className="avatar" />
-              <span>{user?.ad} {user?.soyad}</span>
+              <div className="avatar-initials">
+                {user?.name
+                  ? user.name.split(' ').filter(Boolean).map(n => n[0]).slice(0, 2).join('').toUpperCase()
+                  : 'Q'}
+              </div>
+              <span>{user?.name}</span>
             </div>
           </div>
         </header>
@@ -272,7 +256,6 @@ const YatırımcıEkleÇıkar = () => {
                       </td>
                       <td>{(inv.suanDeger || 0).toLocaleString()} ₺</td>
                       <td>
-                        {/* 🚀 ComboBox buraya geri eklendi */}
                         <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
                           <select
                             style={{
@@ -357,7 +340,7 @@ const YatırımcıEkleÇıkar = () => {
                   </button>
                   <button
                     className="btn-withdraw"
-                    onClick={() => openWithdrawModal(selectedInvestor)} // 🚀 'inv' yerine 'selectedInvestor'
+                    onClick={() => openWithdrawModal(selectedInvestor)}
                     style={{ backgroundColor: '#ef4444', color: 'white', padding: '5px 10px', borderRadius: '5px', cursor: 'pointer' }}
                   >
                     Para Çek

@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import api from '../api';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { jwtDecode } from 'jwt-decode';
 import './LoginModal.css';
 
 const LoginModal = ({ isOpen, onClose }) => {
@@ -10,7 +11,7 @@ const LoginModal = ({ isOpen, onClose }) => {
 
   const [formData, setFormData] = useState({
     email: '',
-    sifre: ''
+    password: ''
   });
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
@@ -26,56 +27,35 @@ const LoginModal = ({ isOpen, onClose }) => {
 const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setMessage('');
-    setErrorMessage('');
-
     try {
-        const response = await axios.post(
-            'http://localhost:8081/api/auth/login', // Portu backend ile eşle
-            formData,
-            { headers: { 'Content-Type': 'application/json' } }
-        );
+        const res = await api.post('/auth/login', formData);
+        
+        // 1. Context Login çağır (LocalStorage'a yazar ve state'i günceller)
+        login(res.data); 
 
-        const data = response.data;
-        console.log('✅ Giriş başarılı:', data);
-
-        // ✅ AuthContext'teki login fonksiyonunu çağırıyoruz.
-        // Bu fonksiyon hem state'i günceller hem localStorage'a yazar.
-        login(data); 
-
-        setMessage('✅ Giriş başarılı! Yönlendiriliyorsunuz...');
-
+        // 2. Rol kontrolü ve yönlendirme
+        const roles = jwtDecode(res.data.access_token).realm_access?.roles || [];
+        
         setTimeout(() => {
             onClose();
-            // Rol bazlı yönlendirme (data içindeki isAdmin veya admin kontrolü)
-            if (data.isAdmin === true || data.admin === true) {
-                navigate('/admin-anasayfa');
+            if (roles.includes('ADMIN')) {
+                navigate('/admin-anasayfa'); // Veya istediğin admin sayfası
+            } else if (roles.includes('ADVISOR')) {
+                navigate('/danisman-anasayfa'); // Demir artık buraya gidecek!
             } else {
-                navigate('/portfoyum');
+                navigate('/yatirimci-anasayfa'); // Sadece investor olanlar buraya
             }
-        }, 1200);
-
-    } catch (error) {
-      console.error('❌ Login hatası:', error);
-
-      if (error.response) {
-        const backendMessage = error.response.data?.message || 'Giriş bilgileri hatalı.';
-        setErrorMessage(`Hata: ${backendMessage}`);
-      } else if (error.request) {
-        setErrorMessage('Sunucuya ulaşılamıyor. Lütfen backend\'in çalıştığından emin olun.');
-      } else {
-        setErrorMessage('Beklenmeyen bir hata oluştu.');
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
+        }, 500);
+    } catch (err) {
+        setErrorMessage("Giriş bilgileri hatalı.");
+    } finally { setLoading(false); }
+};
 
   return (
     <div className="modal-overlay">
       <div className="modal-content">
         <button className="modal-close-btn" onClick={onClose}>&times;</button>
-        <h2 className="modal-title">Giriş Yap</h2>
+        <h2 className="modal-title">QuantShine Capital'e Giriş Yap</h2>
 
         {message && <div className="message-box success">{message}</div>}
         {errorMessage && <div className="message-box error">{errorMessage}</div>}
@@ -90,6 +70,7 @@ const handleSubmit = async (e) => {
               value={formData.email}
               onChange={handleChange}
               required
+              placeholder="örnek@quantshine.com"
             />
           </div>
 
@@ -97,16 +78,16 @@ const handleSubmit = async (e) => {
             <label htmlFor="password">Şifre</label>
             <input
               type="password"
-              id="sifre"
-              name="sifre"
-              value={formData.sifre}
+              id="password"
+              name="password"
+              value={formData.password}
               onChange={handleChange}
               required
             />
           </div>
 
           <button type="submit" className="btn primary login-btn" disabled={loading}>
-            {loading ? 'Yükleniyor...' : 'Giriş Yap'}
+            {loading ? 'Sistem Kontrol Ediliyor...' : 'Giriş Yap'}
           </button>
         </form>
       </div>

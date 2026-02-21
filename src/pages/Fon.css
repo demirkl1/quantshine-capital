@@ -1,67 +1,179 @@
-body {
-  margin: 0;
-  padding: 0;
-  font-family: Arial, sans-serif;
-  background-color: #f4f6fa;
-  color: #0a0f2c;
-}
+/* src/pages/Fon.css */
 
 .fund-container {
-  padding: 20px;
-  max-width: 1600px;
-  margin: auto;
+  padding: 120px 5% 80px;
+  background-color: #0b0e14;
+  min-height: 100vh;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+}
+
+/* Sayfa başlığı */
+.fund-page-header {
+  text-align: center;
+  margin-bottom: 40px;
 }
 
 .fund-container h1 {
-  font-size: 24px;
-  font-weight: bold;
-  margin-bottom: 20px;
+  color: #ffffff;
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin-bottom: 12px;
+  letter-spacing: -1px;
+}
+
+.fund-page-sub {
+  color: #64748b;
+  font-size: 0.95rem;
+  max-width: 600px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* Yükleniyor */
+.fund-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 80px 0;
+  color: #787b86;
+  font-size: 0.9rem;
+}
+
+/* Spinner */
+.fund-spinner {
+  width: 36px;
+  height: 36px;
+  border: 3px solid rgba(41, 98, 255, 0.2);
+  border-top-color: #2962ff;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Hata kutusu */
+.fund-error {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  padding: 40px;
+  background: rgba(239, 83, 80, 0.08);
+  border: 1px solid rgba(239, 83, 80, 0.3);
+  border-radius: 12px;
+  color: #ef5350;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.retry-btn {
+  background: rgba(239, 83, 80, 0.15);
+  border: 1px solid rgba(239, 83, 80, 0.4);
+  color: #ef5350;
+  padding: 8px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-family: inherit;
+  transition: all 0.2s;
+}
+
+.retry-btn:hover {
+  background: rgba(239, 83, 80, 0.25);
+}
+
+/* Boş liste */
+.fund-empty {
+  text-align: center;
+  color: #64748b;
+  padding: 60px 0;
+  font-size: 0.95rem;
+}
+
+/* Son güncelleme */
+.fund-timestamp {
+  text-align: right;
+  color: #334155;
+  font-size: 0.75rem;
+  margin-top: 12px;
+}
+
+/* Fiyat sütunu */
+.price-cell {
+  font-family: 'JetBrains Mono', monospace;
+  color: #cbd5e1;
+}
+
+/* Tablo Kapsayıcı (Responsive) */
+.table-wrapper {
+  overflow-x: auto;
+  background: rgba(17, 22, 35, 0.6);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
 }
 
 .fund-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 12px;
-  background-color: white;
-  border-radius: 8px;
-  overflow: hidden;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-  table-layout: fixed;
-}
-
-.fund-table thead {
-  background-color: #0a1f5c; /* koyu mavi başlık */
-  color: white;
-}
-
-.fund-table th {
-  white-space: normal;   /* tek satıra sıkıştırma, alt satıra geçir */
-  word-break: break-word; /* kelimeyi böl */
-  font-weight: 600;
-  padding: 10px;
-}
-.fund-table td {
-  padding: 8px 10px;
+  color: #cbd5e1; /* Okunabilir açık gri */
+  font-size: 0.9rem;
   text-align: left;
+}
+
+/* Başlık Alanı */
+.fund-table th {
+  background: rgba(30, 64, 175, 0.3); /* Lacivert tonlu başlık */
+  color: #ffffff;
+  padding: 20px 15px;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+  letter-spacing: 1px;
+  border-bottom: 2px solid rgba(59, 130, 246, 0.3);
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis; /* Uzun yazılar "..." olur */
-  white-space: nowrap;
 }
 
-.fund-table tbody tr.even {
-  background-color: #ffffff; /* beyaz satır */
+/* Satırlar */
+.fund-table td {
+  padding: 18px 15px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  transition: all 0.2s ease;
 }
 
-.fund-table tbody tr.odd {
-  background-color: #f2f4f8; /* gri satır */
-}
-
-.fund-table tbody tr:hover {
-  background-color: #e6eefc; /* hover efekti */
+.fund-table tr {
   cursor: pointer;
 }
 
-.fund-table th {
-  font-weight: 600;
+.fund-table tr:hover {
+  background: rgba(59, 130, 246, 0.1) !important;
+  transform: scale(1.002);
 }
+
+/* Fon Kodu Vurgusu */
+.fund-code {
+  color: #3b82f6;
+  font-weight: 800;
+}
+
+/* Risk Seviyesi Renklendirme */
+.risk-badge {
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-weight: 700;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.risk-high { color: #ef4444; } /* Yüksek risk kırmızı */
+.risk-mid { color: #f59e0b; }  /* Orta risk turuncu */
+
+/* Getiri Renkleri */
+.positive { color: #10b981; font-weight: 600; } /* Artış Yeşil */
+.negative { color: #ef4444; font-weight: 600; } /* Azalış Kırmızı */
+
+/* Özel sütun genişlikleri */
+.col-name { min-width: 250px; color: #ffffff; }
