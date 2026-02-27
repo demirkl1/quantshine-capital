@@ -1,21 +1,36 @@
-# 1. Aşama: Build
-FROM node:18-alpine as build
+# =============================================================================
+# Stage 1: Build
+# =============================================================================
+FROM node:20-alpine AS build
+
 WORKDIR /app
-COPY package.json .
-RUN npm install
-COPY . .
+
+COPY package.json package-lock.json ./
+RUN npm ci --silent
+
+ARG REACT_APP_API_BASE_URL
+ARG REACT_APP_KEYCLOAK_URL
+ARG REACT_APP_KEYCLOAK_REALM
+ARG REACT_APP_KEYCLOAK_CLIENT_ID
+
+ENV REACT_APP_API_BASE_URL=$REACT_APP_API_BASE_URL
+ENV REACT_APP_KEYCLOAK_URL=$REACT_APP_KEYCLOAK_URL
+ENV REACT_APP_KEYCLOAK_REALM=$REACT_APP_KEYCLOAK_REALM
+ENV REACT_APP_KEYCLOAK_CLIENT_ID=$REACT_APP_KEYCLOAK_CLIENT_ID
 ENV CI=false
+ENV NODE_OPTIONS=--max-old-space-size=1536
+
+COPY public ./public
+COPY src ./src
+
 RUN npm run build
 
-# 2. Aşama: Sunucu
-FROM nginx:alpine
+# =============================================================================
+# Stage 2: Serve
+# =============================================================================
+FROM nginx:1.27-alpine
 
-# 🚨 ÖNEMLİ: Eğer Vite kullanıyorsan '/app/dist' yazmalısın. 
-# Create React App (CRA) kullanıyorsan '/app/build' olarak kalsın.
 COPY --from=build /app/build /usr/share/nginx/html
-
-# 🛠️ YENİ EKLEDİĞİMİZ SATIR:
-# Kendi nginx.conf dosyamızı Nginx'in yapılandırma klasörüne kopyalıyoruz.
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 80
