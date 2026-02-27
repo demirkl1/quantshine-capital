@@ -20,6 +20,15 @@ const AdminAnasayfa = () => {
   const [fonListesi, setFonListesi] = useState([]);
   const [grafikVerisi, setGrafikVerisi] = useState([]);
 
+  // Admin DB kaydını senkronize et (Keycloak'ta oluşturulmuş kullanıcılar için gerekli)
+  useEffect(() => {
+    const syncAdmin = async () => {
+      if (!token) return;
+      try { await api.get('/users/me'); } catch (e) { console.error("Admin sync hatası:", e.message); }
+    };
+    syncAdmin();
+  }, [token]);
+
   // Stats (portföy değeri + K/Z) — her 60 saniyede bir yenilenir
   useEffect(() => {
     const fetchStats = async () => {
