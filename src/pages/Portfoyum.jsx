@@ -26,6 +26,7 @@ const Portfoyum = () => {
     const fetchMyFunds = async () => {
       if (!token) return;
       try {
+        await api.get('/users/me'); // Kullanıcıyı DB'ye sync et
         const res = await api.get('/trade/my-funds');
         setMyFunds(res.data);
         

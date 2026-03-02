@@ -15,7 +15,9 @@ const HaftalikRapor = () => {
 
   useEffect(() => {
     const fetchReports = async () => {
+      if (!token) return;
       try {
+        await api.get('/users/me'); // Kullanıcıyı DB'ye sync et
         const res = await api.get('/reports/my-reports');
         
         const validReports = res.data.filter(r => r.advisor !== null);
