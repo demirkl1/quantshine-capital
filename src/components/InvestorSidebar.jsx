@@ -1,16 +1,25 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { 
-  MdAccountBalanceWallet, 
-  MdHistory, 
-  MdDateRange, 
+import {
+  MdAccountBalanceWallet,
+  MdHistory,
+  MdDateRange,
   MdSupportAgent,
-  MdLogout 
+  MdLogout
 } from 'react-icons/md';
+import api from '../api';
+import { useAuth } from '../context/AuthContext';
 import './InvestorSidebar.css';
 
 const InvestorSidebar = () => {
   const location = useLocation();
+  const { token } = useAuth();
+
+  // Yatırımcı DB kaydını senkronize et (Keycloak'ta var ama DB'de yoksa oluşturur)
+  useEffect(() => {
+    if (!token) return;
+    api.get('/users/me').catch(() => {});
+  }, [token]);
 
   const menuItems = [
     { path: '/yatirimci-anasayfa', name: 'Portföyüm', icon: <MdAccountBalanceWallet /> },
