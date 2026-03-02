@@ -52,14 +52,14 @@ const Portfoyum = () => {
         const statsRes = await api.get(`/trade/investor-portfolio?fundCode=${selectedFon}`);
         setStats(statsRes.data);
 
-        const chartRes = await api.get(`/funds/${selectedFon}/history?filter=${activeFilter}`);
+        const chartRes = await api.get(`/funds/history/${selectedFon}?filter=${activeFilter}`);
 
-const formattedData = chartRes.data.map(item => ({
-  tarih: item.name,
-  deger: item.fiyat
-}));
+        const formattedData = chartRes.data.map(item => ({
+          tarih: item.date,
+          deger: item.price
+        }));
 
-setChartData(formattedData);
+        setChartData(formattedData);
 
       } catch (err) {
         console.error("Veri çekme hatası:", err);

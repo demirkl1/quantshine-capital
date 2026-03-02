@@ -10,6 +10,7 @@ const AdvisorAnaSayfa = () => {
   const [activeFilter, setActiveFilter] = useState("1A");
   const [loading, setLoading] = useState(true);
   const [realFundCode, setRealFundCode] = useState(null);
+  const [fundCodeFetched, setFundCodeFetched] = useState(false);
 
   const [stats, setStats] = useState({
     sorumluFonBuyuklugu: 0,
@@ -27,6 +28,8 @@ const AdvisorAnaSayfa = () => {
         setRealFundCode(backendUser.managedFundCode || null);
       } catch (err) {
         console.error("Kullanıcı bilgisi alınamadı:", err.message);
+      } finally {
+        setFundCodeFetched(true);
       }
     };
     fetchFundCode();
@@ -53,7 +56,11 @@ const AdvisorAnaSayfa = () => {
   // Grafik verisi — filtre veya fon kodu değişince yenilenir
   useEffect(() => {
     const fetchChart = async () => {
-      if (!token || !realFundCode) return;
+      if (!token || !fundCodeFetched) return;
+      if (!realFundCode) {
+        setLoading(false);
+        return;
+      }
       try {
         const res = await api.get(`/funds/history/${realFundCode}?filter=${activeFilter}`);
         setChartData(res.data.map(item => ({ name: item.date, fiyat: item.price })));
@@ -65,7 +72,7 @@ const AdvisorAnaSayfa = () => {
     };
 
     fetchChart();
-  }, [token, realFundCode, activeFilter]);
+  }, [token, realFundCode, fundCodeFetched, activeFilter]);
 
   const formatXAxis = (tickItem) => {
     if (!tickItem) return "";
