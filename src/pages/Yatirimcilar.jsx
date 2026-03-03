@@ -132,15 +132,11 @@ const handleAdvisorChange = (e) => {
   // 1. Sadece Modal açıldığında veya yatırımcı değiştiğinde veriyi hazırla
 useEffect(() => {
   const fetchActualPrice = async () => {
-    if (!showTradeModal || !selectedYatirimci) return;
-
-    const investorPortfolio = portfolios[selectedYatirimci.id] || [];
-    let targetFund = currentFundCode || (investorPortfolio.length > 0 ? investorPortfolio[0].fundCode : "TEK");
+    if (!showTradeModal || !selectedYatirimci || !currentFundCode) return;
 
     try {
-      const res = await api.get(`/funds/${targetFund}`);
-      setCurrentUnitPrice(res.data.currentPrice);
-      if (!currentFundCode) setCurrentFundCode(targetFund);
+      const res = await api.get(`/funds/${currentFundCode}`);
+      setCurrentUnitPrice(res.data.price ?? res.data.currentPrice ?? 0);
     } catch (err) {
       console.error("Fiyat çekilemedi:", err);
       setCurrentUnitPrice(0);
@@ -399,8 +395,8 @@ const handleAssign = async () => {
           >
             <option value="">Seçiniz...</option>
             {allAvailableFunds.map(fund => (
-              <option key={fund.id} value={fund.fundCode}>
-                {fund.fundCode} - {fund.fundName}
+              <option key={fund.code} value={fund.code}>
+                {fund.code} - {fund.name}
               </option>
             ))}
           </select>
