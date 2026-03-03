@@ -178,24 +178,6 @@ const handleAssign = async () => {
   }
 };
 
-const handleUnassignFund = async () => {
-  if (!targetAdvisorTc) { toast.error("Lütfen bir danışman seçin!"); return; }
-  if (!selectedFundCode || selectedFundCode === '-') {
-    toast.error("Seçili danışman zaten herhangi bir fona atanmamış!");
-    return;
-  }
-
-  try {
-    await api.put('/users/unassign-fund', null, {
-      params: { advisorTc: targetAdvisorTc }
-    });
-    toast.success("Danışman fondan çıkarıldı, artık boşta!");
-    setShowTransferModal(false);
-    fetchData();
-  } catch (err) {
-    toast.error(err.response?.data || "İşlem başarısız!");
-  }
-};
   const handleTradeSubmit = async () => {
   if (!price || parseFloat(price) <= 0) { toast.error("Lütfen geçerli bir tutar girin!"); return; }
 
@@ -323,135 +305,55 @@ const handleUnassignFund = async () => {
         >
           Yeni Kayıt
         </button>
-        <button
-          className={modalMode === 'bosalt' ? 'active' : ''}
-          onClick={() => { setModalMode('bosalt'); setTargetAdvisorTc(''); setSelectedFundCode(''); }}
-        >
-          Boşa Al
-        </button>
       </div>
 
       <div className="modal-info-text">
         {modalMode === 'transfer' && "Mevcut fonunuzdaki danışmanı başka bir danışmanla değiştirir."}
         {modalMode === 'kayit'    && "Yatırımcıyı farklı bir fon grubuna ve danışmana dahil eder."}
-        {modalMode === 'bosalt'   && "Seçili danışmanın fon atamasını tamamen kaldırır. Danışman boşta kalır."}
       </div>
 
-      {/* Transfer & Yeni Kayıt ortak formu */}
-      {modalMode !== 'bosalt' && (
-        <>
-          <div className="form-group" style={{ marginTop: '20px' }}>
-            <label>Danışman Seçin</label>
-            <select className="combobox" value={targetAdvisorTc} onChange={handleAdvisorChange}>
-              <option value="">Seçiniz...</option>
-              {advisors.map(adv => (
-                <option key={adv.tcNo} value={adv.tcNo}>
-                  {adv.fullName || "İsimsiz Danışman"} ({adv.managedFund || "Fon Yok"})
-                </option>
-              ))}
-            </select>
-          </div>
+      <div className="form-group" style={{ marginTop: '20px' }}>
+        <label>Danışman Seçin</label>
+        <select className="combobox" value={targetAdvisorTc} onChange={handleAdvisorChange}>
+          <option value="">Seçiniz...</option>
+          {advisors.map(adv => (
+            <option key={adv.tcNo} value={adv.tcNo}>
+              {adv.fullName || "İsimsiz Danışman"} ({adv.managedFund || "Fon Yok"})
+            </option>
+          ))}
+        </select>
+      </div>
 
-          <div className="form-group" style={{ marginTop: '15px' }}>
-            <label>Atanacak Fon (Otomatik)</label>
-            <input
-              type="text"
-              className="combobox"
-              value={selectedFundCode || "-"}
-              disabled
-              readOnly
-              style={{
-                backgroundColor: '#0f172a',
-                color: (!selectedFundCode || selectedFundCode === '-') ? '#ef4444' : '#10b981',
-                fontWeight: 'bold'
-              }}
-            />
-          </div>
+      <div className="form-group" style={{ marginTop: '15px' }}>
+        <label>Atanacak Fon (Otomatik)</label>
+        <input
+          type="text"
+          className="combobox"
+          value={selectedFundCode || "-"}
+          disabled
+          readOnly
+          style={{
+            backgroundColor: '#0f172a',
+            color: (!selectedFundCode || selectedFundCode === '-') ? '#ef4444' : '#10b981',
+            fontWeight: 'bold'
+          }}
+        />
+      </div>
 
-          <div className="modal-actions">
-            <button
-              className="btn-save"
-              onClick={handleAssign}
-              disabled={!selectedFundCode || selectedFundCode === '-'}
-              style={{
-                opacity: (!selectedFundCode || selectedFundCode === '-') ? 0.5 : 1,
-                background: modalMode === 'transfer' ? '#4f46e5' : '#10b981'
-              }}
-            >
-              {modalMode === 'transfer' ? "Transferi Onayla" : "Yeni Kayıt Oluştur"}
-            </button>
-            <button className="btn-cancel" onClick={() => setShowTransferModal(false)}>İptal</button>
-          </div>
-        </>
-      )}
-
-      {/* Boşa Al formu */}
-      {modalMode === 'bosalt' && (
-        <>
-          <div className="form-group" style={{ marginTop: '20px' }}>
-            <label>Danışman Seçin</label>
-            <select className="combobox" value={targetAdvisorTc} onChange={handleAdvisorChange}>
-              <option value="">Seçiniz...</option>
-              {advisors.map(adv => (
-                <option key={adv.tcNo} value={adv.tcNo}>
-                  {adv.fullName || "İsimsiz Danışman"} ({adv.managedFund || "Fon Yok"})
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div className="form-group" style={{ marginTop: '15px' }}>
-            <label>Mevcut Fonu</label>
-            <input
-              type="text"
-              className="combobox"
-              value={
-                !targetAdvisorTc
-                  ? "— Danışman seçin —"
-                  : (!selectedFundCode || selectedFundCode === '-')
-                    ? "Fon Ataması Yok"
-                    : selectedFundCode
-              }
-              disabled
-              readOnly
-              style={{
-                backgroundColor: '#0f172a',
-                color: (!selectedFundCode || selectedFundCode === '-') ? '#64748b' : '#f59e0b',
-                fontWeight: 'bold'
-              }}
-            />
-          </div>
-
-          {targetAdvisorTc && selectedFundCode && selectedFundCode !== '-' && (
-            <div style={{
-              marginTop: '12px',
-              padding: '10px 12px',
-              background: 'rgba(239,68,68,0.08)',
-              border: '1px solid rgba(239,68,68,0.3)',
-              borderRadius: '6px',
-              color: '#ef4444',
-              fontSize: '12px'
-            }}>
-              ⚠ Bu işlem danışmanın <strong>{selectedFundCode}</strong> fon atamasını kaldırır. Geri alınamaz.
-            </div>
-          )}
-
-          <div className="modal-actions" style={{ marginTop: '20px' }}>
-            <button
-              className="btn-save"
-              onClick={handleUnassignFund}
-              disabled={!targetAdvisorTc || !selectedFundCode || selectedFundCode === '-'}
-              style={{
-                opacity: (!targetAdvisorTc || !selectedFundCode || selectedFundCode === '-') ? 0.5 : 1,
-                background: '#ef4444'
-              }}
-            >
-              Fondan Çıkar
-            </button>
-            <button className="btn-cancel" onClick={() => setShowTransferModal(false)}>İptal</button>
-          </div>
-        </>
-      )}
+      <div className="modal-actions">
+        <button
+          className="btn-save"
+          onClick={handleAssign}
+          disabled={!selectedFundCode || selectedFundCode === '-'}
+          style={{
+            opacity: (!selectedFundCode || selectedFundCode === '-') ? 0.5 : 1,
+            background: modalMode === 'transfer' ? '#4f46e5' : '#10b981'
+          }}
+        >
+          {modalMode === 'transfer' ? "Transferi Onayla" : "Yeni Kayıt Oluştur"}
+        </button>
+        <button className="btn-cancel" onClick={() => setShowTransferModal(false)}>İptal</button>
+      </div>
 
     </div>
   </div>
