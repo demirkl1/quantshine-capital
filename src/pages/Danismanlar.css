@@ -206,3 +206,20 @@
   from { opacity: 0; transform: translateY(12px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
+@media (max-width: 768px) {
+  .table-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .advisor-modal {
+    width: 95vw;
+    max-width: 95vw;
+    margin: 16px;
+  }
+
+  .advisor-info-grid {
+    grid-template-columns: 1fr;
+  }
+}

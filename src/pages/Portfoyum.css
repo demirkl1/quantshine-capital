@@ -171,3 +171,31 @@
   50% { opacity: 0.5; }
   100% { opacity: 1; }
 }
+
+@media (max-width: 768px) {
+  .fon-selector-container {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .header-content {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .chart-section .recharts-responsive-container {
+    height: 250px !important;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+}

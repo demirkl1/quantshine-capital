@@ -153,3 +153,19 @@
 .btn-contact:hover {
   background: #1e53e5;
 }
+
+@media (max-width: 768px) {
+  .advisor-details-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .full-width {
+    grid-column: span 1;
+  }
+
+  .advisor-card-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

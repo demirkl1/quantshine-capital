@@ -103,3 +103,10 @@
 .text-loss { color: #ef5350 !important; font-weight: 700; }
 .text-white { color: #ffffff !important; }
 .font-bold { font-weight: 700; }
+
+@media (max-width: 768px) {
+  .date-cell {
+    font-size: 10px !important;
+    white-space: nowrap;
+  }
+}

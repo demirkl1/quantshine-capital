@@ -1,11 +1,13 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import {
   MdAccountBalanceWallet,
   MdHistory,
   MdDateRange,
   MdSupportAgent,
-  MdLogout
+  MdLogout,
+  MdMenu,
+  MdClose
 } from 'react-icons/md';
 import api from '../api';
 import { useAuth } from '../context/AuthContext';
@@ -14,6 +16,7 @@ import './InvestorSidebar.css';
 const InvestorSidebar = () => {
   const location = useLocation();
   const { token } = useAuth();
+  const [isOpen, setIsOpen] = useState(false);
 
   // Yatırımcı DB kaydını senkronize et (Keycloak'ta var ama DB'de yoksa oluşturur)
   useEffect(() => {
@@ -29,32 +32,42 @@ const InvestorSidebar = () => {
   ];
 
   return (
-    <div className="investor-sidebar">
-      <div className="sidebar-logo">
-        <h2>Quant&Shine</h2>
-        <span>Yatırımcı Paneli</span>
+    <>
+      <div className="mobile-topbar">
+        <h2 className="mobile-logo">Quant&Shine</h2>
+        <button className="hamburger-btn" onClick={() => setIsOpen(!isOpen)}>
+          {isOpen ? <MdClose /> : <MdMenu />}
+        </button>
       </div>
-      
-      <nav className="sidebar-nav">
-        {menuItems.map((item) => (
-          <Link 
-            key={item.path} 
-            to={item.path} 
-            className={`nav-item ${location.pathname === item.path ? 'active' : ''}`}
-          >
-            <span className="nav-icon">{item.icon}</span>
-            <span className="nav-text">{item.name}</span>
-          </Link>
-        ))}
-      </nav>
+      {isOpen && <div className="sidebar-overlay" onClick={() => setIsOpen(false)} />}
+      <div className={`investor-sidebar${isOpen ? ' open' : ''}`}>
+        <div className="sidebar-logo">
+          <h2>Quant&Shine</h2>
+          <span>Yatırımcı Paneli</span>
+        </div>
 
-      <div className="sidebar-footer">
-        <Link to="/" className="nav-item logout-btn">
-          <span className="nav-icon"><MdLogout /></span>
-          <span className="nav-text">Çıkış Yap</span>
-        </Link>
+        <nav className="sidebar-nav">
+          {menuItems.map((item) => (
+            <Link
+              key={item.path}
+              to={item.path}
+              className={`nav-item ${location.pathname === item.path ? 'active' : ''}`}
+              onClick={() => setIsOpen(false)}
+            >
+              <span className="nav-icon">{item.icon}</span>
+              <span className="nav-text">{item.name}</span>
+            </Link>
+          ))}
+        </nav>
+
+        <div className="sidebar-footer">
+          <Link to="/" className="nav-item logout-btn" onClick={() => setIsOpen(false)}>
+            <span className="nav-icon"><MdLogout /></span>
+            <span className="nav-text">Çıkış Yap</span>
+          </Link>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

@@ -128,3 +128,15 @@
   font-style: italic;
   font-size: 11px;
 }
+
+@media (max-width: 768px) {
+  .transfer-modal {
+    width: 95%;
+    padding: 16px;
+    margin: 0 16px;
+  }
+
+  .tab-container {
+    flex-wrap: wrap;
+  }
+}

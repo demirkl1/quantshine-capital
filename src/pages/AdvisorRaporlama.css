@@ -70,3 +70,16 @@
 .send-icon {
   font-size: 1rem;
 }
+
+@media (max-width: 768px) {
+  .report-form-container {
+    padding: 20px 16px;
+    margin: 0;
+    max-width: 100%;
+  }
+
+  .btn-send-report {
+    align-self: stretch;
+    width: 100%;
+  }
+}

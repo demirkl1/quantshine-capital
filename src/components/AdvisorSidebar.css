@@ -90,3 +90,73 @@
 .logout-btn:hover {
   background-color: rgba(239, 83, 80, 0.08) !important;
 }
+
+/* ─── Mobile Topbar & Hamburger ─── */
+.mobile-topbar {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 56px;
+  background-color: #131722;
+  border-bottom: 1px solid #2a2e39;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  z-index: 200;
+  box-sizing: border-box;
+}
+
+.mobile-logo {
+  color: #2962ff;
+  font-size: 1.1rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  margin: 0;
+}
+
+.hamburger-btn {
+  background: transparent;
+  border: none;
+  color: #d1d4dc;
+  font-size: 1.5rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  border-radius: 6px;
+  transition: background 0.15s;
+}
+
+.hamburger-btn:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.sidebar-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 210;
+}
+
+@media (max-width: 1024px) {
+  .mobile-topbar {
+    display: flex;
+  }
+
+  .advisor-sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    z-index: 220;
+    transform: translateX(-100%);
+    transition: transform 0.3s ease;
+  }
+
+  .advisor-sidebar.open {
+    transform: translateX(0);
+  }
+}

@@ -146,3 +146,14 @@
   stroke: #2962ff;
   stroke-width: 1.5;
 }
+
+@media (max-width: 768px) {
+  .chart-section .recharts-responsive-container {
+    height: 250px !important;
+  }
+
+  .table-section {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
