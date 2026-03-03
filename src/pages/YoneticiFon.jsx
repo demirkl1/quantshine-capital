@@ -79,6 +79,20 @@ const YoneticiFon = () => {
     }
   };
 
+  const handleUnassignAdvisor = async () => {
+    if (!selectedAdvisorTc) { toast.error("Lütfen bir danışman seçin!"); return; }
+    try {
+      await api.put('/users/unassign-fund', null, {
+        params: { advisorTc: selectedAdvisorTc }
+      });
+      toast.success("Danışman fondan çıkarıldı, artık boşta!");
+      setShowModal(false);
+      fetchInitialData();
+    } catch (err) {
+      toast.error(err.response?.data || "İşlem başarısız!");
+    }
+  };
+
   const handleDeleteFund = async () => {
     if (!selectedFon) return;
     setDeleting(true);
@@ -97,6 +111,7 @@ const YoneticiFon = () => {
   const handleConfirm = () => {
     if (modalMode === "yeni-fon") return handleCreateFund();
     if (modalMode === "sil-fon") return handleDeleteFund();
+    if (modalMode === "bosalt") return handleUnassignAdvisor();
     return handleTransferOrAssign();
   };
 
@@ -154,8 +169,9 @@ const YoneticiFon = () => {
               {/* Danışman işlemleri için sekmeler */}
               {modalMode !== "yeni-fon" && modalMode !== "sil-fon" && (
                 <div className="modal-tabs">
-                  <button className={`modal-tab ${modalMode === "transfer" ? 'active' : ''}`} onClick={() => setModalMode("transfer")}>Transfer</button>
-                  <button className={`modal-tab ${modalMode === "yeni-danisman" ? 'active' : ''}`} onClick={() => setModalMode("yeni-danisman")}>Yeni Kayıt</button>
+                  <button className={`modal-tab ${modalMode === "transfer" ? 'active' : ''}`} onClick={() => { setModalMode("transfer"); setSelectedAdvisorTc(""); setTargetFundCode(""); }}>Transfer</button>
+                  <button className={`modal-tab ${modalMode === "yeni-danisman" ? 'active' : ''}`} onClick={() => { setModalMode("yeni-danisman"); setSelectedAdvisorTc(""); }}>Yeni Kayıt</button>
+                  <button className={`modal-tab ${modalMode === "bosalt" ? 'active' : ''}`} onClick={() => { setModalMode("bosalt"); setSelectedAdvisorTc(""); }}>Boşa Al</button>
                 </div>
               )}
 
@@ -225,6 +241,35 @@ const YoneticiFon = () => {
                       </select>
                     </div>
                   </>
+                ) : modalMode === "bosalt" ? (
+                  <>
+                    <div className="form-group">
+                      <label>Fondan Çıkarılacak Danışman</label>
+                      <select className="combobox" onChange={e => setSelectedAdvisorTc(e.target.value)} value={selectedAdvisorTc}>
+                        <option value="">Seçiniz...</option>
+                        {advisors.filter(a => a.managedFundCode === selectedFon?.code).map(a => (
+                          <option key={a.id} value={a.tcNo}>{a.firstName} {a.lastName} (TC: {a.tcNo})</option>
+                        ))}
+                      </select>
+                    </div>
+                    <div className="form-group">
+                      <label>Mevcut Fon</label>
+                      <input type="text" className="modal-input" value={selectedFon?.name} disabled />
+                    </div>
+                    {selectedAdvisorTc && (
+                      <div style={{
+                        padding: '10px 12px',
+                        background: 'rgba(239,68,68,0.08)',
+                        border: '1px solid rgba(239,68,68,0.3)',
+                        borderRadius: '6px',
+                        color: '#ef4444',
+                        fontSize: '12px',
+                        marginTop: '8px'
+                      }}>
+                        ⚠ Bu işlem danışmanın <strong>{selectedFon?.code}</strong> fon atamasını kaldırır. Danışman boşta kalır.
+                      </div>
+                    )}
+                  </>
                 ) : (
                   <>
                     <div className="form-group">
@@ -247,11 +292,12 @@ const YoneticiFon = () => {
 
                 <div className="modal-actions">
                   <button
-                    className={modalMode === "sil-fon" ? "btn-delete-confirm" : "btn-confirm"}
+                    className={modalMode === "sil-fon" || modalMode === "bosalt" ? "btn-delete-confirm" : "btn-confirm"}
                     onClick={handleConfirm}
-                    disabled={deleting}
+                    disabled={deleting || (modalMode === "bosalt" && !selectedAdvisorTc)}
+                    style={modalMode === "bosalt" ? { opacity: !selectedAdvisorTc ? 0.5 : 1 } : {}}
                   >
-                    {deleting ? "Siliniyor..." : modalMode === "sil-fon" ? "Evet, Sil" : "Onayla"}
+                    {deleting ? "Siliniyor..." : modalMode === "sil-fon" ? "Evet, Sil" : modalMode === "bosalt" ? "Fondan Çıkar" : "Onayla"}
                   </button>
                   <button className="btn-close" onClick={() => setShowModal(false)}>İptal</button>
                 </div>
