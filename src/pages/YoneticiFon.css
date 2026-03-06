@@ -18,6 +18,23 @@
   background-color: #1e53e5;
 }
 
+.btn-investor-action {
+  background-color: #d97706;
+  color: white;
+  border: none;
+  padding: 4px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 11px;
+  font-family: 'JetBrains Mono', monospace;
+  transition: 0.15s;
+}
+
+.btn-investor-action:hover {
+  background-color: #b45309;
+}
+
 /* Modal Tab */
 .modal-tabs {
   display: flex;

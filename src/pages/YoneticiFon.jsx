@@ -17,15 +17,20 @@ const YoneticiFon = () => {
   const [deleting, setDeleting] = useState(false);
 
   const [newFund, setNewFund] = useState({ fundCode: '', fundName: '', currentPrice: '' });
+  const [investors, setInvestors] = useState([]);
+  const [selectedInvestorTc, setSelectedInvestorTc] = useState('');
+  const [investorFundCode, setInvestorFundCode] = useState('');
 
   const fetchInitialData = async () => {
     try {
-      const [fundRes, advisorRes] = await Promise.all([
+      const [fundRes, advisorRes, investorRes] = await Promise.all([
         api.get('/funds'),
-        api.get('/users/advisors')
+        api.get('/users/advisors'),
+        api.get('/trade/all-investors-detailed')
       ]);
       setFunds(fundRes.data);
       setAdvisors(advisorRes.data);
+      setInvestors(Array.isArray(investorRes.data) ? investorRes.data : []);
     } catch (err) {
       console.error("Veriler yüklenemedi:", err);
     }
@@ -40,6 +45,8 @@ const YoneticiFon = () => {
     setSelectedFon(fon);
     setSelectedAdvisorTc("");
     setTargetFundCode("");
+    setSelectedInvestorTc("");
+    setInvestorFundCode(fon?.code || "");
     setDeleting(false);
     setShowModal(true);
   };
@@ -108,10 +115,26 @@ const YoneticiFon = () => {
     }
   };
 
+  const handleRemoveInvestorFromFund = async () => {
+    if (!selectedInvestorTc) { toast.error("Lütfen bir yatırımcı seçin!"); return; }
+    if (!investorFundCode) { toast.error("Lütfen bir fon seçin!"); return; }
+    try {
+      await api.delete('/users/remove-from-fund', {
+        params: { investorTc: selectedInvestorTc, fundCode: investorFundCode }
+      });
+      toast.success("Yatırımcı fondan çıkarıldı!");
+      setShowModal(false);
+      fetchInitialData();
+    } catch (err) {
+      toast.error(err.response?.data || "İşlem başarısız!");
+    }
+  };
+
   const handleConfirm = () => {
     if (modalMode === "yeni-fon") return handleCreateFund();
     if (modalMode === "sil-fon") return handleDeleteFund();
     if (modalMode === "bosalt") return handleUnassignAdvisor();
+    if (modalMode === "yatirimci-cikar") return handleRemoveInvestorFromFund();
     return handleTransferOrAssign();
   };
 
@@ -147,9 +170,12 @@ const YoneticiFon = () => {
                     <td><strong>{f.name}</strong></td>
                     <td>₺{f.price?.toLocaleString('tr-TR', { minimumFractionDigits: 4 })}</td>
                     <td>
-                      <div style={{ display: 'flex', gap: 8 }}>
+                      <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
                         <button className="btn-transfer-action" onClick={() => handleOpenModal("transfer", f)}>
                           Danışman İşlemleri
+                        </button>
+                        <button className="btn-investor-action" onClick={() => handleOpenModal("yatirimci-cikar", f)}>
+                          Yatırımcı İşlemleri
                         </button>
                         <button className="btn-delete-fund" onClick={() => handleOpenModal("sil-fon", f)}>
                           Sil
@@ -167,7 +193,7 @@ const YoneticiFon = () => {
           <div className="modal-overlay">
             <div className="fon-modal">
               {/* Danışman işlemleri için sekmeler */}
-              {modalMode !== "yeni-fon" && modalMode !== "sil-fon" && (
+              {modalMode !== "yeni-fon" && modalMode !== "sil-fon" && modalMode !== "yatirimci-cikar" && (
                 <div className="modal-tabs">
                   <button className={`modal-tab ${modalMode === "transfer" ? 'active' : ''}`} onClick={() => { setModalMode("transfer"); setSelectedAdvisorTc(""); setTargetFundCode(""); }}>Transfer</button>
                   <button className={`modal-tab ${modalMode === "yeni-danisman" ? 'active' : ''}`} onClick={() => { setModalMode("yeni-danisman"); setSelectedAdvisorTc(""); }}>Yeni Kayıt</button>
@@ -270,6 +296,71 @@ const YoneticiFon = () => {
                       </div>
                     )}
                   </>
+                ) : modalMode === "yatirimci-cikar" ? (
+                  <>
+                    <h3 style={{ marginBottom: 16, color: '#e2e8f0' }}>Yatırımcıyı Fondan Çıkar</h3>
+
+                    <div className="form-group">
+                      <label>Yatırımcı Seçin</label>
+                      <select
+                        className="combobox"
+                        value={selectedInvestorTc}
+                        onChange={e => {
+                          const tc = e.target.value;
+                          setSelectedInvestorTc(tc);
+                          // Yatırımcı değişince fonu sıfırla, ama eğer seçili fonda kaydı varsa onu seç
+                          const inv = investors.find(i => i.tcNo === tc);
+                          const hasCurrentFund = inv?.holdings?.some(h => h.fundCode === selectedFon?.code);
+                          setInvestorFundCode(hasCurrentFund ? selectedFon?.code : '');
+                        }}
+                      >
+                        <option value="">Seçiniz...</option>
+                        {investors
+                          .filter(inv => inv.holdings?.some(h => h.fundCode === selectedFon?.code))
+                          .map(inv => (
+                            <option key={inv.tcNo} value={inv.tcNo}>
+                              {inv.fullName} (TC: {inv.tcNo})
+                            </option>
+                          ))
+                        }
+                      </select>
+                    </div>
+
+                    {selectedInvestorTc && (
+                      <div className="form-group">
+                        <label>Çıkarılacak Fon</label>
+                        <select
+                          className="combobox"
+                          value={investorFundCode}
+                          onChange={e => setInvestorFundCode(e.target.value)}
+                        >
+                          <option value="">Fon Seçin...</option>
+                          {investors
+                            .find(i => i.tcNo === selectedInvestorTc)
+                            ?.holdings?.map(h => (
+                              <option key={h.fundCode} value={h.fundCode}>
+                                {h.fundCode} — {h.lots?.toLocaleString('tr-TR')} Lot
+                              </option>
+                            ))
+                          }
+                        </select>
+                      </div>
+                    )}
+
+                    {selectedInvestorTc && investorFundCode && (
+                      <div style={{
+                        padding: '10px 12px',
+                        background: 'rgba(239,68,68,0.08)',
+                        border: '1px solid rgba(239,68,68,0.3)',
+                        borderRadius: '6px',
+                        color: '#ef4444',
+                        fontSize: '12px',
+                        marginTop: '4px'
+                      }}>
+                        ⚠ Yatırımcı <strong>{investorFundCode}</strong> fonundan tamamen çıkarılacak. Bu işlem geri alınamaz.
+                      </div>
+                    )}
+                  </>
                 ) : (
                   <>
                     <div className="form-group">
@@ -292,12 +383,25 @@ const YoneticiFon = () => {
 
                 <div className="modal-actions">
                   <button
-                    className={modalMode === "sil-fon" || modalMode === "bosalt" ? "btn-delete-confirm" : "btn-confirm"}
+                    className={
+                      modalMode === "sil-fon" || modalMode === "bosalt" || modalMode === "yatirimci-cikar"
+                        ? "btn-delete-confirm"
+                        : "btn-confirm"
+                    }
                     onClick={handleConfirm}
-                    disabled={deleting || (modalMode === "bosalt" && !selectedAdvisorTc)}
-                    style={modalMode === "bosalt" ? { opacity: !selectedAdvisorTc ? 0.5 : 1 } : {}}
+                    disabled={
+                      deleting ||
+                      (modalMode === "bosalt" && !selectedAdvisorTc) ||
+                      (modalMode === "yatirimci-cikar" && (!selectedInvestorTc || !investorFundCode))
+                    }
                   >
-                    {deleting ? "Siliniyor..." : modalMode === "sil-fon" ? "Evet, Sil" : modalMode === "bosalt" ? "Fondan Çıkar" : "Onayla"}
+                    {deleting
+                      ? "Siliniyor..."
+                      : modalMode === "sil-fon"
+                      ? "Evet, Sil"
+                      : modalMode === "bosalt" || modalMode === "yatirimci-cikar"
+                      ? "Fondan Çıkar"
+                      : "Onayla"}
                   </button>
                   <button className="btn-close" onClick={() => setShowModal(false)}>İptal</button>
                 </div>
