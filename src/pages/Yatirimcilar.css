@@ -187,3 +187,228 @@
   align-items: center;
   font-size: 12px;
 }
+
+/* ── Tehlikeli Alan ───────────────────────────────────── */
+.investor-danger-zone {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 20px;
+  padding: 12px 16px;
+  background: rgba(239, 68, 68, 0.05);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  border-radius: 8px;
+}
+
+.investor-danger-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: #ef4444;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.btn-delete-investor {
+  background: transparent;
+  border: 1px solid #ef4444;
+  color: #ef4444;
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+  cursor: pointer;
+  transition: 0.15s;
+  letter-spacing: 0.04em;
+}
+.btn-delete-investor:hover {
+  background: #ef4444;
+  color: #fff;
+}
+
+/* ── Silme Onay Modalı ────────────────────────────────── */
+.investor-delete-modal {
+  background: #131722;
+  border: 1px solid #2a2e39;
+  border-radius: 12px;
+  padding: 32px 28px;
+  width: 440px;
+  max-width: 95vw;
+  text-align: center;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.7);
+}
+
+.delete-modal-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: rgba(239, 68, 68, 0.12);
+  font-size: 26px;
+  margin-bottom: 16px;
+}
+
+.delete-modal-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #ef4444;
+  margin: 0 0 8px;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.delete-modal-subtitle {
+  font-size: 13px;
+  color: #94a3b8;
+  margin: 0 0 20px;
+  line-height: 1.6;
+}
+
+.delete-warning-box {
+  background: rgba(239, 68, 68, 0.07);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  border-radius: 8px;
+  padding: 14px 16px;
+  text-align: left;
+  margin-bottom: 24px;
+}
+
+.delete-warning-head {
+  font-size: 11px;
+  font-weight: 700;
+  color: #fca5a5;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  margin: 0 0 8px;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.delete-warning-list {
+  color: #fca5a5;
+  font-size: 12px;
+  padding-left: 18px;
+  margin: 0 0 10px;
+  line-height: 1.8;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.delete-warning-keep {
+  font-size: 11px;
+  color: #64748b;
+  margin: 0;
+  font-style: italic;
+}
+
+.delete-confirm-tc {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #1c2030;
+  border: 1px solid #2a2e39;
+  border-radius: 6px;
+  padding: 8px 16px;
+  margin-bottom: 14px;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.delete-confirm-tc-label {
+  font-size: 10px;
+  color: #787b86;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  font-weight: 700;
+}
+
+.delete-confirm-tc-value {
+  font-size: 14px;
+  font-weight: 700;
+  color: #f1f5f9;
+  letter-spacing: 0.06em;
+}
+
+.delete-confirm-input {
+  width: 100%;
+  padding: 10px 14px;
+  background: #1c2030;
+  border: 1px solid #ef4444;
+  border-radius: 6px;
+  color: #f1f5f9;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  text-align: center;
+  letter-spacing: 0.05em;
+  box-sizing: border-box;
+  margin-bottom: 6px;
+}
+.delete-confirm-input:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.3);
+}
+
+.delete-input-error {
+  font-size: 11px;
+  color: #ef4444;
+  margin: 0 0 12px;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.delete-modal-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.btn-delete-next {
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  color: #ef4444;
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+  cursor: pointer;
+  transition: 0.15s;
+}
+.btn-delete-next:hover {
+  background: rgba(239, 68, 68, 0.2);
+}
+
+.btn-delete-final {
+  background: #ef4444;
+  border: none;
+  color: #fff;
+  padding: 11px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+  cursor: pointer;
+  transition: 0.15s;
+}
+.btn-delete-final:hover:not(:disabled) {
+  background: #dc2626;
+}
+.btn-delete-final:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.btn-delete-cancel {
+  background: transparent;
+  border: 1px solid #2a2e39;
+  color: #787b86;
+  padding: 9px;
+  border-radius: 8px;
+  font-size: 11px;
+  font-family: 'JetBrains Mono', monospace;
+  cursor: pointer;
+  transition: 0.15s;
+}
+.btn-delete-cancel:hover {
+  border-color: #64748b;
+  color: #94a3b8;
+}

@@ -27,6 +27,11 @@ const Yatirimcilar = () => {
   const [lot, setLot] = useState(0);
   const [modalMode, setModalMode] = useState('transfer'); // 'transfer' | 'kayit' | 'bosalt'
 
+  const [deleteTarget, setDeleteTarget] = useState(null);   // silinecek yatırımcı
+  const [deleteStep, setDeleteStep] = useState(1);          // 1: uyarı, 2: TC onayı
+  const [deleteInput, setDeleteInput] = useState('');
+  const [deleting, setDeleting] = useState(false);
+
  const fetchData = async () => {
     if (!token) return;
     setInvestors([]); // Tab değişince eski veriyi temizle
@@ -178,6 +183,24 @@ const handleAssign = async () => {
     toast.error(err.response?.data || "İşlem başarısız!");
   }
 };
+
+  const handleDeleteInvestor = async () => {
+    if (!deleteTarget) return;
+    setDeleting(true);
+    try {
+      await api.delete(`/users/${deleteTarget.tcNo}`);
+      toast.success(`${deleteTarget.fullName} sistemden silindi.`);
+      setDeleteTarget(null);
+      setDeleteStep(1);
+      setDeleteInput('');
+      setSelectedDetailInvestor(null);
+      fetchData();
+    } catch (err) {
+      toast.error(err.response?.data || 'Yatırımcı silinemedi.');
+    } finally {
+      setDeleting(false);
+    }
+  };
 
   const handleTradeSubmit = async () => {
   if (!price || parseFloat(price) <= 0) { toast.error("Lütfen geçerli bir tutar girin!"); return; }
@@ -445,6 +468,82 @@ const handleAssign = async () => {
 )}
       </main>
 
+      {/* ── Yatırımcı Silme Onay Modalı ── */}
+      {deleteTarget && (
+        <div className="advisor-modal-overlay" onClick={() => { setDeleteTarget(null); setDeleteStep(1); setDeleteInput(''); }}>
+          <div className="investor-delete-modal" onClick={e => e.stopPropagation()}>
+
+            {deleteStep === 1 ? (
+              <>
+                <div className="delete-modal-icon">⚠</div>
+                <h2 className="delete-modal-title">Bu işlem geri alınamaz</h2>
+                <p className="delete-modal-subtitle">
+                  <strong style={{ color: '#f1f5f9' }}>{deleteTarget.fullName}</strong> adlı yatırımcının hesabı kalıcı olarak silinecektir.
+                </p>
+
+                <div className="delete-warning-box">
+                  <p className="delete-warning-head">Silinecekler:</p>
+                  <ul className="delete-warning-list">
+                    <li>Kullanıcı hesabı ve giriş bilgileri</li>
+                    <li>Danışman atamaları</li>
+                    <li>Fon kaydı ve lot bilgileri</li>
+                  </ul>
+                  <p className="delete-warning-keep">İşlem geçmişi arşiv amaçlı korunacaktır.</p>
+                </div>
+
+                <div className="delete-modal-actions">
+                  <button className="btn-delete-next" onClick={() => setDeleteStep(2)}>
+                    Anladım, Devam Et →
+                  </button>
+                  <button className="btn-delete-cancel" onClick={() => { setDeleteTarget(null); setDeleteStep(1); setDeleteInput(''); }}>
+                    Vazgeç
+                  </button>
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="delete-modal-icon" style={{ background: 'rgba(239,68,68,0.15)' }}>🗑</div>
+                <h2 className="delete-modal-title">Silmeyi Onayla</h2>
+                <p className="delete-modal-subtitle">
+                  İşlemi onaylamak için aşağıya yatırımcının TC kimlik numarasını yazın:
+                </p>
+
+                <div className="delete-confirm-tc">
+                  <span className="delete-confirm-tc-label">TC:</span>
+                  <span className="delete-confirm-tc-value">{deleteTarget.tcNo}</span>
+                </div>
+
+                <input
+                  className="delete-confirm-input"
+                  type="text"
+                  placeholder="TC kimlik numarasını buraya girin..."
+                  value={deleteInput}
+                  onChange={e => setDeleteInput(e.target.value)}
+                  autoFocus
+                />
+
+                {deleteInput && deleteInput !== String(deleteTarget.tcNo) && (
+                  <p className="delete-input-error">TC numarası eşleşmiyor</p>
+                )}
+
+                <div className="delete-modal-actions">
+                  <button
+                    className="btn-delete-final"
+                    disabled={deleteInput !== String(deleteTarget.tcNo) || deleting}
+                    onClick={handleDeleteInvestor}
+                  >
+                    {deleting ? 'Siliniyor...' : 'Hesabı Kalıcı Sil'}
+                  </button>
+                  <button className="btn-delete-cancel" onClick={() => { setDeleteTarget(null); setDeleteStep(1); setDeleteInput(''); }}>
+                    Vazgeç
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
+        </div>
+      )}
+
       {/* ── Yatırımcı Detay Modalı ── */}
       {selectedDetailInvestor && (
         <div className="advisor-modal-overlay" onClick={() => setSelectedDetailInvestor(null)}>
@@ -529,6 +628,22 @@ const handleAssign = async () => {
                   onClick={() => { setSelectedDetailInvestor(null); setSelectedYatirimci(selectedDetailInvestor); setShowTradeModal(true); }}
                 >
                   Yatırım Yap / Çek
+                </button>
+              </div>
+
+              {/* Tehlikeli Alan */}
+              <div className="investor-danger-zone">
+                <span className="investor-danger-label">Tehlikeli Alan</span>
+                <button
+                  className="btn-delete-investor"
+                  onClick={() => {
+                    setDeleteTarget(selectedDetailInvestor);
+                    setDeleteStep(1);
+                    setDeleteInput('');
+                    setSelectedDetailInvestor(null);
+                  }}
+                >
+                  Hesabı Kalıcı Sil
                 </button>
               </div>
             </div>
