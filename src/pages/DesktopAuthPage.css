@@ -1,0 +1,488 @@
+/* ── DesktopAuthPage.css ──────────────────────────────── */
+
+/* Root */
+.dap-root {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  background: #020b18;
+  overflow: hidden;
+  font-family: 'Poppins', 'Inter', sans-serif;
+}
+
+/* Arka plan ızgara */
+.dap-bg-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(16, 185, 129, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(16, 185, 129, 0.03) 1px, transparent 1px);
+  background-size: 48px 48px;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Işık topları */
+.dap-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.dap-orb-1 {
+  width: 500px;
+  height: 500px;
+  top: -180px;
+  left: -100px;
+  background: radial-gradient(circle, rgba(14, 165, 233, 0.12), transparent 70%);
+}
+
+.dap-orb-2 {
+  width: 400px;
+  height: 400px;
+  bottom: -120px;
+  left: 200px;
+  background: radial-gradient(circle, rgba(16, 185, 129, 0.1), transparent 70%);
+}
+
+.dap-orb-3 {
+  width: 300px;
+  height: 300px;
+  top: 30%;
+  right: -80px;
+  background: radial-gradient(circle, rgba(99, 102, 241, 0.08), transparent 70%);
+}
+
+/* ── SOL PANEL (Marka) ────────────────────────────────── */
+
+.dap-brand-panel {
+  position: relative;
+  z-index: 1;
+  flex: 0 0 42%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 3rem 3.5rem;
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
+  background: linear-gradient(
+    135deg,
+    rgba(14, 165, 233, 0.06) 0%,
+    rgba(2, 11, 24, 0) 60%
+  );
+}
+
+.dap-brand-content {
+  display: flex;
+  flex-direction: column;
+  gap: 1.8rem;
+  margin-top: 2rem;
+}
+
+/* Logo */
+.dap-brand-logo-wrap {
+  width: 72px;
+  height: 72px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, rgba(14,165,233,0.18), rgba(16,185,129,0.1));
+  border: 1px solid rgba(14, 165, 233, 0.28);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 32px rgba(14, 165, 233, 0.18);
+}
+
+.dap-brand-logo {
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+}
+
+/* Marka adı */
+.dap-brand-text {
+  line-height: 1;
+}
+
+.dap-brand-name {
+  font-size: 2.8rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  margin: 0 0 0.3rem;
+}
+
+.dap-brand-quant { color: #f0f9ff; }
+.dap-brand-shine {
+  background: linear-gradient(135deg, #0ea5e9, #10b981);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.dap-brand-capital {
+  font-size: 0.9rem;
+  letter-spacing: 0.42em;
+  color: #64748b;
+  margin: 0;
+  font-weight: 300;
+}
+
+/* Divider */
+.dap-brand-divider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.dap-brand-line {
+  display: block;
+  flex: 1;
+  max-width: 80px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #1e3a5f, transparent);
+}
+
+.dap-brand-dot {
+  display: block;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 8px #10b981;
+}
+
+/* Slogan */
+.dap-brand-slogan {
+  font-size: 1rem;
+  color: #94a3b8;
+  line-height: 1.7;
+  margin: 0;
+}
+
+.dap-brand-slogan strong {
+  color: #cbd5e1;
+  font-weight: 600;
+}
+
+/* Özellikler listesi */
+.dap-brand-features {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.dap-feature {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  color: #64748b;
+  font-size: 0.88rem;
+}
+
+.dap-feature-icon {
+  color: #0ea5e9;
+  font-size: 0.75rem;
+  flex-shrink: 0;
+}
+
+/* Alt footer */
+.dap-brand-footer p {
+  color: #334155;
+  font-size: 0.75rem;
+  margin: 0;
+}
+
+/* ── SAĞ PANEL (Form) ─────────────────────────────────── */
+
+.dap-form-panel {
+  position: relative;
+  z-index: 1;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 3rem;
+  overflow-y: auto;
+}
+
+/* Sekme butonları */
+.dap-tabs {
+  display: flex;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 12px;
+  padding: 4px;
+  gap: 4px;
+  width: 100%;
+  max-width: 420px;
+  margin-bottom: 1.6rem;
+}
+
+.dap-tab {
+  flex: 1;
+  padding: 0.65rem 1rem;
+  border: none;
+  border-radius: 9px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  background: transparent;
+  color: #64748b;
+  font-family: inherit;
+}
+
+.dap-tab--active {
+  background: linear-gradient(135deg, #0ea5e9, #0d9488);
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(14, 165, 233, 0.3);
+}
+
+.dap-tab:not(.dap-tab--active):hover {
+  color: #cbd5e1;
+  background: rgba(255,255,255,0.05);
+}
+
+/* Form alanı */
+.dap-form-area {
+  width: 100%;
+  max-width: 420px;
+  animation: dapFadeIn 0.3s ease;
+}
+
+@keyframes dapFadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Form kartı */
+.dap-form-card {
+  width: 100%;
+}
+
+.dap-form-card--register {
+  /* Register formda biraz daha compact */
+}
+
+.dap-form-header {
+  margin-bottom: 1.6rem;
+}
+
+.dap-form-title {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #f1f5f9;
+  margin: 0 0 0.3rem;
+}
+
+.dap-form-sub {
+  color: #64748b;
+  font-size: 0.88rem;
+  margin: 0;
+}
+
+/* Alert */
+.dap-alert {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  margin-bottom: 1rem;
+}
+
+.dap-alert-error {
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  color: #fca5a5;
+}
+
+/* Form yapısı */
+.dap-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.95rem;
+}
+
+.dap-field-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.dap-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+}
+
+.dap-field label {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #94a3b8;
+  letter-spacing: 0.02em;
+}
+
+/* Input alanı */
+.dap-input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.dap-input-icon {
+  position: absolute;
+  left: 0.9rem;
+  width: 16px;
+  height: 16px;
+  color: #475569;
+  flex-shrink: 0;
+  pointer-events: none;
+}
+
+.dap-input-wrap input,
+.dap-input-wrap select {
+  width: 100%;
+  padding: 0.75rem 0.9rem 0.75rem 2.6rem;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 10px;
+  font-size: 0.88rem;
+  color: #e2e8f0;
+  font-family: inherit;
+  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.dap-input-wrap input::placeholder {
+  color: #334155;
+}
+
+.dap-input-wrap input:focus,
+.dap-input-wrap select:focus {
+  border-color: rgba(14, 165, 233, 0.5);
+  background: rgba(14, 165, 233, 0.06);
+  box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.12);
+}
+
+/* Select özel */
+.dap-select-wrap select {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.9rem center;
+  padding-right: 2.2rem;
+}
+
+.dap-select-wrap select option {
+  background: #0f172a;
+  color: #e2e8f0;
+}
+
+/* Göz butonu */
+.dap-eye-btn {
+  position: absolute;
+  right: 0.9rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #475569;
+  padding: 0;
+  display: flex;
+  transition: color 0.2s;
+}
+
+.dap-eye-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+.dap-eye-btn:hover { color: #94a3b8; }
+
+/* Submit butonu */
+.dap-submit-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  padding: 0.85rem 1.5rem;
+  margin-top: 0.4rem;
+  background: linear-gradient(135deg, #0ea5e9, #0d9488);
+  border: none;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #fff;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.2s, box-shadow 0.2s;
+  font-family: inherit;
+  box-shadow: 0 4px 16px rgba(14, 165, 233, 0.28);
+}
+
+.dap-submit-btn:hover:not(:disabled) {
+  opacity: 0.92;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(14, 165, 233, 0.38);
+}
+
+.dap-submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Spinner */
+.dap-spinner {
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: dapSpin 0.7s linear infinite;
+}
+
+@keyframes dapSpin {
+  to { transform: rotate(360deg); }
+}
+
+/* Alt geçiş linki */
+.dap-switch-text {
+  text-align: center;
+  font-size: 0.85rem;
+  color: #475569;
+  margin-top: 1.2rem;
+}
+
+.dap-switch-link {
+  background: none;
+  border: none;
+  color: #0ea5e9;
+  font-size: inherit;
+  font-family: inherit;
+  cursor: pointer;
+  font-weight: 500;
+  padding: 0;
+  transition: color 0.2s;
+}
+
+.dap-switch-link:hover { color: #38bdf8; }
+
+/* ── Responsive ───────────────────────────────────────── */
+
+@media (max-width: 768px) {
+  .dap-root { flex-direction: column; }
+  .dap-brand-panel {
+    flex: 0 0 auto;
+    padding: 1.5rem 2rem;
+    border-right: none;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .dap-brand-content { flex-direction: row; align-items: center; gap: 1rem; }
+  .dap-brand-features, .dap-brand-divider, .dap-brand-slogan { display: none; }
+  .dap-form-panel { padding: 1.5rem 1.5rem 2.5rem; }
+}

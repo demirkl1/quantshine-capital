@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from "react-router-dom";
 
 // 1. Sayfa Importları
@@ -41,9 +41,14 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import LoginModal from "./components/LoginModal";
 import RegisterModal from "./components/RegisterModal";
+import SplashScreen from "./components/SplashScreen";
+import DesktopAuthPage from "./pages/DesktopAuthPage";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import { ThemeProvider } from "./context/ThemeContext";
 import { Toaster } from "react-hot-toast";
+
+// Tauri ortamı tespiti
+const isTauri = Boolean(window.__TAURI__);
 
 const AppContent = ({
   isLoginModalOpen,
@@ -56,10 +61,15 @@ const AppContent = ({
 
   if (loading) {
     return (
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', background: '#0f172a' }}>
-        <h2 style={{ color: 'white' }}>Quantshine Sistem Yükleniyor...</h2>
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', background: '#020b18' }}>
+        <h2 style={{ color: '#94a3b8', fontFamily: 'Poppins, sans-serif', fontWeight: 400 }}>Quantshine Sistem Yükleniyor...</h2>
       </div>
     );
+  }
+
+  // Tauri ortamında kullanıcı giriş yapmamışsa desktop auth sayfasına yönlendir
+  if (isTauri && !user) {
+    return <DesktopAuthPage />;
   }
 
   // Sidebar olan sayfalar (Header/Footer görünmeyecek)
@@ -143,28 +153,37 @@ const AppContent = ({
 function App() {
   const [isLoginModalOpen, setLoginModalOpen] = useState(false);
   const [isRegisterModalOpen, setRegisterModalOpen] = useState(false);
+  const [showSplash, setShowSplash] = useState(isTauri);
+
+  const handleSplashFinish = useCallback(() => setShowSplash(false), []);
 
   return (
-    <Router>
-      <AuthProvider>
-        <ThemeProvider>
-          <AppContent
-            isLoginModalOpen={isLoginModalOpen}
-            setLoginModalOpen={setLoginModalOpen}
-            isRegisterModalOpen={isRegisterModalOpen}
-            setRegisterModalOpen={setRegisterModalOpen}
-          />
-          <Toaster
-            position="top-right"
-            toastOptions={{
-              style: { background: '#1e293b', color: '#f1f5f9', border: '1px solid #334155' },
-              success: { iconTheme: { primary: '#10b981', secondary: '#1e293b' } },
-              error: { iconTheme: { primary: '#ef4444', secondary: '#1e293b' } },
-            }}
-          />
-        </ThemeProvider>
-      </AuthProvider>
-    </Router>
+    <>
+      {showSplash && <SplashScreen onFinish={handleSplashFinish} />}
+
+      {!showSplash && (
+        <Router>
+          <AuthProvider>
+            <ThemeProvider>
+              <AppContent
+                isLoginModalOpen={isLoginModalOpen}
+                setLoginModalOpen={setLoginModalOpen}
+                isRegisterModalOpen={isRegisterModalOpen}
+                setRegisterModalOpen={setRegisterModalOpen}
+              />
+              <Toaster
+                position="top-right"
+                toastOptions={{
+                  style: { background: '#1e293b', color: '#f1f5f9', border: '1px solid #334155' },
+                  success: { iconTheme: { primary: '#10b981', secondary: '#1e293b' } },
+                  error: { iconTheme: { primary: '#ef4444', secondary: '#1e293b' } },
+                }}
+              />
+            </ThemeProvider>
+          </AuthProvider>
+        </Router>
+      )}
+    </>
   );
 }
 
