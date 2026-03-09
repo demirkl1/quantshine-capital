@@ -2,14 +2,28 @@ import React, { useState, useEffect } from 'react';
 import api from '../api';
 import { useAuth } from '../context/AuthContext';
 import AdminSidebar from '../components/AdminSidebar';
-import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
 import './AdminAnasayfa.css';
 
 const AdminAnasayfa = () => {
   const { token, user } = useAuth();
   const [activeFilter, setActiveFilter] = useState("1A");
   const [loading, setLoading] = useState(true);
-  const [selectedChartFon, setSelectedChartFon] = useState("HSF");
+  const [selectedFonlar, setSelectedFonlar] = useState(null);
+  const [multiChartData, setMultiChartData] = useState([]);
+  const [fonDropdownOpen, setFonDropdownOpen] = useState(false);
+
+  const CHART_COLORS = ['#4f46e5', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4'];
+  const getFonColor = (code) => {
+    const idx = fonListesi.findIndex(f => f.fundCode === code || f.fundName === code);
+    return CHART_COLORS[Math.max(0, idx) % CHART_COLORS.length];
+  };
+  const toggleFon = (code) => {
+    setSelectedFonlar(prev => {
+      if (!prev) return [code];
+      return prev.includes(code) ? prev.filter(c => c !== code) : [...prev, code];
+    });
+  };
 
   const [financials, setFinancials] = useState({
     sirketFonBuyuklugu: 0,
@@ -18,7 +32,7 @@ const AdminAnasayfa = () => {
     fonKarZararTl: 0
   });
   const [fonListesi, setFonListesi] = useState([]);
-  const [grafikVerisi, setGrafikVerisi] = useState([]);
+  const [grafikVerisi, setGrafikVerisi] = useState([]); // legacy, kullanılmıyor
 
   // Admin DB kaydını senkronize et (Keycloak'ta oluşturulmuş kullanıcılar için gerekli)
   useEffect(() => {
@@ -44,25 +58,51 @@ const AdminAnasayfa = () => {
     return () => clearInterval(interval);
   }, [token]);
 
-  // Grafik + fon listesi — filtre veya kullanıcı değişince yenilenir
+  // selectedFonlar'ı kullanıcı yüklenince başlat
   useEffect(() => {
-    const fetchChartAndFunds = async () => {
-      if (!token) return;
-      try {
-        const res = await api.get(`/funds/history/${user?.managedFundCode || 'HSF'}?filter=${activeFilter}`);
-        setGrafikVerisi(res.data.map(item => ({ name: item.date, fiyat: item.price })));
-      } catch (e) { console.error("Grafik API Hatası:", e.message); }
+    if (selectedFonlar === null && user?.managedFundCode) {
+      setSelectedFonlar([user.managedFundCode]);
+    }
+  }, [user, selectedFonlar]);
 
+  // Fon listesi
+  useEffect(() => {
+    const fetchFunds = async () => {
+      if (!token) return;
       try {
         const res = await api.get('/funds/all-details');
         setFonListesi(res.data);
       } catch (e) { console.error("Tablo API Hatası:", e.message); }
-
       setLoading(false);
     };
+    fetchFunds();
+  }, [token]);
 
-    fetchChartAndFunds();
-  }, [token, user, activeFilter]);
+  // Multi-fund chart — seçili fonlar veya filtre değişince
+  useEffect(() => {
+    const fetchMultiChart = async () => {
+      if (!token || !selectedFonlar || selectedFonlar.length === 0) return;
+      try {
+        const results = await Promise.all(
+          selectedFonlar.map(code =>
+            api.get(`/funds/history/${code}?filter=${activeFilter}`)
+              .then(res => ({ code, data: res.data }))
+              .catch(() => ({ code, data: [] }))
+          )
+        );
+        const dateMap = {};
+        results.forEach(({ code, data }) => {
+          data.forEach(item => {
+            const key = item.date;
+            if (!dateMap[key]) dateMap[key] = { name: key };
+            dateMap[key][code] = item.price;
+          });
+        });
+        setMultiChartData(Object.values(dateMap).sort((a, b) => new Date(a.name) - new Date(b.name)));
+      } catch (e) { console.error("Multi-chart hatası:", e); }
+    };
+    fetchMultiChart();
+  }, [token, selectedFonlar, activeFilter]);
   const formatXAxis = (tickItem) => {
     if (!tickItem) return "";
     const date = new Date(tickItem);
@@ -78,7 +118,7 @@ const AdminAnasayfa = () => {
   };
 
   const getTickInterval = () => {
-    const len = grafikVerisi.length;
+    const len = multiChartData.length;
     if (len <= 7) return 0;
     return Math.max(0, Math.ceil(len / 6) - 1);
   };
@@ -148,8 +188,42 @@ const calculatePerc = (profit, total) => {
           </div>
 
           <div className="chart-section">
-            <div className="chart-header-row">
-              <h3>{user?.managedFundCode || 'HSF'} - Portföy Değeri Gelişimi</h3>
+            <div className="chart-header-row" style={{ flexWrap: 'wrap', gap: 12 }}>
+              {/* Fon çoklu seçici */}
+              <div style={{ position: 'relative' }}>
+                <button
+                  className="fon-dropdown-btn"
+                  onClick={() => setFonDropdownOpen(o => !o)}
+                >
+                  {selectedFonlar && selectedFonlar.length > 0
+                    ? selectedFonlar.join(', ')
+                    : 'Fon Seçin'}
+                  <span style={{ marginLeft: 6, fontSize: 9 }}>▾</span>
+                </button>
+                {fonDropdownOpen && (
+                  <div className="fon-dropdown-menu">
+                    {fonListesi.map((f, i) => {
+                      const code = f.fundCode || f.fundName;
+                      const selected = selectedFonlar?.includes(code);
+                      return (
+                        <div
+                          key={i}
+                          className={`fon-dropdown-item ${selected ? 'selected' : ''}`}
+                          onClick={() => toggleFon(code)}
+                        >
+                          <span
+                            className="fon-color-dot"
+                            style={{ background: CHART_COLORS[i % CHART_COLORS.length] }}
+                          />
+                          {f.fundName || code}
+                          {selected && <span style={{ marginLeft: 'auto', color: '#10b981', fontSize: 12 }}>✓</span>}
+                        </div>
+                      );
+                    })}
+                  </div>
+                )}
+              </div>
+
               <div className="time-filter-group">
                 {["1H", "1A", "3A", "6A", "1Y"].map((f) => (
                   <button key={f} className={`filter-btn ${activeFilter === f ? 'active' : ''}`} onClick={() => setActiveFilter(f)}>
@@ -159,14 +233,28 @@ const calculatePerc = (profit, total) => {
               </div>
             </div>
 
+            {/* Seçili fon etiketleri */}
+            {selectedFonlar && selectedFonlar.length > 0 && (
+              <div style={{ display: 'flex', gap: 8, marginBottom: 12, flexWrap: 'wrap' }}>
+                {selectedFonlar.map((code, i) => (
+                  <span key={code} className="fon-chip" style={{ borderColor: CHART_COLORS[i % CHART_COLORS.length], color: CHART_COLORS[i % CHART_COLORS.length] }}>
+                    {code}
+                    <button className="fon-chip-remove" onClick={() => toggleFon(code)}>×</button>
+                  </span>
+                ))}
+              </div>
+            )}
+
             <div style={{ width: '100%', height: 350 }}>
               <ResponsiveContainer>
-                <AreaChart data={grafikVerisi}>
+                <AreaChart data={multiChartData}>
                   <defs>
-                    <linearGradient id="colorAdmin" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#4f46e5" stopOpacity={0.3}/>
-                      <stop offset="95%" stopColor="#4f46e5" stopOpacity={0}/>
-                    </linearGradient>
+                    {(selectedFonlar || []).map((code, i) => (
+                      <linearGradient key={code} id={`color-${code}`} x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor={CHART_COLORS[i % CHART_COLORS.length]} stopOpacity={0.25}/>
+                        <stop offset="95%" stopColor={CHART_COLORS[i % CHART_COLORS.length]} stopOpacity={0}/>
+                      </linearGradient>
+                    ))}
                   </defs>
                   <CartesianGrid strokeDasharray="3 3" stroke="#2d3748" vertical={false} />
                   <XAxis
@@ -193,12 +281,31 @@ const calculatePerc = (profit, total) => {
                     axisLine={false}
                     tickLine={false}
                   />
-                  <Tooltip 
-  contentStyle={{ backgroundColor: '#161b2c', border: 'none', borderRadius: '10px', color: '#fff' }}
-  labelFormatter={(label) => new Date(label).toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' })}
-  formatter={(value) => [`₺${value.toLocaleString('tr-TR', { minimumFractionDigits: 2 })}`, "Birim Fiyat"]}
-/>
-                  <Area type="monotone" dataKey="fiyat" stroke="#4f46e5" fillOpacity={1} fill="url(#colorAdmin)" strokeWidth={3} />
+                  <Tooltip
+                    contentStyle={{ backgroundColor: '#161b2c', border: 'none', borderRadius: '10px', color: '#fff' }}
+                    labelFormatter={(label) => new Date(label).toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' })}
+                    formatter={(value, name) => [`₺${Number(value).toLocaleString('tr-TR', { minimumFractionDigits: 2 })}`, name]}
+                  />
+                  {(selectedFonlar || []).length > 1 && (
+                    <Legend
+                      wrapperStyle={{ fontSize: 11, color: '#94a3b8', paddingTop: 8 }}
+                      formatter={(value) => value}
+                    />
+                  )}
+                  {(selectedFonlar || []).map((code, i) => (
+                    <Area
+                      key={code}
+                      type="monotone"
+                      dataKey={code}
+                      name={code}
+                      stroke={CHART_COLORS[i % CHART_COLORS.length]}
+                      fill={`url(#color-${code})`}
+                      fillOpacity={1}
+                      strokeWidth={2}
+                      dot={false}
+                      connectNulls
+                    />
+                  ))}
                 </AreaChart>
               </ResponsiveContainer>
             </div>

@@ -55,3 +55,38 @@
 .sort-th:hover {
   color: #d1d4dc;
 }
+
+/* ── Responsive Grid ──────────────────────────────────── */
+.trade-grid {
+  display: grid;
+  grid-template-columns: 380px 1fr;
+  gap: 16px;
+  align-items: start;
+}
+
+@media (max-width: 1200px) {
+  .trade-grid {
+    grid-template-columns: 340px 1fr;
+  }
+}
+
+@media (max-width: 1024px) {
+  .trade-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 1024px) {
+  /* main padding - mobile topbar offset */
+  div[style*="padding: 20px 24px"],
+  div[style*="padding:20px 24px"] {
+    padding: 72px 12px 12px !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .trade-grid {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+}

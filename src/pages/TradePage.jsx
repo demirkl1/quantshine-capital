@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import api from '../api';
 import toast from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext';
@@ -380,6 +380,23 @@ const TradePage = ({ role }) => {
   /* ── top 5 watchlist from holdings ── */
   const watchlist = (portfolio?.holdings || []).slice(0, 5);
 
+  /* ── En çok işlem yapılan hisseler ── */
+  const mostTradedStocks = useMemo(() => {
+    if (tradeHistory.length === 0) return [];
+    const counts = {};
+    tradeHistory.forEach(t => {
+      if (t.stockCode) counts[t.stockCode] = (counts[t.stockCode] || 0) + 1;
+    });
+    return Object.entries(counts)
+      .sort(([, a], [, b]) => b - a)
+      .slice(0, 8)
+      .map(([code, count]) => {
+        const stock = hisseler.find(h => h.stockCode === code);
+        return stock ? { ...stock, tradeCount: count } : null;
+      })
+      .filter(Boolean);
+  }, [tradeHistory, hisseler]);
+
   /* ── panel/history tab style helper ── */
   const tabStyle = (active) => ({
     padding:'9px 16px', border:'none', cursor:'pointer',
@@ -518,7 +535,7 @@ const TradePage = ({ role }) => {
           )}
 
           {/* ── MAIN GRID ────────────────────────────────────── */}
-          <div style={G.grid}>
+          <div style={G.grid} className="trade-grid">
 
             {/* ── LEFT: TRADE PANEL ──────────────────────────── */}
             <div style={{display:'flex', flexDirection:'column', gap:12}}>
@@ -570,6 +587,54 @@ const TradePage = ({ role }) => {
                     </div>
 
                     <div style={{display:'flex', flexDirection:'column', gap:12}}>
+
+                      {/* Önerilen / Sık kullanılan hisseler */}
+                      {mostTradedStocks.length > 0 && (
+                        <div>
+                          <div style={{...G.label, marginBottom: 6}}>
+                            ⚡ Sık İşlem Yapılan
+                          </div>
+                          <div style={{ display:'flex', flexWrap:'wrap', gap:5 }}>
+                            {mostTradedStocks.map(h => {
+                              const isPos = parseFloat((h.changePercent||'0').replace('%','')) >= 0;
+                              const isSelected = selectedHisse?.stockCode === h.stockCode;
+                              return (
+                                <button
+                                  key={h.stockCode}
+                                  onClick={() => {
+                                    setSelectedHisse(h);
+                                    setActivePanel('hisse');
+                                    setLot('');
+                                    setTutar('');
+                                  }}
+                                  style={{
+                                    padding:'4px 10px',
+                                    borderRadius:4,
+                                    border:`1px solid ${isSelected ? tv.accent : tv.borderHi}`,
+                                    background: isSelected ? `rgba(41,98,255,0.15)` : tv.panel,
+                                    color: isSelected ? tv.accent : tv.text,
+                                    fontSize:10,
+                                    fontWeight:700,
+                                    cursor:'pointer',
+                                    fontFamily:"'JetBrains Mono', monospace",
+                                    display:'flex',
+                                    flexDirection:'column',
+                                    alignItems:'center',
+                                    gap:1,
+                                    transition:'all 0.15s',
+                                    minWidth:52,
+                                  }}
+                                >
+                                  <span>{h.stockCode}</span>
+                                  <span style={{fontSize:9, color: isPos ? tv.green : tv.red}}>
+                                    {h.changePercent || '—'}
+                                  </span>
+                                </button>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      )}
 
                       {/* hisse select */}
                       <div>
