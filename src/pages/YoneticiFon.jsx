@@ -3,6 +3,9 @@ import api from '../api';
 import { useAuth } from '../context/AuthContext';
 import AdminSidebar from '../components/AdminSidebar';
 import toast from 'react-hot-toast';
+import {
+  AreaChart, Area, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer
+} from 'recharts';
 import './YoneticiFon.css';
 
 const YoneticiFon = () => {
@@ -20,6 +23,46 @@ const YoneticiFon = () => {
   const [investors, setInvestors] = useState([]);
   const [selectedInvestorTc, setSelectedInvestorTc] = useState('');
   const [investorFundCode, setInvestorFundCode] = useState('');
+
+  // Fon detay modalı
+  const [selectedDetailFon, setSelectedDetailFon] = useState(null);
+  const [detailFund, setDetailFund]         = useState(null);
+  const [detailChartData, setDetailChartData] = useState([]);
+  const [detailPeriod, setDetailPeriod]     = useState('1A');
+  const [loadingDetail, setLoadingDetail]   = useState(false);
+
+  const DETAIL_PERIODS = [
+    { key: '1A', label: '1 Ay'  },
+    { key: '3A', label: '3 Ay'  },
+    { key: '6A', label: '6 Ay'  },
+    { key: '1Y', label: '1 Yıl' },
+    { key: '3Y', label: '3 Yıl' },
+  ];
+
+  // Fon detayını çek (bilgi + grafik)
+  useEffect(() => {
+    if (!selectedDetailFon) return;
+    const ctrl = new AbortController();
+    const fetchDetail = async () => {
+      setLoadingDetail(true);
+      setDetailFund(null);
+      setDetailChartData([]);
+      try {
+        const [detailRes, histRes] = await Promise.all([
+          api.get(`/funds/${selectedDetailFon.code}`, { signal: ctrl.signal }),
+          api.get(`/funds/${selectedDetailFon.code}/history`, { params: { period: detailPeriod }, signal: ctrl.signal }),
+        ]);
+        setDetailFund(detailRes.data);
+        setDetailChartData(Array.isArray(histRes.data) ? histRes.data : []);
+      } catch (e) {
+        if (e.name !== 'CanceledError' && e.name !== 'AbortError') console.error(e);
+      } finally {
+        setLoadingDetail(false);
+      }
+    };
+    fetchDetail();
+    return () => ctrl.abort();
+  }, [selectedDetailFon, detailPeriod]);
 
   const fetchInitialData = async () => {
     try {
@@ -165,19 +208,19 @@ const YoneticiFon = () => {
               </thead>
               <tbody>
                 {funds.map(f => (
-                  <tr key={f.code}>
+                  <tr key={f.code} onClick={() => { setSelectedDetailFon(f); setDetailPeriod('1A'); }} style={{ cursor: 'pointer' }}>
                     <td><span className="badge-fon-code">{f.code}</span></td>
                     <td><strong>{f.name}</strong></td>
                     <td>₺{f.price?.toLocaleString('tr-TR', { minimumFractionDigits: 4 })}</td>
                     <td>
                       <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
-                        <button className="btn-transfer-action" onClick={() => handleOpenModal("transfer", f)}>
+                        <button className="btn-transfer-action" onClick={(e) => { e.stopPropagation(); handleOpenModal("transfer", f); }}>
                           Danışman İşlemleri
                         </button>
-                        <button className="btn-investor-action" onClick={() => handleOpenModal("yatirimci-cikar", f)}>
+                        <button className="btn-investor-action" onClick={(e) => { e.stopPropagation(); handleOpenModal("yatirimci-cikar", f); }}>
                           Yatırımcı İşlemleri
                         </button>
-                        <button className="btn-delete-fund" onClick={() => handleOpenModal("sil-fon", f)}>
+                        <button className="btn-delete-fund" onClick={(e) => { e.stopPropagation(); handleOpenModal("sil-fon", f); }}>
                           Sil
                         </button>
                       </div>
@@ -410,6 +453,152 @@ const YoneticiFon = () => {
           </div>
         )}
       </main>
+
+      {/* Fon Detay Modalı — main dışında, tüm sayfanın üstünde */}
+      {selectedDetailFon && (
+        <div className="fon-detail-overlay" onClick={() => setSelectedDetailFon(null)}>
+          <div className="fon-detail-modal" onClick={e => e.stopPropagation()}>
+            <div className="fon-detail-header">
+              <div>
+                <span className="fon-code-badge">
+                  {detailFund?.code || selectedDetailFon.code}
+                </span>
+                <h2 className="fon-detail-title">{detailFund?.name || selectedDetailFon.name}</h2>
+                {detailFund?.type && <span className="fon-detail-type">{detailFund.type}</span>}
+              </div>
+              <button className="fon-detail-close" onClick={() => setSelectedDetailFon(null)}>✕</button>
+            </div>
+
+            {loadingDetail ? (
+              <div className="fon-detail-loading">Yükleniyor...</div>
+            ) : (
+              <>
+                <div className="fon-detail-stats">
+                  <div className="fon-stat-card">
+                    <span className="fon-stat-label">Birim Fiyat</span>
+                    <span className="fon-stat-value">₺{detailFund?.price?.toLocaleString('tr-TR', { minimumFractionDigits: 4 }) ?? '—'}</span>
+                  </div>
+                  <div className="fon-stat-card">
+                    <span className="fon-stat-label">Toplam Değer</span>
+                    <span className="fon-stat-value">₺{detailFund?.totalValue?.toLocaleString('tr-TR', { minimumFractionDigits: 2 }) ?? '—'}</span>
+                  </div>
+                  <div className="fon-stat-card">
+                    <span className="fon-stat-label">Oluşturulma Tarihi</span>
+                    <span className="fon-stat-value fon-stat-small">{detailFund?.inceptionDate ?? '—'}</span>
+                  </div>
+                  <div className="fon-stat-card">
+                    <span className="fon-stat-label">Risk Seviyesi</span>
+                    <span className="fon-stat-value fon-stat-small">{detailFund?.riskLevel ?? '—'}</span>
+                  </div>
+                  <div className="fon-stat-card">
+                    <span className="fon-stat-label">Para Birimi</span>
+                    <span className="fon-stat-value fon-stat-small">{detailFund?.currency ?? '—'}</span>
+                  </div>
+                  <div className="fon-stat-card">
+                    <span className="fon-stat-label">TEFAS</span>
+                    <span className="fon-stat-value fon-stat-small">{detailFund?.tefas != null ? (detailFund.tefas ? 'Evet' : 'Hayır') : '—'}</span>
+                  </div>
+                </div>
+
+                {detailFund?.performance && (
+                  <div className="fon-perf-section">
+                    <p className="fon-section-label">Getiri Performansı</p>
+                    <div className="fon-perf-grid">
+                      {[
+                        { label: 'Günlük', val: detailFund.performance.day1 },
+                        { label: '1 Ay',   val: detailFund.performance.day30 },
+                        { label: '3 Ay',   val: detailFund.performance.day90 },
+                        { label: '6 Ay',   val: detailFund.performance.day180 },
+                        { label: 'YBB',    val: detailFund.performance.ytd },
+                        { label: '1 Yıl',  val: detailFund.performance.day365 },
+                      ].map(({ label, val }) => (
+                        <div key={label} className={`fon-perf-pill ${val == null ? 'neutral' : val >= 0 ? 'positive' : 'negative'}`}>
+                          <span className="fon-perf-label">{label}</span>
+                          <span className="fon-perf-val">
+                            {val != null ? `${val >= 0 ? '+' : ''}${val.toFixed(2)}%` : '—'}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                <div className="fon-chart-section">
+                  <div className="fon-chart-header">
+                    <p className="fon-section-label">Fiyat Geçmişi</p>
+                    <div className="fon-period-btns">
+                      {DETAIL_PERIODS.map(p => (
+                        <button
+                          key={p.key}
+                          className={`fon-period-btn ${detailPeriod === p.key ? 'active' : ''}`}
+                          onClick={() => setDetailPeriod(p.key)}
+                        >
+                          {p.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  {detailChartData.length > 0 ? (
+                    <ResponsiveContainer width="100%" height={180}>
+                      <AreaChart data={detailChartData} margin={{ top: 4, right: 4, left: 0, bottom: 0 }}>
+                        <defs>
+                          <linearGradient id="detailGrad" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="5%" stopColor="#4f46e5" stopOpacity={0.35} />
+                            <stop offset="95%" stopColor="#4f46e5" stopOpacity={0} />
+                          </linearGradient>
+                        </defs>
+                        <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
+                        <XAxis
+                          dataKey="priceDate"
+                          tickFormatter={v => v ? v.substring(0, 10) : ''}
+                          tick={{ fill: '#787b86', fontSize: 10 }}
+                          axisLine={false} tickLine={false}
+                        />
+                        <YAxis
+                          tick={{ fill: '#787b86', fontSize: 10 }}
+                          axisLine={false} tickLine={false}
+                          width={55}
+                          tickFormatter={v => `₺${v.toLocaleString('tr-TR')}`}
+                        />
+                        <Tooltip
+                          contentStyle={{ background: '#1e293b', border: '1px solid #334155', borderRadius: 6, fontSize: 11 }}
+                          labelStyle={{ color: '#94a3b8' }}
+                          itemStyle={{ color: '#818cf8' }}
+                          formatter={v => [`₺${Number(v).toLocaleString('tr-TR', { minimumFractionDigits: 4 })}`, 'Fiyat']}
+                          labelFormatter={v => v ? v.substring(0, 10) : v}
+                        />
+                        <Area type="monotone" dataKey="price" stroke="#4f46e5" strokeWidth={2} fill="url(#detailGrad)" dot={false} />
+                      </AreaChart>
+                    </ResponsiveContainer>
+                  ) : (
+                    <div className="fon-no-chart">Bu dönem için fiyat verisi bulunamadı.</div>
+                  )}
+                </div>
+
+                {detailFund?.allocation?.length > 0 && (
+                  <div className="fon-alloc-section">
+                    <p className="fon-section-label">Varlık Dağılımı</p>
+                    <div className="fon-alloc-bars">
+                      {detailFund.allocation.map((item, i) => {
+                        const colors = ['#4f46e5', '#10b981', '#f59e0b', '#ef4444'];
+                        return (
+                          <div key={i} className="fon-alloc-row">
+                            <span className="fon-alloc-name">{item.name}</span>
+                            <div className="fon-alloc-bar-bg">
+                              <div className="fon-alloc-bar-fill" style={{ width: `${item.percentage}%`, background: colors[i % colors.length] }} />
+                            </div>
+                            <span className="fon-alloc-pct">%{item.percentage}</span>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+              </>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 };
