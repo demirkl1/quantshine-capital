@@ -18,6 +18,7 @@ const Yatirimcilar = () => {
   const [advisors, setAdvisors] = useState([]);
   const [portfolios, setPortfolios] = useState({});
   const [allAvailableFunds, setAllAvailableFunds] = useState([]);
+  const [selectedDetailInvestor, setSelectedDetailInvestor] = useState(null);
 
   const [targetAdvisorTc, setTargetAdvisorTc] = useState('');
   const [selectedFundCode, setSelectedFundCode] = useState('');
@@ -226,7 +227,7 @@ const handleAssign = async () => {
               </thead>
 <tbody>
   {investors.map((inv) => (
-    <tr key={inv.tcNo}>
+    <tr key={inv.tcNo} onClick={() => setSelectedDetailInvestor(inv)} style={{ cursor: 'pointer' }}>
       <td>{inv.tcNo}</td>
       <td>{inv.fullName}</td>
       <td>{inv.email}</td>
@@ -274,10 +275,10 @@ const handleAssign = async () => {
         )}
       </td>
       <td className="actions-cell">
-        <button className="btn-transfer" onClick={() => { setSelectedYatirimci(inv); setShowTransferModal(true); }}>
+        <button className="btn-transfer" onClick={(e) => { e.stopPropagation(); setSelectedYatirimci(inv); setShowTransferModal(true); }}>
           Danışman Ekle
         </button>
-        <button className="btn-transfer" style={{background: '#4f46e5', marginLeft: '5px'}} onClick={() => { setSelectedYatirimci(inv); setShowTradeModal(true); }}>
+        <button className="btn-transfer" style={{background: '#4f46e5', marginLeft: '5px'}} onClick={(e) => { e.stopPropagation(); setSelectedYatirimci(inv); setShowTradeModal(true); }}>
           Yatırım Yap / Çek
         </button>
       </td>
@@ -443,6 +444,97 @@ const handleAssign = async () => {
   </div>
 )}
       </main>
+
+      {/* ── Yatırımcı Detay Modalı ── */}
+      {selectedDetailInvestor && (
+        <div className="advisor-modal-overlay" onClick={() => setSelectedDetailInvestor(null)}>
+          <div className="advisor-modal investor-detail-modal" onClick={e => e.stopPropagation()}>
+
+            {/* Header */}
+            <div className="advisor-modal-header">
+              <div className="advisor-avatar" style={{ background: '#10b981' }}>
+                {selectedDetailInvestor.fullName?.charAt(0)?.toUpperCase() || '?'}
+              </div>
+              <div>
+                <h2 className="advisor-modal-name">{selectedDetailInvestor.fullName}</h2>
+                <span className="advisor-modal-role">Yatırımcı · {selectedDetailInvestor.tcNo}</span>
+              </div>
+              <button className="advisor-modal-close" onClick={() => setSelectedDetailInvestor(null)}>✕</button>
+            </div>
+
+            {/* Body */}
+            <div className="advisor-modal-body">
+
+              {/* Kişisel bilgiler */}
+              <div className="advisor-info-grid">
+                <div className="advisor-info-item">
+                  <span className="advisor-info-label">TC Kimlik No</span>
+                  <span className="advisor-info-value">{selectedDetailInvestor.tcNo}</span>
+                </div>
+                <div className="advisor-info-item">
+                  <span className="advisor-info-label">E-Posta</span>
+                  <span className="advisor-info-value">{selectedDetailInvestor.email}</span>
+                </div>
+                <div className="advisor-info-item">
+                  <span className="advisor-info-label">Telefon</span>
+                  <span className="advisor-info-value">{selectedDetailInvestor.phone || '---'}</span>
+                </div>
+                <div className="advisor-info-item">
+                  <span className="advisor-info-label">Toplam Portföy</span>
+                  <span className="advisor-info-value" style={{ color: '#f59e0b' }}>
+                    ₺{Number(selectedDetailInvestor.totalPortfolioValue || 0).toLocaleString('tr-TR', { minimumFractionDigits: 2 })}
+                  </span>
+                </div>
+              </div>
+
+              {/* Fon pozisyonları */}
+              {selectedDetailInvestor.holdings && selectedDetailInvestor.holdings.length > 0 && (
+                <div className="investor-holdings-section">
+                  <span className="advisor-info-label" style={{ display: 'block', marginBottom: 10 }}>Fon Pozisyonları</span>
+                  {selectedDetailInvestor.holdings.map((h, i) => (
+                    <div key={i} className="investor-holding-card">
+                      <div className="investor-holding-top">
+                        <span className="investor-holding-code">{h.fundCode}</span>
+                        <span className="investor-holding-lots">{Number(h.lots || 0).toLocaleString('tr-TR', { minimumFractionDigits: 4 })} Lot</span>
+                      </div>
+                      <div className="investor-holding-value">
+                        <span style={{ color: '#787b86', fontSize: 11 }}>Güncel Değer</span>
+                        <span style={{ color: '#10b981', fontWeight: 700 }}>
+                          ₺{Number(h.tlValue || 0).toLocaleString('tr-TR', { minimumFractionDigits: 2 })}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {(!selectedDetailInvestor.holdings || selectedDetailInvestor.holdings.length === 0) && (
+                <div style={{ textAlign: 'center', padding: '20px', color: '#434651', fontSize: 12 }}>
+                  Bu yatırımcının henüz aktif fon pozisyonu bulunmuyor.
+                </div>
+              )}
+
+              {/* İşlem butonları */}
+              <div style={{ display: 'flex', gap: 8, marginTop: 16 }}>
+                <button
+                  className="btn-transfer"
+                  style={{ flex: 1 }}
+                  onClick={() => { setSelectedDetailInvestor(null); setSelectedYatirimci(selectedDetailInvestor); setShowTransferModal(true); }}
+                >
+                  Danışman Ekle / Transfer
+                </button>
+                <button
+                  className="btn-transfer"
+                  style={{ flex: 1, background: '#4f46e5' }}
+                  onClick={() => { setSelectedDetailInvestor(null); setSelectedYatirimci(selectedDetailInvestor); setShowTradeModal(true); }}
+                >
+                  Yatırım Yap / Çek
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
