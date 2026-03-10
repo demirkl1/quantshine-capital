@@ -96,10 +96,22 @@ const AdminAnasayfa = () => {
               .catch(() => ({ code, data: [] }))
           )
         );
+        const toDay = (v) => {
+          if (!v) return null;
+          const d = new Date(v);
+          return isNaN(d.getTime()) ? String(v).substring(0, 10) : d.toISOString().split('T')[0];
+        };
         const newSeries = {};
         results.forEach(({ code, data }) => {
-          newSeries[code] = data.map(item => ({ date: item.date, price: item.price }));
+          newSeries[code] = data
+            .map(item => ({
+              date: toDay(item.date ?? item.priceDate ?? item.recordDate),
+              price: parseFloat(item.price ?? item.currentPrice ?? 0) || 0
+            }))
+            .filter(d => d.date)
+            .sort((a, b) => a.date.localeCompare(b.date));
         });
+        console.log('[AdminChart] fundSeriesData:', newSeries);
         setFundSeriesData(newSeries);
       } catch (e) { console.error("Fon grafik hatası:", e); }
     };
@@ -117,14 +129,18 @@ const AdminAnasayfa = () => {
       const fromUnix = toUnix - days * 86400;
       try {
         const res = await fetch(
-          `https://data.tradingview.com/datafeed/history?symbol=BIST%3AXU100&resolution=D&from=${fromUnix}&to=${toUnix}&countback=500`
+          `https://data.tradingview.com/datafeed/history?symbol=BIST%3AXU100&resolution=1D&from=${fromUnix}&to=${toUnix}`
         );
+        if (!res.ok) return [];
         const json = await res.json();
-        if (json.s !== 'ok' || !Array.isArray(json.t)) return [];
+        if (!json || json.s === 'error' || !Array.isArray(json.t) || json.t.length === 0) return [];
         return json.t
           .map((ts, i) => ({ date: new Date(ts * 1000).toISOString().split('T')[0], price: json.c[i] }))
           .filter(d => d.price != null);
-      } catch { return []; }
+      } catch (e) {
+        console.warn('BIST 100 verisi alınamadı:', e.message);
+        return [];
+      }
     };
 
     // USD/TRY — Yahoo Finance
@@ -134,6 +150,7 @@ const AdminAnasayfa = () => {
         const res = await fetch(
           `https://query1.finance.yahoo.com/v8/finance/chart/USDTRY=X?range=${range}&interval=1d`
         );
+        if (!res.ok) return [];
         const json = await res.json();
         const result = json.chart?.result?.[0];
         if (!result) return [];
@@ -142,7 +159,10 @@ const AdminAnasayfa = () => {
         return timestamps
           .map((t, i) => ({ date: new Date(t * 1000).toISOString().split('T')[0], price: closes[i] }))
           .filter(d => d.price != null);
-      } catch { return []; }
+      } catch (e) {
+        console.warn('USD/TRY verisi alınamadı:', e.message);
+        return [];
+      }
     };
 
     Promise.all([fetchBist(), fetchUsd()]).then(([bist, usd]) => setMarketData({ bist, usd }));
@@ -152,10 +172,16 @@ const AdminAnasayfa = () => {
   const normalizedChartData = useMemo(() => {
     const normSeries = (items) => {
       if (!items?.length) return {};
-      const base = items[0].price;
-      if (!base || base === 0) return {};
+      const valid = items.filter(d => d.price != null && d.date);
+      if (!valid.length) return {};
+      const base = valid[0].price;
       const map = {};
-      items.forEach(d => { if (d.price != null) map[d.date] = parseFloat((((d.price - base) / base) * 100).toFixed(3)); });
+      valid.forEach(d => {
+        // base 0 ise flat çizgi (0%) göster, yoksa % değişim hesapla
+        map[d.date] = base === 0
+          ? 0
+          : parseFloat((((d.price - base) / base) * 100).toFixed(3));
+      });
       return map;
     };
 
