@@ -106,32 +106,46 @@ const AdminAnasayfa = () => {
     fetchFundSeries();
   }, [token, selectedFonlar, activeFilter]);
 
-  // BIST 100 + USD/TRY geçmiş verileri (Yahoo Finance)
+  // BIST 100 + USD/TRY geçmiş verileri
   useEffect(() => {
-    const fetchMarket = async () => {
-      const range = FILTER_TO_YAHOO[activeFilter] || '3mo';
-      const fetchSeries = async (symbol) => {
-        try {
-          const res = await fetch(
-            `https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?range=${range}&interval=1d`
-          );
-          const json = await res.json();
-          const result = json.chart?.result?.[0];
-          if (!result) return [];
-          const timestamps = result.timestamp || [];
-          const closes = result.indicators?.quote?.[0]?.close || [];
-          return timestamps
-            .map((t, i) => ({ date: new Date(t * 1000).toISOString().split('T')[0], price: closes[i] }))
-            .filter(d => d.price != null);
-        } catch { return []; }
-      };
-      const [bist, usd] = await Promise.all([
-        fetchSeries('XU100.IS'),
-        fetchSeries('USDTRY=X'),
-      ]);
-      setMarketData({ bist, usd });
+    const filterToDays = { '1H': 8, '1A': 32, '3A': 93, '6A': 186, '1Y': 366 };
+
+    // BIST 100 — TradingView UDF endpoint
+    const fetchBist = async () => {
+      const days = filterToDays[activeFilter] || 93;
+      const toUnix   = Math.floor(Date.now() / 1000);
+      const fromUnix = toUnix - days * 86400;
+      try {
+        const res = await fetch(
+          `https://data.tradingview.com/datafeed/history?symbol=BIST%3AXU100&resolution=D&from=${fromUnix}&to=${toUnix}&countback=500`
+        );
+        const json = await res.json();
+        if (json.s !== 'ok' || !Array.isArray(json.t)) return [];
+        return json.t
+          .map((ts, i) => ({ date: new Date(ts * 1000).toISOString().split('T')[0], price: json.c[i] }))
+          .filter(d => d.price != null);
+      } catch { return []; }
     };
-    fetchMarket();
+
+    // USD/TRY — Yahoo Finance
+    const fetchUsd = async () => {
+      const range = FILTER_TO_YAHOO[activeFilter] || '3mo';
+      try {
+        const res = await fetch(
+          `https://query1.finance.yahoo.com/v8/finance/chart/USDTRY=X?range=${range}&interval=1d`
+        );
+        const json = await res.json();
+        const result = json.chart?.result?.[0];
+        if (!result) return [];
+        const timestamps = result.timestamp || [];
+        const closes = result.indicators?.quote?.[0]?.close || [];
+        return timestamps
+          .map((t, i) => ({ date: new Date(t * 1000).toISOString().split('T')[0], price: closes[i] }))
+          .filter(d => d.price != null);
+      } catch { return []; }
+    };
+
+    Promise.all([fetchBist(), fetchUsd()]).then(([bist, usd]) => setMarketData({ bist, usd }));
   }, [activeFilter]);
 
   // Normalize: tüm serileri dönem başından % değişim olarak birleştir
