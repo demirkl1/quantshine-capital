@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import api from '../api';
 import { useAuth } from '../context/AuthContext';
 import AdminSidebar from '../components/AdminSidebar';
@@ -10,8 +10,13 @@ const AdminAnasayfa = () => {
   const [activeFilter, setActiveFilter] = useState("1A");
   const [loading, setLoading] = useState(true);
   const [selectedFonlar, setSelectedFonlar] = useState(null);
-  const [multiChartData, setMultiChartData] = useState([]);
+  const [fundSeriesData, setFundSeriesData] = useState({});
+  const [marketData, setMarketData] = useState({ bist: [], usd: [] });
+  const [showBist, setShowBist] = useState(true);
+  const [showUsd, setShowUsd] = useState(true);
   const [fonDropdownOpen, setFonDropdownOpen] = useState(false);
+
+  const FILTER_TO_YAHOO = { '1H': '5d', '1A': '1mo', '3A': '3mo', '6A': '6mo', '1Y': '1y' };
 
   const CHART_COLORS = ['#4f46e5', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4'];
   const getFonColor = (code) => {
@@ -34,20 +39,6 @@ const AdminAnasayfa = () => {
   const [fonListesi, setFonListesi] = useState([]);
   const [grafikVerisi, setGrafikVerisi] = useState([]); // legacy, kullanılmıyor
 
-  // Mini TradingView widget HTML üreteci
-  const getMiniChartHtml = (symbol, color) => `<!DOCTYPE html>
-<html><head><meta charset="utf-8">
-<style>*{margin:0;padding:0;box-sizing:border-box;}html,body{height:100%;background:#131722;overflow:hidden;}</style>
-</head><body>
-<div class="tradingview-widget-container" style="height:100%;width:100%;">
-  <div class="tradingview-widget-container__widget" style="height:100%;width:100%;"></div>
-  <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js" async>
-  {"symbol":"${symbol}","width":"100%","height":"100%","locale":"tr","dateRange":"3M","colorTheme":"dark",
-   "trendLineColor":"${color}","underLineColor":"${color}22","underLineBottomColor":"rgba(0,0,0,0)",
-   "isTransparent":true,"autosize":true,"largeChartUrl":""}
-  </script>
-</div>
-</body></html>`;
 
   // Admin DB kaydını senkronize et (Keycloak'ta oluşturulmuş kullanıcılar için gerekli)
   useEffect(() => {
@@ -93,31 +84,81 @@ const AdminAnasayfa = () => {
     fetchFunds();
   }, [token]);
 
-  // Multi-fund chart — seçili fonlar veya filtre değişince
+  // Fon geçmiş verileri — ham olarak sakla (normalize için)
   useEffect(() => {
-    const fetchMultiChart = async () => {
+    const fetchFundSeries = async () => {
       if (!token || !selectedFonlar || selectedFonlar.length === 0) return;
       try {
         const results = await Promise.all(
           selectedFonlar.map(code =>
             api.get(`/funds/history/${code}?filter=${activeFilter}`)
-              .then(res => ({ code, data: res.data }))
+              .then(res => ({ code, data: Array.isArray(res.data) ? res.data : [] }))
               .catch(() => ({ code, data: [] }))
           )
         );
-        const dateMap = {};
+        const newSeries = {};
         results.forEach(({ code, data }) => {
-          data.forEach(item => {
-            const key = item.date;
-            if (!dateMap[key]) dateMap[key] = { name: key };
-            dateMap[key][code] = item.price;
-          });
+          newSeries[code] = data.map(item => ({ date: item.date, price: item.price }));
         });
-        setMultiChartData(Object.values(dateMap).sort((a, b) => new Date(a.name) - new Date(b.name)));
-      } catch (e) { console.error("Multi-chart hatası:", e); }
+        setFundSeriesData(newSeries);
+      } catch (e) { console.error("Fon grafik hatası:", e); }
     };
-    fetchMultiChart();
+    fetchFundSeries();
   }, [token, selectedFonlar, activeFilter]);
+
+  // BIST 100 + USD/TRY geçmiş verileri (Yahoo Finance)
+  useEffect(() => {
+    const fetchMarket = async () => {
+      const range = FILTER_TO_YAHOO[activeFilter] || '3mo';
+      const fetchSeries = async (symbol) => {
+        try {
+          const res = await fetch(
+            `https://query1.finance.yahoo.com/v8/finance/chart/${symbol}?range=${range}&interval=1d`
+          );
+          const json = await res.json();
+          const result = json.chart?.result?.[0];
+          if (!result) return [];
+          const timestamps = result.timestamp || [];
+          const closes = result.indicators?.quote?.[0]?.close || [];
+          return timestamps
+            .map((t, i) => ({ date: new Date(t * 1000).toISOString().split('T')[0], price: closes[i] }))
+            .filter(d => d.price != null);
+        } catch { return []; }
+      };
+      const [bist, usd] = await Promise.all([
+        fetchSeries('XU100.IS'),
+        fetchSeries('USDTRY=X'),
+      ]);
+      setMarketData({ bist, usd });
+    };
+    fetchMarket();
+  }, [activeFilter]);
+
+  // Normalize: tüm serileri dönem başından % değişim olarak birleştir
+  const normalizedChartData = useMemo(() => {
+    const normSeries = (items) => {
+      if (!items?.length) return {};
+      const base = items[0].price;
+      if (!base || base === 0) return {};
+      const map = {};
+      items.forEach(d => { if (d.price != null) map[d.date] = parseFloat((((d.price - base) / base) * 100).toFixed(3)); });
+      return map;
+    };
+
+    const allNorms = {};
+    Object.entries(fundSeriesData).forEach(([code, data]) => { allNorms[code] = normSeries(data); });
+    if (showBist && marketData.bist.length) allNorms['BIST 100'] = normSeries(marketData.bist);
+    if (showUsd  && marketData.usd.length)  allNorms['USD/TRY']  = normSeries(marketData.usd);
+
+    const dateSet = new Set();
+    Object.values(allNorms).forEach(norm => Object.keys(norm).forEach(d => dateSet.add(d)));
+
+    return Array.from(dateSet).sort().map(date => {
+      const point = { name: date };
+      Object.entries(allNorms).forEach(([key, norm]) => { if (norm[date] != null) point[key] = norm[date]; });
+      return point;
+    });
+  }, [fundSeriesData, marketData, showBist, showUsd]);
   const formatXAxis = (tickItem) => {
     if (!tickItem) return "";
     const date = new Date(tickItem);
@@ -133,7 +174,7 @@ const AdminAnasayfa = () => {
   };
 
   const getTickInterval = () => {
-    const len = multiChartData.length;
+    const len = normalizedChartData.length;
     if (len <= 7) return 0;
     return Math.max(0, Math.ceil(len / 6) - 1);
   };
@@ -222,13 +263,8 @@ const calculatePerc = (profit, total) => {
             <div className="chart-header-row" style={{ flexWrap: 'wrap', gap: 12 }}>
               {/* Fon çoklu seçici */}
               <div style={{ position: 'relative' }}>
-                <button
-                  className="fon-dropdown-btn"
-                  onClick={() => setFonDropdownOpen(o => !o)}
-                >
-                  {selectedFonlar && selectedFonlar.length > 0
-                    ? selectedFonlar.join(', ')
-                    : 'Fon Seçin'}
+                <button className="fon-dropdown-btn" onClick={() => setFonDropdownOpen(o => !o)}>
+                  {selectedFonlar && selectedFonlar.length > 0 ? selectedFonlar.join(', ') : 'Fon Seçin'}
                   <span style={{ marginLeft: 6, fontSize: 9 }}>▾</span>
                 </button>
                 {fonDropdownOpen && (
@@ -237,15 +273,8 @@ const calculatePerc = (profit, total) => {
                       const code = f.fundCode || f.fundName;
                       const selected = selectedFonlar?.includes(code);
                       return (
-                        <div
-                          key={i}
-                          className={`fon-dropdown-item ${selected ? 'selected' : ''}`}
-                          onClick={() => toggleFon(code)}
-                        >
-                          <span
-                            className="fon-color-dot"
-                            style={{ background: CHART_COLORS[i % CHART_COLORS.length] }}
-                          />
+                        <div key={i} className={`fon-dropdown-item ${selected ? 'selected' : ''}`} onClick={() => toggleFon(code)}>
+                          <span className="fon-color-dot" style={{ background: CHART_COLORS[i % CHART_COLORS.length] }} />
                           {f.fundName || code}
                           {selected && <span style={{ marginLeft: 'auto', color: '#10b981', fontSize: 12 }}>✓</span>}
                         </div>
@@ -253,6 +282,22 @@ const calculatePerc = (profit, total) => {
                     })}
                   </div>
                 )}
+              </div>
+
+              {/* BIST 100 + USD/TRY toggle */}
+              <div style={{ display: 'flex', gap: 6 }}>
+                <button
+                  className={`karsilastirma-btn ${showBist ? 'active-bist' : ''}`}
+                  onClick={() => setShowBist(v => !v)}
+                >
+                  ● BIST 100
+                </button>
+                <button
+                  className={`karsilastirma-btn ${showUsd ? 'active-usd' : ''}`}
+                  onClick={() => setShowUsd(v => !v)}
+                >
+                  ● USD/TRY
+                </button>
               </div>
 
               <div className="time-filter-group">
@@ -264,25 +309,32 @@ const calculatePerc = (profit, total) => {
               </div>
             </div>
 
-            {/* Seçili fon etiketleri */}
-            {selectedFonlar && selectedFonlar.length > 0 && (
-              <div style={{ display: 'flex', gap: 8, marginBottom: 12, flexWrap: 'wrap' }}>
-                {selectedFonlar.map((code, i) => (
-                  <span key={code} className="fon-chip" style={{ borderColor: CHART_COLORS[i % CHART_COLORS.length], color: CHART_COLORS[i % CHART_COLORS.length] }}>
-                    {code}
-                    <button className="fon-chip-remove" onClick={() => toggleFon(code)}>×</button>
-                  </span>
-                ))}
-              </div>
-            )}
+            {/* Seçili seri etiketleri */}
+            <div style={{ display: 'flex', gap: 8, marginBottom: 12, flexWrap: 'wrap' }}>
+              {(selectedFonlar || []).map((code, i) => (
+                <span key={code} className="fon-chip" style={{ borderColor: CHART_COLORS[i % CHART_COLORS.length], color: CHART_COLORS[i % CHART_COLORS.length] }}>
+                  {code}
+                  <button className="fon-chip-remove" onClick={() => toggleFon(code)}>×</button>
+                </span>
+              ))}
+              {showBist && marketData.bist.length > 0 && (
+                <span className="fon-chip" style={{ borderColor: '#10b981', color: '#10b981' }}>BIST 100</span>
+              )}
+              {showUsd && marketData.usd.length > 0 && (
+                <span className="fon-chip" style={{ borderColor: '#f59e0b', color: '#f59e0b' }}>USD/TRY</span>
+              )}
+              <span style={{ fontSize: 10, color: '#434651', alignSelf: 'center', fontFamily: 'JetBrains Mono, monospace' }}>
+                Dönem başından % değişim
+              </span>
+            </div>
 
-            <div style={{ width: '100%', height: 350 }}>
+            <div style={{ width: '100%', height: 380 }}>
               <ResponsiveContainer>
-                <AreaChart data={multiChartData}>
+                <AreaChart data={normalizedChartData}>
                   <defs>
                     {(selectedFonlar || []).map((code, i) => (
                       <linearGradient key={code} id={`color-${code}`} x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor={CHART_COLORS[i % CHART_COLORS.length]} stopOpacity={0.25}/>
+                        <stop offset="5%"  stopColor={CHART_COLORS[i % CHART_COLORS.length]} stopOpacity={0.2}/>
                         <stop offset="95%" stopColor={CHART_COLORS[i % CHART_COLORS.length]} stopOpacity={0}/>
                       </linearGradient>
                     ))}
@@ -302,27 +354,26 @@ const calculatePerc = (profit, total) => {
                   <YAxis
                     stroke="#2d3748"
                     tick={{ fontSize: 11, fill: '#94a3b8' }}
-                    tickFormatter={(v) => {
-                      if (v >= 1_000_000) return `₺${(v / 1_000_000).toFixed(1)}M`;
-                      if (v >= 1_000) return `₺${(v / 1_000).toFixed(1)}K`;
-                      return `₺${v.toFixed(2)}`;
-                    }}
+                    tickFormatter={v => `${v >= 0 ? '+' : ''}${v.toFixed(1)}%`}
                     domain={['auto', 'auto']}
-                    width={75}
+                    width={68}
                     axisLine={false}
                     tickLine={false}
                   />
                   <Tooltip
-                    contentStyle={{ backgroundColor: '#161b2c', border: 'none', borderRadius: '10px', color: '#fff' }}
-                    labelFormatter={(label) => new Date(label).toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' })}
-                    formatter={(value, name) => [`₺${Number(value).toLocaleString('tr-TR', { minimumFractionDigits: 2 })}`, name]}
+                    contentStyle={{ backgroundColor: '#161b2c', border: '1px solid #2a2e39', borderRadius: '10px', color: '#fff' }}
+                    labelFormatter={label => {
+                      const d = new Date(label);
+                      return isNaN(d) ? label : d.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' });
+                    }}
+                    formatter={(value, name) => [
+                      `${value >= 0 ? '+' : ''}${Number(value).toFixed(2)}%`,
+                      name
+                    ]}
                   />
-                  {(selectedFonlar || []).length > 1 && (
-                    <Legend
-                      wrapperStyle={{ fontSize: 11, color: '#94a3b8', paddingTop: 8 }}
-                      formatter={(value) => value}
-                    />
-                  )}
+                  <Legend wrapperStyle={{ fontSize: 11, color: '#94a3b8', paddingTop: 8 }} />
+
+                  {/* Fon serileri */}
                   {(selectedFonlar || []).map((code, i) => (
                     <Area
                       key={code}
@@ -337,38 +388,38 @@ const calculatePerc = (profit, total) => {
                       connectNulls
                     />
                   ))}
+
+                  {/* BIST 100 */}
+                  {showBist && marketData.bist.length > 0 && (
+                    <Area
+                      type="monotone"
+                      dataKey="BIST 100"
+                      name="BIST 100"
+                      stroke="#10b981"
+                      fill="none"
+                      strokeWidth={2}
+                      strokeDasharray="6 3"
+                      dot={false}
+                      connectNulls
+                    />
+                  )}
+
+                  {/* USD/TRY */}
+                  {showUsd && marketData.usd.length > 0 && (
+                    <Area
+                      type="monotone"
+                      dataKey="USD/TRY"
+                      name="USD/TRY"
+                      stroke="#f59e0b"
+                      fill="none"
+                      strokeWidth={2}
+                      strokeDasharray="6 3"
+                      dot={false}
+                      connectNulls
+                    />
+                  )}
                 </AreaChart>
               </ResponsiveContainer>
-            </div>
-          </div>
-
-          {/* ── Piyasa Grafikleri (BIST 100 + USD/TRY) ── */}
-          <div className="piyasa-grafik-grid">
-            <div className="piyasa-grafik-card">
-              <div className="piyasa-grafik-header">
-                <span className="piyasa-grafik-label">BIST 100</span>
-                <span className="piyasa-grafik-source">TradingView · Gecikmeli</span>
-              </div>
-              <iframe
-                srcDoc={getMiniChartHtml('BIST:XU100', '#10b981')}
-                frameBorder="0"
-                scrolling="no"
-                style={{ width: '100%', height: 260, border: 'none', display: 'block' }}
-                title="BIST 100"
-              />
-            </div>
-            <div className="piyasa-grafik-card">
-              <div className="piyasa-grafik-header">
-                <span className="piyasa-grafik-label">USD / TRY</span>
-                <span className="piyasa-grafik-source">TradingView · Gecikmeli</span>
-              </div>
-              <iframe
-                srcDoc={getMiniChartHtml('FX_IDC:USDTRY', '#f59e0b')}
-                frameBorder="0"
-                scrolling="no"
-                style={{ width: '100%', height: 260, border: 'none', display: 'block' }}
-                title="USD/TRY"
-              />
             </div>
           </div>
 
