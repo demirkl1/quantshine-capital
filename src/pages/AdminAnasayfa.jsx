@@ -34,6 +34,21 @@ const AdminAnasayfa = () => {
   const [fonListesi, setFonListesi] = useState([]);
   const [grafikVerisi, setGrafikVerisi] = useState([]); // legacy, kullanılmıyor
 
+  // Mini TradingView widget HTML üreteci
+  const getMiniChartHtml = (symbol, color) => `<!DOCTYPE html>
+<html><head><meta charset="utf-8">
+<style>*{margin:0;padding:0;box-sizing:border-box;}html,body{height:100%;background:#131722;overflow:hidden;}</style>
+</head><body>
+<div class="tradingview-widget-container" style="height:100%;width:100%;">
+  <div class="tradingview-widget-container__widget" style="height:100%;width:100%;"></div>
+  <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-mini-symbol-overview.js" async>
+  {"symbol":"${symbol}","width":"100%","height":"100%","locale":"tr","dateRange":"3M","colorTheme":"dark",
+   "trendLineColor":"${color}","underLineColor":"${color}22","underLineBottomColor":"rgba(0,0,0,0)",
+   "isTransparent":true,"autosize":true,"largeChartUrl":""}
+  </script>
+</div>
+</body></html>`;
+
   // Admin DB kaydını senkronize et (Keycloak'ta oluşturulmuş kullanıcılar için gerekli)
   useEffect(() => {
     const syncAdmin = async () => {
@@ -128,6 +143,9 @@ const calculatePerc = (profit, total) => {
     return ((profit / total) * 100).toFixed(2);
 };
 
+  const adminFon = fonListesi.find(f => f.fundCode === user?.managedFundCode);
+  const adminFonLot = adminFon?.totalLot ?? null;
+
   if (loading) return <div className="loading-screen"><div className="spinner"></div><p>Gerçek Zamanlı Veriler Bağlanıyor...</p></div>;
 
   return (
@@ -135,7 +153,7 @@ const calculatePerc = (profit, total) => {
       <AdminSidebar />
       <main className="admin-main">
         <div className="admin-content">
-          
+
           <div className="stats-grid">
             {[
               {
@@ -185,6 +203,19 @@ const calculatePerc = (profit, total) => {
                 )}
               </div>
             ))}
+
+            {/* 5. Kart — Fon Toplam Lot */}
+            <div className="stat-card" style={{ borderTop: '4px solid #8b5cf6' }}>
+              <h3>TOPLAM LOT ({user?.managedFundCode || 'FON'})</h3>
+              <p className="stat-value">
+                {adminFonLot !== null
+                  ? Number(adminFonLot).toLocaleString('tr-TR')
+                  : '—'}
+              </p>
+              <span style={{ fontSize: 12, color: '#94a3b8', marginTop: 4, display: 'block' }}>
+                Fon Toplam Lot Adedi
+              </span>
+            </div>
           </div>
 
           <div className="chart-section">
@@ -308,6 +339,36 @@ const calculatePerc = (profit, total) => {
                   ))}
                 </AreaChart>
               </ResponsiveContainer>
+            </div>
+          </div>
+
+          {/* ── Piyasa Grafikleri (BIST 100 + USD/TRY) ── */}
+          <div className="piyasa-grafik-grid">
+            <div className="piyasa-grafik-card">
+              <div className="piyasa-grafik-header">
+                <span className="piyasa-grafik-label">BIST 100</span>
+                <span className="piyasa-grafik-source">TradingView · Gecikmeli</span>
+              </div>
+              <iframe
+                srcDoc={getMiniChartHtml('BIST:XU100', '#10b981')}
+                frameBorder="0"
+                scrolling="no"
+                style={{ width: '100%', height: 260, border: 'none', display: 'block' }}
+                title="BIST 100"
+              />
+            </div>
+            <div className="piyasa-grafik-card">
+              <div className="piyasa-grafik-header">
+                <span className="piyasa-grafik-label">USD / TRY</span>
+                <span className="piyasa-grafik-source">TradingView · Gecikmeli</span>
+              </div>
+              <iframe
+                srcDoc={getMiniChartHtml('FX_IDC:USDTRY', '#f59e0b')}
+                frameBorder="0"
+                scrolling="no"
+                style={{ width: '100%', height: 260, border: 'none', display: 'block' }}
+                title="USD/TRY"
+              />
             </div>
           </div>
 
