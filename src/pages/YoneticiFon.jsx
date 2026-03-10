@@ -4,7 +4,8 @@ import { useAuth } from '../context/AuthContext';
 import AdminSidebar from '../components/AdminSidebar';
 import toast from 'react-hot-toast';
 import {
-  AreaChart, Area, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer
+  AreaChart, Area, XAxis, YAxis, Tooltip, CartesianGrid, ResponsiveContainer,
+  PieChart, Pie, Cell, Legend
 } from 'recharts';
 import './YoneticiFon.css';
 
@@ -455,150 +456,281 @@ const YoneticiFon = () => {
       </main>
 
       {/* Fon Detay Modalı — main dışında, tüm sayfanın üstünde */}
-      {selectedDetailFon && (
-        <div className="fon-detail-overlay" onClick={() => setSelectedDetailFon(null)}>
-          <div className="fon-detail-modal" onClick={e => e.stopPropagation()}>
-            <div className="fon-detail-header">
-              <div>
-                <span className="fon-code-badge">
-                  {detailFund?.code || selectedDetailFon.code}
-                </span>
-                <h2 className="fon-detail-title">{detailFund?.name || selectedDetailFon.name}</h2>
-                {detailFund?.type && <span className="fon-detail-type">{detailFund.type}</span>}
+      {selectedDetailFon && (() => {
+        const ALLOC_COLORS = ['#4f46e5', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4', '#f97316'];
+        const fonDanismanlari = advisors.filter(a =>
+          a.managedFundCode === selectedDetailFon.code || a.managedFund === selectedDetailFon.code
+        );
+        const allocData = (detailFund?.allocation || []).map(item => ({
+          name: item.name,
+          value: item.percentage ?? item.value ?? 0
+        }));
+
+        return (
+          <div className="fon-detail-overlay" onClick={() => setSelectedDetailFon(null)}>
+            <div className="fon-detail-modal" onClick={e => e.stopPropagation()}>
+
+              {/* Header */}
+              <div className="fon-detail-header">
+                <div>
+                  <span className="fon-code-badge">{detailFund?.code || selectedDetailFon.code}</span>
+                  <h2 className="fon-detail-title">{detailFund?.name || selectedDetailFon.name}</h2>
+                  {detailFund?.type && <span className="fon-detail-type">{detailFund.type}</span>}
+                </div>
+                <button className="fon-detail-close" onClick={() => setSelectedDetailFon(null)}>✕</button>
               </div>
-              <button className="fon-detail-close" onClick={() => setSelectedDetailFon(null)}>✕</button>
-            </div>
 
-            {loadingDetail ? (
-              <div className="fon-detail-loading">Yükleniyor...</div>
-            ) : (
-              <>
-                <div className="fon-detail-stats">
-                  <div className="fon-stat-card">
-                    <span className="fon-stat-label">Birim Fiyat</span>
-                    <span className="fon-stat-value">₺{detailFund?.price?.toLocaleString('tr-TR', { minimumFractionDigits: 4 }) ?? '—'}</span>
-                  </div>
-                  <div className="fon-stat-card">
-                    <span className="fon-stat-label">Toplam Değer</span>
-                    <span className="fon-stat-value">₺{detailFund?.totalValue?.toLocaleString('tr-TR', { minimumFractionDigits: 2 }) ?? '—'}</span>
-                  </div>
-                  <div className="fon-stat-card">
-                    <span className="fon-stat-label">Oluşturulma Tarihi</span>
-                    <span className="fon-stat-value fon-stat-small">{detailFund?.inceptionDate ?? '—'}</span>
-                  </div>
-                  <div className="fon-stat-card">
-                    <span className="fon-stat-label">Risk Seviyesi</span>
-                    <span className="fon-stat-value fon-stat-small">{detailFund?.riskLevel ?? '—'}</span>
-                  </div>
-                  <div className="fon-stat-card">
-                    <span className="fon-stat-label">Para Birimi</span>
-                    <span className="fon-stat-value fon-stat-small">{detailFund?.currency ?? '—'}</span>
-                  </div>
-                  <div className="fon-stat-card">
-                    <span className="fon-stat-label">TEFAS</span>
-                    <span className="fon-stat-value fon-stat-small">{detailFund?.tefas != null ? (detailFund.tefas ? 'Evet' : 'Hayır') : '—'}</span>
-                  </div>
-                </div>
-
-                {detailFund?.performance && (
-                  <div className="fon-perf-section">
-                    <p className="fon-section-label">Getiri Performansı</p>
-                    <div className="fon-perf-grid">
-                      {[
-                        { label: 'Günlük', val: detailFund.performance.day1 },
-                        { label: '1 Ay',   val: detailFund.performance.day30 },
-                        { label: '3 Ay',   val: detailFund.performance.day90 },
-                        { label: '6 Ay',   val: detailFund.performance.day180 },
-                        { label: 'YBB',    val: detailFund.performance.ytd },
-                        { label: '1 Yıl',  val: detailFund.performance.day365 },
-                      ].map(({ label, val }) => (
-                        <div key={label} className={`fon-perf-pill ${val == null ? 'neutral' : val >= 0 ? 'positive' : 'negative'}`}>
-                          <span className="fon-perf-label">{label}</span>
-                          <span className="fon-perf-val">
-                            {val != null ? `${val >= 0 ? '+' : ''}${val.toFixed(2)}%` : '—'}
-                          </span>
+              {loadingDetail ? (
+                <div className="fon-detail-loading">Yükleniyor...</div>
+              ) : (
+                <>
+                  {/* ── 1. KURULUŞ BİLGİLERİ ── */}
+                  <div className="fon-section">
+                    <p className="fon-section-label">Kuruluş Bilgileri</p>
+                    <div className="fon-founding-grid">
+                      <div className="fon-founding-item">
+                        <span className="fon-founding-key">Kuruluş Tarihi</span>
+                        <span className="fon-founding-val">
+                          {detailFund?.inceptionDate
+                            ? new Date(detailFund.inceptionDate).toLocaleDateString('tr-TR', { day: '2-digit', month: 'long', year: 'numeric' })
+                            : '—'}
+                        </span>
+                      </div>
+                      <div className="fon-founding-item">
+                        <span className="fon-founding-key">Fon Türü</span>
+                        <span className="fon-founding-val">{detailFund?.type || '—'}</span>
+                      </div>
+                      <div className="fon-founding-item">
+                        <span className="fon-founding-key">Para Birimi</span>
+                        <span className="fon-founding-val">{detailFund?.currency || 'TRY'}</span>
+                      </div>
+                      <div className="fon-founding-item">
+                        <span className="fon-founding-key">Risk Seviyesi</span>
+                        <span className="fon-founding-val">{detailFund?.riskLevel || '—'}</span>
+                      </div>
+                      <div className="fon-founding-item">
+                        <span className="fon-founding-key">TEFAS Kapsamı</span>
+                        <span className="fon-founding-val">
+                          {detailFund?.tefas != null ? (detailFund.tefas ? 'Evet' : 'Hayır') : '—'}
+                        </span>
+                      </div>
+                      {detailFund?.founder && (
+                        <div className="fon-founding-item">
+                          <span className="fon-founding-key">Kurucusu</span>
+                          <span className="fon-founding-val">{detailFund.founder}</span>
                         </div>
-                      ))}
+                      )}
                     </div>
+                    {(detailFund?.description || detailFund?.objective) && (
+                      <div className="fon-description-box">
+                        <span className="fon-founding-key" style={{ display: 'block', marginBottom: 6 }}>Kuruluş Amacı</span>
+                        <p className="fon-description-text">{detailFund.description || detailFund.objective}</p>
+                      </div>
+                    )}
                   </div>
-                )}
 
-                <div className="fon-chart-section">
-                  <div className="fon-chart-header">
-                    <p className="fon-section-label">Fiyat Geçmişi</p>
-                    <div className="fon-period-btns">
-                      {DETAIL_PERIODS.map(p => (
-                        <button
-                          key={p.key}
-                          className={`fon-period-btn ${detailPeriod === p.key ? 'active' : ''}`}
-                          onClick={() => setDetailPeriod(p.key)}
-                        >
-                          {p.label}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                  {detailChartData.length > 0 ? (
-                    <ResponsiveContainer width="100%" height={180}>
-                      <AreaChart data={detailChartData} margin={{ top: 4, right: 4, left: 0, bottom: 0 }}>
-                        <defs>
-                          <linearGradient id="detailGrad" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="5%" stopColor="#4f46e5" stopOpacity={0.35} />
-                            <stop offset="95%" stopColor="#4f46e5" stopOpacity={0} />
-                          </linearGradient>
-                        </defs>
-                        <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
-                        <XAxis
-                          dataKey="priceDate"
-                          tickFormatter={v => v ? v.substring(0, 10) : ''}
-                          tick={{ fill: '#787b86', fontSize: 10 }}
-                          axisLine={false} tickLine={false}
-                        />
-                        <YAxis
-                          tick={{ fill: '#787b86', fontSize: 10 }}
-                          axisLine={false} tickLine={false}
-                          width={55}
-                          tickFormatter={v => `₺${v.toLocaleString('tr-TR')}`}
-                        />
-                        <Tooltip
-                          contentStyle={{ background: '#1e293b', border: '1px solid #334155', borderRadius: 6, fontSize: 11 }}
-                          labelStyle={{ color: '#94a3b8' }}
-                          itemStyle={{ color: '#818cf8' }}
-                          formatter={v => [`₺${Number(v).toLocaleString('tr-TR', { minimumFractionDigits: 4 })}`, 'Fiyat']}
-                          labelFormatter={v => v ? v.substring(0, 10) : v}
-                        />
-                        <Area type="monotone" dataKey="price" stroke="#4f46e5" strokeWidth={2} fill="url(#detailGrad)" dot={false} />
-                      </AreaChart>
-                    </ResponsiveContainer>
-                  ) : (
-                    <div className="fon-no-chart">Bu dönem için fiyat verisi bulunamadı.</div>
-                  )}
-                </div>
-
-                {detailFund?.allocation?.length > 0 && (
-                  <div className="fon-alloc-section">
-                    <p className="fon-section-label">Varlık Dağılımı</p>
-                    <div className="fon-alloc-bars">
-                      {detailFund.allocation.map((item, i) => {
-                        const colors = ['#4f46e5', '#10b981', '#f59e0b', '#ef4444'];
-                        return (
-                          <div key={i} className="fon-alloc-row">
-                            <span className="fon-alloc-name">{item.name}</span>
-                            <div className="fon-alloc-bar-bg">
-                              <div className="fon-alloc-bar-fill" style={{ width: `${item.percentage}%`, background: colors[i % colors.length] }} />
+                  {/* ── 2. GÜNCEL DANIŞMANLAR ── */}
+                  <div className="fon-section">
+                    <p className="fon-section-label">Güncel Danışmanlar</p>
+                    {fonDanismanlari.length > 0 ? (
+                      <div className="fon-advisor-list">
+                        {fonDanismanlari.map((a, i) => (
+                          <div key={i} className="fon-advisor-card">
+                            <div className="fon-advisor-avatar">
+                              {(a.firstName || a.fullName || '?').charAt(0).toUpperCase()}
                             </div>
-                            <span className="fon-alloc-pct">%{item.percentage}</span>
+                            <div>
+                              <div className="fon-advisor-name">
+                                {a.firstName && a.lastName ? `${a.firstName} ${a.lastName}` : a.fullName || '—'}
+                              </div>
+                              <div className="fon-advisor-tc">TC: {a.tcNo}</div>
+                            </div>
+                            <span className={`fon-advisor-role ${a.role === 'ADMIN' ? 'admin' : 'advisor'}`}>
+                              {a.role === 'ADMIN' ? 'Yönetici' : 'Danışman'}
+                            </span>
                           </div>
-                        );
-                      })}
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="fon-empty-state">Bu fona atanmış danışman bulunmuyor.</div>
+                    )}
+                  </div>
+
+                  {/* ── 3. FON İSTATİSTİKLERİ ── */}
+                  <div className="fon-section">
+                    <p className="fon-section-label">Fon İstatistikleri</p>
+                    <div className="fon-detail-stats">
+                      <div className="fon-stat-card">
+                        <span className="fon-stat-label">Birim Lot Değeri</span>
+                        <span className="fon-stat-value">₺{detailFund?.price?.toLocaleString('tr-TR', { minimumFractionDigits: 4 }) ?? '—'}</span>
+                      </div>
+                      <div className="fon-stat-card">
+                        <span className="fon-stat-label">Toplam Fon Değeri</span>
+                        <span className="fon-stat-value fon-stat-small">₺{detailFund?.totalValue?.toLocaleString('tr-TR', { minimumFractionDigits: 2 }) ?? '—'}</span>
+                      </div>
+                      <div className="fon-stat-card">
+                        <span className="fon-stat-label">Toplam Lot</span>
+                        <span className="fon-stat-value fon-stat-small">
+                          {detailFund?.totalLot != null ? Number(detailFund.totalLot).toLocaleString('tr-TR') : '—'}
+                        </span>
+                      </div>
                     </div>
                   </div>
-                )}
-              </>
-            )}
+
+                  {/* ── 4. GETİRİ PERFORMANSI ── */}
+                  {detailFund?.performance && (
+                    <div className="fon-section">
+                      <p className="fon-section-label">Getiri Performansı</p>
+                      <div className="fon-perf-grid">
+                        {[
+                          { label: 'Günlük', val: detailFund.performance.day1 },
+                          { label: '1 Ay',   val: detailFund.performance.day30 },
+                          { label: '3 Ay',   val: detailFund.performance.day90 },
+                          { label: '6 Ay',   val: detailFund.performance.day180 },
+                          { label: 'YBB',    val: detailFund.performance.ytd },
+                          { label: '1 Yıl',  val: detailFund.performance.day365 },
+                        ].map(({ label, val }) => (
+                          <div key={label} className={`fon-perf-pill ${val == null ? 'neutral' : val >= 0 ? 'positive' : 'negative'}`}>
+                            <span className="fon-perf-label">{label}</span>
+                            <span className="fon-perf-val">
+                              {val != null ? `${val >= 0 ? '+' : ''}${val.toFixed(2)}%` : '—'}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* ── 5. SEKTÖREL AĞIRLIKLAR (PASta GRAFİĞİ) ── */}
+                  {allocData.length > 0 && (
+                    <div className="fon-section">
+                      <p className="fon-section-label">Sektörel Ağırlıklar</p>
+                      <div className="fon-alloc-pie-row">
+                        <div style={{ width: 220, height: 220, flexShrink: 0 }}>
+                          <ResponsiveContainer>
+                            <PieChart>
+                              <Pie
+                                data={allocData}
+                                cx="50%" cy="50%"
+                                innerRadius={55}
+                                outerRadius={90}
+                                paddingAngle={2}
+                                dataKey="value"
+                              >
+                                {allocData.map((_, i) => (
+                                  <Cell key={i} fill={ALLOC_COLORS[i % ALLOC_COLORS.length]} />
+                                ))}
+                              </Pie>
+                              <Tooltip
+                                contentStyle={{ background: '#131722', border: '1px solid #2a2e39', borderRadius: 8, fontSize: 11, color: '#fff' }}
+                                formatter={(v) => [`%${Number(v).toFixed(2)}`, '']}
+                              />
+                            </PieChart>
+                          </ResponsiveContainer>
+                        </div>
+                        <div className="fon-alloc-legend">
+                          {allocData.map((item, i) => (
+                            <div key={i} className="fon-alloc-legend-row">
+                              <span className="fon-alloc-legend-dot" style={{ background: ALLOC_COLORS[i % ALLOC_COLORS.length] }} />
+                              <span className="fon-alloc-legend-name">{item.name}</span>
+                              <div className="fon-alloc-bar-bg" style={{ flex: 1, margin: '0 10px' }}>
+                                <div className="fon-alloc-bar-fill" style={{ width: `${item.value}%`, background: ALLOC_COLORS[i % ALLOC_COLORS.length] }} />
+                              </div>
+                              <span className="fon-alloc-pct">%{Number(item.value).toFixed(1)}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* ── 6. MENKUL KIYMETler TABLOSU ── */}
+                  {detailFund?.securities?.length > 0 && (
+                    <div className="fon-section">
+                      <p className="fon-section-label">Portföydeki Menkul Kıymetler</p>
+                      <div style={{ overflowX: 'auto' }}>
+                        <table className="fon-securities-table">
+                          <thead>
+                            <tr>
+                              <th>Sembol</th>
+                              <th>Ad</th>
+                              <th>Tür</th>
+                              <th>Ağırlık</th>
+                              <th>Lot / Adet</th>
+                              <th>Değer</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {detailFund.securities.map((s, i) => (
+                              <tr key={i}>
+                                <td><span className="fon-code-badge">{s.symbol || s.ticker || '—'}</span></td>
+                                <td style={{ color: '#d1d4dc' }}>{s.name || '—'}</td>
+                                <td style={{ color: '#94a3b8' }}>{s.type || s.assetType || '—'}</td>
+                                <td style={{ color: '#f59e0b', fontWeight: 700 }}>
+                                  {s.weight != null ? `%${Number(s.weight).toFixed(2)}` : '—'}
+                                </td>
+                                <td style={{ color: '#d1d4dc' }}>
+                                  {s.lotCount != null ? Number(s.lotCount).toLocaleString('tr-TR') : s.quantity != null ? Number(s.quantity).toLocaleString('tr-TR') : '—'}
+                                </td>
+                                <td style={{ color: '#10b981', fontWeight: 700 }}>
+                                  {s.value != null ? `₺${Number(s.value).toLocaleString('tr-TR', { minimumFractionDigits: 2 })}` : '—'}
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* ── 7. FİYAT GEÇMİŞİ ── */}
+                  <div className="fon-section">
+                    <div className="fon-chart-header">
+                      <p className="fon-section-label" style={{ margin: 0 }}>Fiyat Geçmişi</p>
+                      <div className="fon-period-btns">
+                        {DETAIL_PERIODS.map(p => (
+                          <button
+                            key={p.key}
+                            className={`fon-period-btn ${detailPeriod === p.key ? 'active' : ''}`}
+                            onClick={() => setDetailPeriod(p.key)}
+                          >
+                            {p.label}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                    {detailChartData.length > 0 ? (
+                      <ResponsiveContainer width="100%" height={180}>
+                        <AreaChart data={detailChartData} margin={{ top: 4, right: 4, left: 0, bottom: 0 }}>
+                          <defs>
+                            <linearGradient id="detailGrad" x1="0" y1="0" x2="0" y2="1">
+                              <stop offset="5%" stopColor="#4f46e5" stopOpacity={0.35} />
+                              <stop offset="95%" stopColor="#4f46e5" stopOpacity={0} />
+                            </linearGradient>
+                          </defs>
+                          <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
+                          <XAxis dataKey="priceDate" tickFormatter={v => v ? v.substring(0, 10) : ''} tick={{ fill: '#787b86', fontSize: 10 }} axisLine={false} tickLine={false} />
+                          <YAxis tick={{ fill: '#787b86', fontSize: 10 }} axisLine={false} tickLine={false} width={55} tickFormatter={v => `₺${v.toLocaleString('tr-TR')}`} />
+                          <Tooltip
+                            contentStyle={{ background: '#1e293b', border: '1px solid #334155', borderRadius: 6, fontSize: 11 }}
+                            labelStyle={{ color: '#94a3b8' }}
+                            itemStyle={{ color: '#818cf8' }}
+                            formatter={v => [`₺${Number(v).toLocaleString('tr-TR', { minimumFractionDigits: 4 })}`, 'Fiyat']}
+                            labelFormatter={v => v ? v.substring(0, 10) : v}
+                          />
+                          <Area type="monotone" dataKey="price" stroke="#4f46e5" strokeWidth={2} fill="url(#detailGrad)" dot={false} />
+                        </AreaChart>
+                      </ResponsiveContainer>
+                    ) : (
+                      <div className="fon-no-chart">Bu dönem için fiyat verisi bulunamadı.</div>
+                    )}
+                  </div>
+                </>
+              )}
+            </div>
           </div>
-        </div>
-      )}
+        );
+      })()}
     </div>
   );
 };

@@ -143,7 +143,159 @@
 
 /* ── Yatırımcı Detay Modalı ──────────────────────────── */
 .investor-detail-modal {
-  width: 560px;
+  width: 780px;
+  max-width: 96vw;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.investor-detail-modal .advisor-modal-body {
+  overflow-y: auto;
+  flex: 1;
+}
+
+/* Sekmeler */
+.investor-detail-tabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid #2a2e39;
+  margin: 0 0 16px;
+  padding: 0 24px;
+}
+
+.investor-detail-tab {
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: #787b86;
+  padding: 10px 18px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  transition: 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.investor-detail-tab.active {
+  color: #2962ff;
+  border-bottom-color: #2962ff;
+}
+.investor-detail-tab:hover:not(.active) {
+  color: #d1d4dc;
+}
+
+.history-count-badge {
+  background: #2962ff;
+  color: #fff;
+  font-size: 9px;
+  padding: 1px 5px;
+  border-radius: 10px;
+}
+
+/* Pasta grafiği */
+.investor-pie-section {
+  margin-bottom: 16px;
+}
+
+.investor-pie-row {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.investor-pie-legend {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.pie-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+}
+
+.pie-legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.pie-legend-code {
+  font-weight: 700;
+  color: #d1d4dc;
+  min-width: 48px;
+}
+
+.pie-legend-pct {
+  color: #94a3b8;
+  min-width: 44px;
+}
+
+.pie-legend-val {
+  color: #10b981;
+  font-weight: 700;
+  margin-left: auto;
+}
+
+/* İşlem Geçmişi tablosu */
+.investor-history-section {
+  overflow-x: auto;
+}
+
+.investor-history-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+}
+
+.investor-history-table th {
+  color: #787b86;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  padding: 8px 10px;
+  border-bottom: 1px solid #2a2e39;
+  text-align: left;
+}
+
+.investor-history-table td {
+  padding: 9px 10px;
+  border-bottom: 1px solid #1c2030;
+  color: #94a3b8;
+}
+
+.investor-history-table tr:hover td {
+  background: #1c2030;
+}
+
+.status-badge-small {
+  display: inline-block;
+  padding: 2px 7px;
+  border-radius: 3px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+.status-badge-small.buy {
+  background: rgba(16, 185, 129, 0.12);
+  color: #10b981;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+.status-badge-small.sell {
+  background: rgba(239, 68, 68, 0.12);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.3);
 }
 
 .investor-holdings-section {

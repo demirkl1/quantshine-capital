@@ -17,6 +17,7 @@ const AdvisorAnaSayfa = () => {
     fonKarZararTl: 0,
     fonKarZararYuzde: "0.00"
   });
+  const [fonBilgi, setFonBilgi] = useState({ totalLot: null, price: null });
   const [chartData, setChartData] = useState([]);
 
   // İlk yüklemede backend'den gerçek fon kodunu çek
@@ -50,6 +51,26 @@ const AdvisorAnaSayfa = () => {
 
     fetchStats();
     const interval = setInterval(fetchStats, 60000);
+    return () => clearInterval(interval);
+  }, [token, realFundCode]);
+
+  // Fon detayları (toplam lot + birim fiyat) — her 60 saniyede bir yenilenir
+  useEffect(() => {
+    const fetchFonBilgi = async () => {
+      if (!token || !realFundCode) return;
+      try {
+        const res = await api.get(`/funds/${realFundCode}`);
+        setFonBilgi({
+          totalLot: res.data?.totalLot ?? null,
+          price: res.data?.price ?? null
+        });
+      } catch (err) {
+        console.error("Fon bilgisi alınamadı:", err.message);
+      }
+    };
+
+    fetchFonBilgi();
+    const interval = setInterval(fetchFonBilgi, 60000);
     return () => clearInterval(interval);
   }, [token, realFundCode]);
 
@@ -118,6 +139,26 @@ return (
                   </span>
                 </div>
               )}
+            </div>
+
+            <div className="stat-card" style={{ borderTop: `4px solid #8b5cf6` }}>
+              <h3>TOPLAM LOT ({realFundCode || 'FON'})</h3>
+              <p className="stat-value">
+                {fonBilgi.totalLot !== null
+                  ? Number(fonBilgi.totalLot).toLocaleString('tr-TR')
+                  : '—'}
+              </p>
+              <span style={{ fontSize: 12, color: '#94a3b8' }}>Fon Toplam Lot Adedi</span>
+            </div>
+
+            <div className="stat-card" style={{ borderTop: `4px solid #06b6d4` }}>
+              <h3>ANLIK LOT DEĞERİ</h3>
+              <p className="stat-value">
+                {fonBilgi.price !== null
+                  ? `₺${Number(fonBilgi.price).toLocaleString('tr-TR', { minimumFractionDigits: 4, maximumFractionDigits: 4 })}`
+                  : '—'}
+              </p>
+              <span style={{ fontSize: 12, color: '#94a3b8' }}>Birim Fiyat ({realFundCode || 'FON'})</span>
             </div>
 
             <div className="stat-card" style={{ borderTop: `4px solid ${parseFloat(stats.fonKarZararYuzde) >= 0 ? '#10b981' : '#ef4444'}` }}>

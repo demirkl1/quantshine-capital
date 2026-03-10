@@ -3,6 +3,7 @@ import api from '../api';
 import { useAuth } from '../context/AuthContext';
 import AdminSidebar from '../components/AdminSidebar';
 import toast from 'react-hot-toast';
+import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import './Yatirimcilar.css';
 
 const Yatirimcilar = () => {
@@ -31,6 +32,12 @@ const Yatirimcilar = () => {
   const [deleteStep, setDeleteStep] = useState(1);          // 1: uyarı, 2: TC onayı
   const [deleteInput, setDeleteInput] = useState('');
   const [deleting, setDeleting] = useState(false);
+
+  const [investorHistory, setInvestorHistory] = useState([]);
+  const [historyLoading, setHistoryLoading] = useState(false);
+  const [detailTab, setDetailTab] = useState('genel');
+
+  const PIE_COLORS = ['#4f46e5', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4'];
 
  const fetchData = async () => {
     if (!token) return;
@@ -108,6 +115,28 @@ useEffect(() => {
     fetchAllFunds();
   }
 }, [token, activeTab]);
+
+// Detay modalı açıldığında o yatırımcının işlem geçmişini çek
+useEffect(() => {
+  if (!selectedDetailInvestor) return;
+  setDetailTab('genel');
+  const fetchHistory = async () => {
+    setHistoryLoading(true);
+    try {
+      const res = await api.get('/trade/all-history');
+      const filtered = (Array.isArray(res.data) ? res.data : []).filter(
+        item => String(item.investorTc) === String(selectedDetailInvestor.tcNo)
+      );
+      setInvestorHistory(filtered);
+    } catch (err) {
+      console.error("İşlem geçmişi alınamadı:", err);
+      setInvestorHistory([]);
+    } finally {
+      setHistoryLoading(false);
+    }
+  };
+  fetchHistory();
+}, [selectedDetailInvestor?.tcNo]);
 
 const handleAdvisorChange = (e) => {
     const selectedTc = e.target.value;
@@ -545,111 +574,208 @@ const handleAssign = async () => {
       )}
 
       {/* ── Yatırımcı Detay Modalı ── */}
-      {selectedDetailInvestor && (
-        <div className="advisor-modal-overlay" onClick={() => setSelectedDetailInvestor(null)}>
-          <div className="advisor-modal investor-detail-modal" onClick={e => e.stopPropagation()}>
+      {selectedDetailInvestor && (() => {
+        const sortedHist = [...investorHistory].sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+        const ilkTarih = sortedHist[0]?.createdAt;
+        const sonTarih = sortedHist[sortedHist.length - 1]?.createdAt;
+        const pieData = (selectedDetailInvestor.holdings || [])
+          .filter(h => (h.tlValue || 0) > 0)
+          .map(h => ({ name: h.fundCode, value: h.tlValue || 0 }));
+        const totalVal = pieData.reduce((s, d) => s + d.value, 0);
 
-            {/* Header */}
-            <div className="advisor-modal-header">
-              <div className="advisor-avatar" style={{ background: '#10b981' }}>
-                {selectedDetailInvestor.fullName?.charAt(0)?.toUpperCase() || '?'}
-              </div>
-              <div>
-                <h2 className="advisor-modal-name">{selectedDetailInvestor.fullName}</h2>
-                <span className="advisor-modal-role">Yatırımcı · {selectedDetailInvestor.tcNo}</span>
-              </div>
-              <button className="advisor-modal-close" onClick={() => setSelectedDetailInvestor(null)}>✕</button>
-            </div>
+        return (
+          <div className="advisor-modal-overlay" onClick={() => setSelectedDetailInvestor(null)}>
+            <div className="advisor-modal investor-detail-modal" onClick={e => e.stopPropagation()}>
 
-            {/* Body */}
-            <div className="advisor-modal-body">
-
-              {/* Kişisel bilgiler */}
-              <div className="advisor-info-grid">
-                <div className="advisor-info-item">
-                  <span className="advisor-info-label">TC Kimlik No</span>
-                  <span className="advisor-info-value">{selectedDetailInvestor.tcNo}</span>
+              {/* Header */}
+              <div className="advisor-modal-header">
+                <div className="advisor-avatar" style={{ background: '#10b981' }}>
+                  {selectedDetailInvestor.fullName?.charAt(0)?.toUpperCase() || '?'}
                 </div>
-                <div className="advisor-info-item">
-                  <span className="advisor-info-label">E-Posta</span>
-                  <span className="advisor-info-value">{selectedDetailInvestor.email}</span>
+                <div>
+                  <h2 className="advisor-modal-name">{selectedDetailInvestor.fullName}</h2>
+                  <span className="advisor-modal-role">Yatırımcı · {selectedDetailInvestor.tcNo}</span>
                 </div>
-                <div className="advisor-info-item">
-                  <span className="advisor-info-label">Telefon</span>
-                  <span className="advisor-info-value">{selectedDetailInvestor.phone || '---'}</span>
-                </div>
-                <div className="advisor-info-item">
-                  <span className="advisor-info-label">Toplam Portföy</span>
-                  <span className="advisor-info-value" style={{ color: '#f59e0b' }}>
-                    ₺{Number(selectedDetailInvestor.totalPortfolioValue || 0).toLocaleString('tr-TR', { minimumFractionDigits: 2 })}
-                  </span>
-                </div>
+                <button className="advisor-modal-close" onClick={() => setSelectedDetailInvestor(null)}>✕</button>
               </div>
 
-              {/* Fon pozisyonları */}
-              {selectedDetailInvestor.holdings && selectedDetailInvestor.holdings.length > 0 && (
-                <div className="investor-holdings-section">
-                  <span className="advisor-info-label" style={{ display: 'block', marginBottom: 10 }}>Fon Pozisyonları</span>
-                  {selectedDetailInvestor.holdings.map((h, i) => (
-                    <div key={i} className="investor-holding-card">
-                      <div className="investor-holding-top">
-                        <span className="investor-holding-code">{h.fundCode}</span>
-                        <span className="investor-holding-lots">{Number(h.lots || 0).toLocaleString('tr-TR', { minimumFractionDigits: 4 })} Lot</span>
+              {/* Sekmeler */}
+              <div className="investor-detail-tabs">
+                <button className={`investor-detail-tab ${detailTab === 'genel' ? 'active' : ''}`} onClick={() => setDetailTab('genel')}>Genel Bakış</button>
+                <button className={`investor-detail-tab ${detailTab === 'gecmis' ? 'active' : ''}`} onClick={() => setDetailTab('gecmis')}>
+                  İşlem Geçmişi {investorHistory.length > 0 && <span className="history-count-badge">{investorHistory.length}</span>}
+                </button>
+              </div>
+
+              {/* Body */}
+              <div className="advisor-modal-body">
+
+                {detailTab === 'genel' && (
+                  <>
+                    {/* Kişisel bilgiler */}
+                    <div className="advisor-info-grid" style={{ gridTemplateColumns: 'repeat(3, 1fr)' }}>
+                      <div className="advisor-info-item">
+                        <span className="advisor-info-label">TC Kimlik No</span>
+                        <span className="advisor-info-value">{selectedDetailInvestor.tcNo}</span>
                       </div>
-                      <div className="investor-holding-value">
-                        <span style={{ color: '#787b86', fontSize: 11 }}>Güncel Değer</span>
-                        <span style={{ color: '#10b981', fontWeight: 700 }}>
-                          ₺{Number(h.tlValue || 0).toLocaleString('tr-TR', { minimumFractionDigits: 2 })}
+                      <div className="advisor-info-item">
+                        <span className="advisor-info-label">E-Posta</span>
+                        <span className="advisor-info-value">{selectedDetailInvestor.email}</span>
+                      </div>
+                      <div className="advisor-info-item">
+                        <span className="advisor-info-label">Telefon</span>
+                        <span className="advisor-info-value">{selectedDetailInvestor.phone || '---'}</span>
+                      </div>
+                      <div className="advisor-info-item">
+                        <span className="advisor-info-label">İlk Yatırım Tarihi</span>
+                        <span className="advisor-info-value">
+                          {ilkTarih ? new Date(ilkTarih).toLocaleDateString('tr-TR', { day: '2-digit', month: 'long', year: 'numeric' }) : '---'}
+                        </span>
+                      </div>
+                      <div className="advisor-info-item">
+                        <span className="advisor-info-label">Son Yatırım Tarihi</span>
+                        <span className="advisor-info-value">
+                          {sonTarih ? new Date(sonTarih).toLocaleDateString('tr-TR', { day: '2-digit', month: 'long', year: 'numeric' }) : '---'}
+                        </span>
+                      </div>
+                      <div className="advisor-info-item">
+                        <span className="advisor-info-label">Toplam Portföy</span>
+                        <span className="advisor-info-value" style={{ color: '#f59e0b' }}>
+                          ₺{Number(selectedDetailInvestor.totalPortfolioValue || 0).toLocaleString('tr-TR', { minimumFractionDigits: 2 })}
                         </span>
                       </div>
                     </div>
-                  ))}
-                </div>
-              )}
 
-              {(!selectedDetailInvestor.holdings || selectedDetailInvestor.holdings.length === 0) && (
-                <div style={{ textAlign: 'center', padding: '20px', color: '#434651', fontSize: 12 }}>
-                  Bu yatırımcının henüz aktif fon pozisyonu bulunmuyor.
-                </div>
-              )}
+                    {/* Pasta grafiği + fon pozisyonları */}
+                    {pieData.length > 0 && (
+                      <div className="investor-pie-section">
+                        <span className="advisor-info-label" style={{ display: 'block', marginBottom: 10 }}>Portföy Dağılımı</span>
+                        <div className="investor-pie-row">
+                          <div style={{ width: 200, height: 200 }}>
+                            <ResponsiveContainer>
+                              <PieChart>
+                                <Pie
+                                  data={pieData}
+                                  cx="50%"
+                                  cy="50%"
+                                  innerRadius={50}
+                                  outerRadius={80}
+                                  paddingAngle={3}
+                                  dataKey="value"
+                                >
+                                  {pieData.map((_, i) => (
+                                    <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} />
+                                  ))}
+                                </Pie>
+                                <Tooltip
+                                  contentStyle={{ background: '#131722', border: '1px solid #2a2e39', borderRadius: 8, color: '#fff', fontSize: 12 }}
+                                  formatter={(value) => [`₺${Number(value).toLocaleString('tr-TR', { minimumFractionDigits: 2 })}`, '']}
+                                />
+                              </PieChart>
+                            </ResponsiveContainer>
+                          </div>
+                          <div className="investor-pie-legend">
+                            {pieData.map((d, i) => (
+                              <div key={i} className="pie-legend-item">
+                                <span className="pie-legend-dot" style={{ background: PIE_COLORS[i % PIE_COLORS.length] }} />
+                                <span className="pie-legend-code">{d.name}</span>
+                                <span className="pie-legend-pct">%{totalVal > 0 ? ((d.value / totalVal) * 100).toFixed(1) : '0.0'}</span>
+                                <span className="pie-legend-val">₺{Number(d.value).toLocaleString('tr-TR', { minimumFractionDigits: 2 })}</span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    )}
 
-              {/* İşlem butonları */}
-              <div style={{ display: 'flex', gap: 8, marginTop: 16 }}>
-                <button
-                  className="btn-transfer"
-                  style={{ flex: 1 }}
-                  onClick={() => { setSelectedDetailInvestor(null); setSelectedYatirimci(selectedDetailInvestor); setShowTransferModal(true); }}
-                >
-                  Danışman Ekle / Transfer
-                </button>
-                <button
-                  className="btn-transfer"
-                  style={{ flex: 1, background: '#4f46e5' }}
-                  onClick={() => { setSelectedDetailInvestor(null); setSelectedYatirimci(selectedDetailInvestor); setShowTradeModal(true); }}
-                >
-                  Yatırım Yap / Çek
-                </button>
-              </div>
+                    {/* Fon pozisyonları */}
+                    {selectedDetailInvestor.holdings && selectedDetailInvestor.holdings.length > 0 && (
+                      <div className="investor-holdings-section">
+                        <span className="advisor-info-label" style={{ display: 'block', marginBottom: 10 }}>Fon Pozisyonları</span>
+                        {selectedDetailInvestor.holdings.map((h, i) => (
+                          <div key={i} className="investor-holding-card">
+                            <div className="investor-holding-top">
+                              <span className="investor-holding-code">{h.fundCode}</span>
+                              <span className="investor-holding-lots">{Number(h.lots || 0).toLocaleString('tr-TR', { minimumFractionDigits: 4 })} Lot</span>
+                            </div>
+                            <div className="investor-holding-value">
+                              <span style={{ color: '#787b86', fontSize: 11 }}>Güncel Değer</span>
+                              <span style={{ color: '#10b981', fontWeight: 700 }}>
+                                ₺{Number(h.tlValue || 0).toLocaleString('tr-TR', { minimumFractionDigits: 2 })}
+                              </span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    )}
 
-              {/* Tehlikeli Alan */}
-              <div className="investor-danger-zone">
-                <span className="investor-danger-label">Tehlikeli Alan</span>
-                <button
-                  className="btn-delete-investor"
-                  onClick={() => {
-                    setDeleteTarget(selectedDetailInvestor);
-                    setDeleteStep(1);
-                    setDeleteInput('');
-                    setSelectedDetailInvestor(null);
-                  }}
-                >
-                  Hesabı Kalıcı Sil
-                </button>
+                    {(!selectedDetailInvestor.holdings || selectedDetailInvestor.holdings.length === 0) && (
+                      <div style={{ textAlign: 'center', padding: '20px', color: '#434651', fontSize: 12 }}>
+                        Bu yatırımcının henüz aktif fon pozisyonu bulunmuyor.
+                      </div>
+                    )}
+
+                    {/* İşlem butonları */}
+                    <div style={{ display: 'flex', gap: 8, marginTop: 16 }}>
+                      <button className="btn-transfer" style={{ flex: 1 }} onClick={() => { setSelectedDetailInvestor(null); setSelectedYatirimci(selectedDetailInvestor); setShowTransferModal(true); }}>
+                        Danışman Ekle / Transfer
+                      </button>
+                      <button className="btn-transfer" style={{ flex: 1, background: '#4f46e5' }} onClick={() => { setSelectedDetailInvestor(null); setSelectedYatirimci(selectedDetailInvestor); setShowTradeModal(true); }}>
+                        Yatırım Yap / Çek
+                      </button>
+                    </div>
+
+                    {/* Tehlikeli Alan */}
+                    <div className="investor-danger-zone">
+                      <span className="investor-danger-label">Tehlikeli Alan</span>
+                      <button className="btn-delete-investor" onClick={() => { setDeleteTarget(selectedDetailInvestor); setDeleteStep(1); setDeleteInput(''); setSelectedDetailInvestor(null); }}>
+                        Hesabı Kalıcı Sil
+                      </button>
+                    </div>
+                  </>
+                )}
+
+                {detailTab === 'gecmis' && (
+                  <div className="investor-history-section">
+                    {historyLoading ? (
+                      <div style={{ textAlign: 'center', padding: 30, color: '#94a3b8', fontSize: 13 }}>Geçmiş yükleniyor...</div>
+                    ) : investorHistory.length === 0 ? (
+                      <div style={{ textAlign: 'center', padding: 30, color: '#434651', fontSize: 12 }}>Bu yatırımcıya ait işlem kaydı bulunamadı.</div>
+                    ) : (
+                      <table className="investor-history-table">
+                        <thead>
+                          <tr>
+                            <th>Tarih</th>
+                            <th>Fon</th>
+                            <th>İşlem</th>
+                            <th>Lot</th>
+                            <th>Tutar</th>
+                            <th>Birim Fiyat</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          {[...investorHistory]
+                            .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+                            .map((item, i) => (
+                            <tr key={item.id || i}>
+                              <td>{new Date(item.createdAt).toLocaleDateString('tr-TR', { day: '2-digit', month: '2-digit', year: 'numeric' })}</td>
+                              <td><span className="investor-holding-code">{item.fundCode}</span></td>
+                              <td><span className={`status-badge-small ${item.type === 'BUY' ? 'buy' : 'sell'}`}>{item.type === 'BUY' ? 'ALIŞ' : 'SATIŞ'}</span></td>
+                              <td style={{ color: '#d1d4dc' }}>{Number(item.lotCount || 0).toLocaleString('tr-TR', { minimumFractionDigits: 4 })}</td>
+                              <td style={{ color: '#f59e0b', fontWeight: 700 }}>₺{Number(item.amount || 0).toLocaleString('tr-TR', { minimumFractionDigits: 2 })}</td>
+                              <td style={{ color: '#94a3b8' }}>₺{Number(item.unitPrice || 0).toFixed(4)}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    )}
+                  </div>
+                )}
               </div>
             </div>
           </div>
-        </div>
-      )}
+        );
+      })()}
     </div>
   );
 };

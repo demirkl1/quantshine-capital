@@ -19,6 +19,7 @@ const Portfoyum = () => {
     guncelDeger: 0,
     toplamPortfoyBuyuklugu: 0
   });
+  const [birimFiyat, setBirimFiyat] = useState(null);
   const [chartData, setChartData] = useState([]);
 
   // 1. ADIM: Sayfa açıldığında yatırımcının fon listesini çekiyoruz
@@ -52,6 +53,9 @@ const Portfoyum = () => {
       try {
         const statsRes = await api.get(`/trade/investor-portfolio?fundCode=${selectedFon}`);
         setStats(statsRes.data);
+
+        const fundRes = await api.get(`/funds/${selectedFon}`);
+        setBirimFiyat(fundRes.data?.price ?? null);
 
         const chartRes = await api.get(`/funds/history/${selectedFon}?filter=${activeFilter}`);
 
@@ -130,6 +134,16 @@ const Portfoyum = () => {
   <div className="stat-card" style={{ borderTop: `4px solid ${getFonColor(selectedFon)}` }}>
     <h3>PORTFÖY BÜYÜKLÜĞÜ</h3>
     <p className="stat-value">₺{stats.guncelDeger?.toLocaleString('tr-TR')}</p>
+  </div>
+
+  <div className="stat-card" style={{ borderTop: `4px solid #06b6d4` }}>
+    <h3>ANLIK LOT DEĞERİ</h3>
+    <p className="stat-value">
+      {birimFiyat !== null
+        ? `₺${Number(birimFiyat).toLocaleString('tr-TR', { minimumFractionDigits: 4, maximumFractionDigits: 4 })}`
+        : '—'}
+    </p>
+    <span style={{ fontSize: 12, color: '#94a3b8' }}>Birim Fiyat ({selectedFon})</span>
   </div>
 
   <div className="stat-card static-card">

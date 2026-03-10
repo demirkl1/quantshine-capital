@@ -447,8 +447,218 @@
   text-align: right;
 }
 
+/* ── Genel Section Wrapper ────────────────────────────── */
+.fon-section {
+  margin-bottom: 24px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #1c2030;
+}
+.fon-section:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+/* ── Modal genişliği güncelleme ───────────────────────── */
+.fon-detail-modal {
+  width: 820px;
+}
+
+/* ── Kuruluş Bilgileri ────────────────────────────────── */
+.fon-founding-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.fon-founding-item {
+  background: #1c2030;
+  border: 1px solid #2a2e39;
+  border-radius: 8px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.fon-founding-key {
+  font-size: 10px;
+  color: #787b86;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.fon-founding-val {
+  font-size: 13px;
+  font-weight: 700;
+  color: #e2e8f0;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.fon-description-box {
+  background: #1c2030;
+  border: 1px solid #2a2e39;
+  border-left: 3px solid #4f46e5;
+  border-radius: 8px;
+  padding: 12px 14px;
+}
+
+.fon-description-text {
+  font-size: 12px;
+  color: #94a3b8;
+  line-height: 1.7;
+  margin: 0;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* ── Danışman Kartları ────────────────────────────────── */
+.fon-advisor-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.fon-advisor-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #1c2030;
+  border: 1px solid #2a2e39;
+  border-radius: 8px;
+  padding: 12px 14px;
+}
+
+.fon-advisor-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #4f46e5, #7c3aed);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+  flex-shrink: 0;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.fon-advisor-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: #e2e8f0;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.fon-advisor-tc {
+  font-size: 11px;
+  color: #787b86;
+  font-family: 'JetBrains Mono', monospace;
+  margin-top: 2px;
+}
+
+.fon-advisor-role {
+  margin-left: auto;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: 0.06em;
+}
+.fon-advisor-role.advisor {
+  background: rgba(16, 185, 129, 0.12);
+  color: #10b981;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+.fon-advisor-role.admin {
+  background: rgba(79, 70, 229, 0.12);
+  color: #818cf8;
+  border: 1px solid rgba(79, 70, 229, 0.3);
+}
+
+.fon-empty-state {
+  color: #434651;
+  font-size: 12px;
+  font-style: italic;
+  text-align: center;
+  padding: 16px 0;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* ── Pasta Grafiği + Legend ───────────────────────────── */
+.fon-alloc-pie-row {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.fon-alloc-legend {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.fon-alloc-legend-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.fon-alloc-legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.fon-alloc-legend-name {
+  font-size: 11px;
+  color: #d1d4dc;
+  min-width: 90px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── Menkul Kıymetler Tablosu ─────────────────────────── */
+.fon-securities-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+}
+
+.fon-securities-table th {
+  color: #787b86;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  padding: 8px 10px;
+  border-bottom: 1px solid #2a2e39;
+  text-align: left;
+}
+
+.fon-securities-table td {
+  padding: 9px 10px;
+  border-bottom: 1px solid #1c2030;
+  color: #94a3b8;
+}
+
+.fon-securities-table tr:hover td {
+  background: #1c2030;
+}
+
 /* Responsive */
-@media (max-width: 600px) {
+@media (max-width: 860px) {
+  .fon-detail-modal { width: 96vw; }
   .fon-detail-stats { grid-template-columns: repeat(2, 1fr); }
+  .fon-founding-grid { grid-template-columns: repeat(2, 1fr); }
   .fon-perf-grid { grid-template-columns: repeat(3, 1fr); }
+  .fon-alloc-pie-row { flex-direction: column; align-items: flex-start; }
 }
