@@ -16,7 +16,7 @@ const AdminAnasayfa = () => {
   const [showUsd, setShowUsd] = useState(true);
   const [fonDropdownOpen, setFonDropdownOpen] = useState(false);
 
-  const FILTER_TO_YAHOO = { '1H': '5d', '1A': '1mo', '3A': '3mo', '6A': '6mo', '1Y': '1y' };
+  const FILTER_TO_DAYS = { '1H': 7, '1A': 30, '3A': 90, '6A': 180, '1Y': 365 };
 
   const CHART_COLORS = ['#4f46e5', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4'];
   const getFonColor = (code) => {
@@ -118,54 +118,18 @@ const AdminAnasayfa = () => {
     fetchFundSeries();
   }, [token, selectedFonlar, activeFilter]);
 
-  // BIST 100 + USD/TRY geçmiş verileri
+  // BIST 100 + USD/TRY geçmiş verileri — backend proxy üzerinden (CORS sorunu olmaz)
   useEffect(() => {
-    const filterToDays = { '1H': 8, '1A': 32, '3A': 93, '6A': 186, '1Y': 366 };
+    const days = FILTER_TO_DAYS[activeFilter] || 30;
+    const toArray = (obj) =>
+      Object.entries(obj || {})
+        .map(([date, price]) => ({ date, price }))
+        .sort((a, b) => a.date.localeCompare(b.date));
 
-    // BIST 100 — TradingView UDF endpoint
-    const fetchBist = async () => {
-      const days = filterToDays[activeFilter] || 93;
-      const toUnix   = Math.floor(Date.now() / 1000);
-      const fromUnix = toUnix - days * 86400;
-      try {
-        const res = await fetch(
-          `https://data.tradingview.com/datafeed/history?symbol=BIST%3AXU100&resolution=1D&from=${fromUnix}&to=${toUnix}`
-        );
-        if (!res.ok) return [];
-        const json = await res.json();
-        if (!json || json.s === 'error' || !Array.isArray(json.t) || json.t.length === 0) return [];
-        return json.t
-          .map((ts, i) => ({ date: new Date(ts * 1000).toISOString().split('T')[0], price: json.c[i] }))
-          .filter(d => d.price != null);
-      } catch (e) {
-        console.warn('BIST 100 verisi alınamadı:', e.message);
-        return [];
-      }
-    };
-
-    // USD/TRY — Yahoo Finance
-    const fetchUsd = async () => {
-      const range = FILTER_TO_YAHOO[activeFilter] || '3mo';
-      try {
-        const res = await fetch(
-          `https://query1.finance.yahoo.com/v8/finance/chart/USDTRY=X?range=${range}&interval=1d`
-        );
-        if (!res.ok) return [];
-        const json = await res.json();
-        const result = json.chart?.result?.[0];
-        if (!result) return [];
-        const timestamps = result.timestamp || [];
-        const closes = result.indicators?.quote?.[0]?.close || [];
-        return timestamps
-          .map((t, i) => ({ date: new Date(t * 1000).toISOString().split('T')[0], price: closes[i] }))
-          .filter(d => d.price != null);
-      } catch (e) {
-        console.warn('USD/TRY verisi alınamadı:', e.message);
-        return [];
-      }
-    };
-
-    Promise.all([fetchBist(), fetchUsd()]).then(([bist, usd]) => setMarketData({ bist, usd }));
+    Promise.all([
+      api.get(`/market/history/BIST?days=${days}`).then(r => toArray(r.data)).catch(() => []),
+      api.get(`/market/history/USD?days=${days}`).then(r => toArray(r.data)).catch(() => []),
+    ]).then(([bist, usd]) => setMarketData({ bist, usd }));
   }, [activeFilter]);
 
   // Normalize: tüm serileri dönem başından % değişim olarak birleştir
