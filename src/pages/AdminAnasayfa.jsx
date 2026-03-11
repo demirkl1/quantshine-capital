@@ -132,34 +132,24 @@ const AdminAnasayfa = () => {
     ]).then(([bist, usd]) => setMarketData({ bist, usd }));
   }, [activeFilter]);
 
-  // Normalize: tüm serileri dönem başından % değişim olarak birleştir
-  const normalizedChartData = useMemo(() => {
-    const normSeries = (items) => {
-      if (!items?.length) return {};
-      const valid = items.filter(d => d.price != null && d.date);
-      if (!valid.length) return {};
-      const base = valid[0].price;
-      const map = {};
-      valid.forEach(d => {
-        // base 0 ise flat çizgi (0%) göster, yoksa % değişim hesapla
-        map[d.date] = base === 0
-          ? 0
-          : parseFloat((((d.price - base) / base) * 100).toFixed(3));
-      });
-      return map;
-    };
-
-    const allNorms = {};
-    Object.entries(fundSeriesData).forEach(([code, data]) => { allNorms[code] = normSeries(data); });
-    if (showBist && marketData.bist.length) allNorms['BIST 100'] = normSeries(marketData.bist);
-    if (showUsd  && marketData.usd.length)  allNorms['USD/TRY']  = normSeries(marketData.usd);
-
+  // Ham değerleri birleştir (normalize etmeden)
+  const chartData = useMemo(() => {
     const dateSet = new Set();
-    Object.values(allNorms).forEach(norm => Object.keys(norm).forEach(d => dateSet.add(d)));
+    const fundMaps = {};
+    Object.entries(fundSeriesData).forEach(([code, data]) => {
+      fundMaps[code] = {};
+      data.forEach(d => { dateSet.add(d.date); fundMaps[code][d.date] = d.price; });
+    });
+    const bistMap = {};
+    if (showBist) marketData.bist.forEach(d => { dateSet.add(d.date); bistMap[d.date] = d.price; });
+    const usdMap = {};
+    if (showUsd) marketData.usd.forEach(d => { dateSet.add(d.date); usdMap[d.date] = d.price; });
 
     return Array.from(dateSet).sort().map(date => {
       const point = { name: date };
-      Object.entries(allNorms).forEach(([key, norm]) => { if (norm[date] != null) point[key] = norm[date]; });
+      Object.entries(fundMaps).forEach(([code, map]) => { if (map[date] != null) point[code] = map[date]; });
+      if (showBist && bistMap[date] != null) point['BIST 100'] = bistMap[date];
+      if (showUsd  && usdMap[date]  != null) point['USD/TRY']  = usdMap[date];
       return point;
     });
   }, [fundSeriesData, marketData, showBist, showUsd]);
@@ -178,7 +168,7 @@ const AdminAnasayfa = () => {
   };
 
   const getTickInterval = () => {
-    const len = normalizedChartData.length;
+    const len = chartData.length;
     if (len <= 7) return 0;
     return Math.max(0, Math.ceil(len / 6) - 1);
   };
@@ -328,13 +318,13 @@ const calculatePerc = (profit, total) => {
                 <span className="fon-chip" style={{ borderColor: '#f59e0b', color: '#f59e0b' }}>USD/TRY</span>
               )}
               <span style={{ fontSize: 10, color: '#434651', alignSelf: 'center', fontFamily: 'JetBrains Mono, monospace' }}>
-                Dönem başından % değişim
+                Sol eksen: ₺ (fon) · Sağ eksen: piyasa
               </span>
             </div>
 
             <div style={{ width: '100%', height: 380 }}>
               <ResponsiveContainer>
-                <AreaChart data={normalizedChartData}>
+                <AreaChart data={chartData}>
                   <defs>
                     {(selectedFonlar || []).map((code, i) => (
                       <linearGradient key={code} id={`color-${code}`} x1="0" y1="0" x2="0" y2="1">
@@ -355,32 +345,55 @@ const calculatePerc = (profit, total) => {
                     axisLine={{ stroke: '#2d3748' }}
                     tickLine={false}
                   />
+                  {/* Sol eksen — fon birim fiyatı (₺) */}
                   <YAxis
+                    yAxisId="fund"
+                    orientation="left"
                     stroke="#2d3748"
                     tick={{ fontSize: 11, fill: '#94a3b8' }}
-                    tickFormatter={v => `${v >= 0 ? '+' : ''}${v.toFixed(1)}%`}
+                    tickFormatter={v => `₺${Number(v).toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`}
                     domain={['auto', 'auto']}
-                    width={68}
+                    width={80}
                     axisLine={false}
                     tickLine={false}
                   />
+                  {/* Sağ eksen — BIST 100 (kendi ölçeği) */}
+                  {showBist && marketData.bist.length > 0 && (
+                    <YAxis
+                      yAxisId="bist"
+                      orientation="right"
+                      stroke="#2d3748"
+                      tick={{ fontSize: 10, fill: '#10b981' }}
+                      tickFormatter={v => Number(v).toLocaleString('tr-TR', { maximumFractionDigits: 0 })}
+                      domain={['auto', 'auto']}
+                      width={68}
+                      axisLine={false}
+                      tickLine={false}
+                    />
+                  )}
+                  {/* USD/TRY ekseni — gizli, sadece ölçekleme için */}
+                  {showUsd && marketData.usd.length > 0 && (
+                    <YAxis yAxisId="usd" orientation="right" hide />
+                  )}
                   <Tooltip
                     contentStyle={{ backgroundColor: '#161b2c', border: '1px solid #2a2e39', borderRadius: '10px', color: '#fff' }}
                     labelFormatter={label => {
                       const d = new Date(label);
                       return isNaN(d) ? label : d.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' });
                     }}
-                    formatter={(value, name) => [
-                      `${value >= 0 ? '+' : ''}${Number(value).toFixed(2)}%`,
-                      name
-                    ]}
+                    formatter={(value, name) => {
+                      if (name === 'BIST 100') return [Number(value).toLocaleString('tr-TR', { maximumFractionDigits: 0 }), name];
+                      if (name === 'USD/TRY') return [`₺${Number(value).toFixed(4)}`, name];
+                      return [`₺${Number(value).toLocaleString('tr-TR', { minimumFractionDigits: 2, maximumFractionDigits: 4 })}`, name];
+                    }}
                   />
                   <Legend wrapperStyle={{ fontSize: 11, color: '#94a3b8', paddingTop: 8 }} />
 
-                  {/* Fon serileri */}
+                  {/* Fon serileri — sol eksen */}
                   {(selectedFonlar || []).map((code, i) => (
                     <Area
                       key={code}
+                      yAxisId="fund"
                       type="monotone"
                       dataKey={code}
                       name={code}
@@ -393,9 +406,10 @@ const calculatePerc = (profit, total) => {
                     />
                   ))}
 
-                  {/* BIST 100 */}
+                  {/* BIST 100 — sağ eksen */}
                   {showBist && marketData.bist.length > 0 && (
                     <Area
+                      yAxisId="bist"
                       type="monotone"
                       dataKey="BIST 100"
                       name="BIST 100"
@@ -408,9 +422,10 @@ const calculatePerc = (profit, total) => {
                     />
                   )}
 
-                  {/* USD/TRY */}
+                  {/* USD/TRY — kendi gizli ekseni */}
                   {showUsd && marketData.usd.length > 0 && (
                     <Area
+                      yAxisId="usd"
                       type="monotone"
                       dataKey="USD/TRY"
                       name="USD/TRY"
