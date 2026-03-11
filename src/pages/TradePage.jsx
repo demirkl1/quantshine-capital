@@ -283,13 +283,13 @@ const StockChartModal = ({ stock, onClose, onBuy, onSell }) => {
           ) : history.length === 0 ? (
             <div style={{
               display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center',
-              height:'100%', gap:8,
+              height:'100%', gap:10,
             }}>
-              <div style={{fontSize:28}}>📊</div>
+              <div style={{fontSize:32}}>📊</div>
               <div style={{color:tv.textDim, fontSize:13, fontFamily:"'JetBrains Mono', monospace"}}>
-                {stock.stockCode} için geçmiş veri bulunamadı
+                {stock.stockCode} için {period} döneminde veri bulunamadı
               </div>
-              <div style={{fontSize:11, color:tv.textFaint}}>Yahoo Finance'da bu hisse listelenmemiş olabilir</div>
+              <div style={{fontSize:11, color:tv.textFaint}}>Farklı bir periyot deneyin</div>
             </div>
           ) : (
             <ResponsiveContainer width="100%" height="100%">
