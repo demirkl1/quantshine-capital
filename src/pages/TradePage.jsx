@@ -4,6 +4,10 @@ import toast from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext';
 import AdminSidebar from '../components/AdminSidebar';
 import AdvisorSidebar from '../components/AdvisorSidebar';
+import {
+  AreaChart, Area, XAxis, YAxis, CartesianGrid,
+  Tooltip, ResponsiveContainer, ReferenceLine
+} from 'recharts';
 import './TradePage.css';
 
 /* ─── TradingView-inspired dark theme ─────────────────────────── */
@@ -98,50 +102,53 @@ const LiveDot = () => (
     boxShadow:`0 0 0 0 ${tv.green}`, animation:'pulse 2s infinite' }} />
 );
 
-/* ─── TradingView stock chart HTML ─────────────────────────────── */
-const getStockChartHtml = (stockCode) => `<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    html, body { height: 100%; background: #131722; overflow: hidden; }
-  </style>
-</head>
-<body>
-  <div class="tradingview-widget-container" style="height:100%;width:100%;">
-    <div class="tradingview-widget-container__widget" style="height:100%;width:100%;"></div>
-    <script type="text/javascript"
-      src="https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js"
-      async>
-    {
-      "autosize": true,
-      "symbol": "BIST:${stockCode}",
-      "interval": "D",
-      "timezone": "Europe/Istanbul",
-      "theme": "dark",
-      "style": "1",
-      "locale": "tr",
-      "enable_publishing": false,
-      "allow_symbol_change": false,
-      "hide_side_toolbar": false,
-      "save_image": false,
-      "calendar": false,
-      "hide_volume": false,
-      "backgroundColor": "rgba(13,17,23,1)",
-      "gridColor": "rgba(42,46,57,0.5)",
-      "support_host": "https://www.tradingview.com"
-    }
-    </script>
-  </div>
-</body>
-</html>`;
+/* ─── Periyot → gün eşlemesi ────────────────────────────────────── */
+const PERIOD_DAYS = { '1H': 7, '1A': 30, '3A': 90, '6A': 180, '1Y': 365 };
+const PERIODS     = Object.keys(PERIOD_DAYS);
 
 /* ─── Stock Chart Modal ─────────────────────────────────────────── */
 const StockChartModal = ({ stock, onClose, onBuy, onSell }) => {
+  const [period,    setPeriod]    = useState('1A');
+  const [history,   setHistory]   = useState([]);
+  const [chartLoad, setChartLoad] = useState(false);
+
+  useEffect(() => {
+    if (!stock) return;
+    setChartLoad(true);
+    const days = PERIOD_DAYS[period] || 30;
+    api.get(`/market/stock-history/${stock.stockCode}?days=${days}`)
+      .then(r => {
+        const data = Object.entries(r.data || {})
+          .map(([date, price]) => ({ date, price }))
+          .sort((a, b) => a.date.localeCompare(b.date));
+        setHistory(data);
+      })
+      .catch(() => setHistory([]))
+      .finally(() => setChartLoad(false));
+  }, [stock, period]);
+
   if (!stock) return null;
+
   const chgPct = parseFloat((stock.changePercent || '0').replace('%', ''));
   const isPos  = chgPct >= 0;
+  const color  = isPos ? tv.green : tv.red;
+
+  /* Tooltip formatter */
+  const fmtDate = (d) => {
+    if (!d) return '';
+    const dt = new Date(d);
+    return isNaN(dt) ? d : dt.toLocaleDateString('tr-TR', { day:'numeric', month:'long', year:'numeric' });
+  };
+
+  /* X eksen etiket sayısı */
+  const tickInterval = history.length <= 10 ? 0 : Math.ceil(history.length / 7) - 1;
+
+  /* fiyat aralığı — %3 padding */
+  const prices  = history.map(d => d.price).filter(Boolean);
+  const minP    = prices.length ? Math.min(...prices) : 0;
+  const maxP    = prices.length ? Math.max(...prices) : 100;
+  const pad     = (maxP - minP) * 0.03 || 1;
+  const yDomain = [Math.max(0, minP - pad), maxP + pad];
 
   return (
     <div
@@ -157,7 +164,7 @@ const StockChartModal = ({ stock, onClose, onBuy, onSell }) => {
       <div
         onClick={e => e.stopPropagation()}
         style={{
-          width:'92vw', maxWidth:1280, height:'88vh',
+          width:'92vw', maxWidth:1320, height:'88vh',
           background:tv.surface, border:`1px solid ${tv.border}`,
           borderRadius:12, display:'flex', flexDirection:'column',
           overflow:'hidden', boxShadow:'0 24px 80px rgba(0,0,0,0.6)',
@@ -167,101 +174,194 @@ const StockChartModal = ({ stock, onClose, onBuy, onSell }) => {
         <div style={{
           display:'flex', alignItems:'center', justifyContent:'space-between',
           padding:'14px 20px', borderBottom:`1px solid ${tv.border}`,
-          background:tv.panel, flexShrink:0,
+          background:tv.panel, flexShrink:0, flexWrap:'wrap', gap:10,
         }}>
-          <div style={{display:'flex', alignItems:'center', gap:20}}>
+          <div style={{display:'flex', alignItems:'center', gap:20, flexWrap:'wrap'}}>
             <div>
               <div style={{
-                fontSize:20, fontWeight:700, color:tv.white,
+                fontSize:22, fontWeight:700, color:tv.white,
                 fontFamily:"'JetBrains Mono', monospace", letterSpacing:'-0.01em',
               }}>
                 {stock.stockCode}
+                <span style={{fontSize:12, color:tv.textDim, fontWeight:400, marginLeft:8}}>BIST</span>
               </div>
               <div style={{fontSize:11, color:tv.textDim, marginTop:2}}>{stock.stockName}</div>
             </div>
-            <div style={{
-              fontSize:24, fontWeight:700, color:tv.white,
-              fontFamily:"'JetBrains Mono', monospace",
-            }}>
-              ₺{Number(stock.currentPrice||0).toFixed(2)}
-            </div>
-            <div style={{
-              display:'flex', flexDirection:'column', gap:3,
-            }}>
-              <span style={{
-                fontSize:13, fontWeight:700,
-                color: isPos ? tv.green : tv.red,
-                background: isPos ? tv.greenBg : tv.redBg,
-                padding:'3px 10px', borderRadius:5,
-                fontFamily:"'JetBrains Mono', monospace",
+
+            <div style={{display:'flex', flexDirection:'column', gap:2}}>
+              <div style={{
+                fontSize:26, fontWeight:700, color:tv.white,
+                fontFamily:"'JetBrains Mono', monospace", lineHeight:1,
               }}>
-                {isPos ? '+' : ''}{chgPct.toFixed(2)}%
-              </span>
-              {stock.change != null && (
-                <span style={{fontSize:11, color: isPos ? tv.green : tv.red, textAlign:'center'}}>
-                  {isPos ? '+' : ''}{Number(stock.change).toFixed(2)}
+                ₺{Number(stock.currentPrice||0).toFixed(2)}
+              </div>
+              <div style={{display:'flex', gap:8, alignItems:'center'}}>
+                <span style={{
+                  fontSize:13, fontWeight:700, color,
+                  background: isPos ? tv.greenBg : tv.redBg,
+                  padding:'2px 8px', borderRadius:4,
+                  fontFamily:"'JetBrains Mono', monospace",
+                }}>
+                  {isPos ? '+' : ''}{chgPct.toFixed(2)}%
                 </span>
-              )}
+                {stock.change != null && (
+                  <span style={{fontSize:11, color, fontFamily:"'JetBrains Mono', monospace"}}>
+                    {isPos ? '+' : ''}₺{Number(stock.change).toFixed(2)}
+                  </span>
+                )}
+              </div>
             </div>
-            <div style={{fontSize:10, color:tv.textFaint, fontFamily:"'JetBrains Mono', monospace"}}>
-              BIST · {stock.lastUpdate
-                ? new Date(stock.lastUpdate).toLocaleString('tr-TR',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'})
-                : '—'}
+
+            <div style={{fontSize:10, color:tv.textFaint, fontFamily:"'JetBrains Mono', monospace", lineHeight:1.6}}>
+              <div>Son Güncelleme</div>
+              <div style={{color:tv.textDim}}>
+                {stock.lastUpdate
+                  ? new Date(stock.lastUpdate).toLocaleString('tr-TR',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'})
+                  : '—'}
+              </div>
             </div>
           </div>
+
           <div style={{display:'flex', alignItems:'center', gap:8}}>
-            <button
-              onClick={onBuy}
-              style={{
-                padding:'9px 22px', border:'none', borderRadius:6, cursor:'pointer',
-                background:tv.green, color:'#fff', fontSize:13, fontWeight:700,
-                fontFamily:"'JetBrains Mono', monospace", letterSpacing:'0.06em',
-                transition:'opacity 0.15s',
-              }}
-              onMouseOver={e => e.currentTarget.style.opacity = '0.85'}
-              onMouseOut={e => e.currentTarget.style.opacity = '1'}
-            >
+            {/* Periyot seçici */}
+            <div style={{
+              display:'flex', gap:2, background:tv.bg,
+              borderRadius:6, padding:3, border:`1px solid ${tv.border}`,
+            }}>
+              {PERIODS.map(p => (
+                <button key={p} onClick={() => setPeriod(p)} style={{
+                  padding:'5px 10px', border:'none', borderRadius:4,
+                  background: period === p ? tv.accent : 'transparent',
+                  color: period === p ? tv.white : tv.textDim,
+                  fontSize:11, fontWeight:700, cursor:'pointer',
+                  fontFamily:"'JetBrains Mono', monospace", transition:'all 0.15s',
+                }}>
+                  {p}
+                </button>
+              ))}
+            </div>
+
+            <button onClick={onBuy} style={{
+              padding:'9px 20px', border:'none', borderRadius:6, cursor:'pointer',
+              background:tv.green, color:'#fff', fontSize:13, fontWeight:700,
+              fontFamily:"'JetBrains Mono', monospace", letterSpacing:'0.05em',
+            }}>
               ▲ ALIŞ
             </button>
-            <button
-              onClick={onSell}
-              style={{
-                padding:'9px 22px', border:'none', borderRadius:6, cursor:'pointer',
-                background:tv.red, color:'#fff', fontSize:13, fontWeight:700,
-                fontFamily:"'JetBrains Mono', monospace", letterSpacing:'0.06em',
-                transition:'opacity 0.15s',
-              }}
-              onMouseOver={e => e.currentTarget.style.opacity = '0.85'}
-              onMouseOut={e => e.currentTarget.style.opacity = '1'}
-            >
+            <button onClick={onSell} style={{
+              padding:'9px 20px', border:'none', borderRadius:6, cursor:'pointer',
+              background:tv.red, color:'#fff', fontSize:13, fontWeight:700,
+              fontFamily:"'JetBrains Mono', monospace", letterSpacing:'0.05em',
+            }}>
               ▼ SATIŞ
             </button>
-            <button
-              onClick={onClose}
-              style={{
-                width:34, height:34, border:`1px solid ${tv.border}`,
-                borderRadius:6, background:tv.panel, color:tv.textDim,
-                cursor:'pointer', fontSize:16, display:'flex',
-                alignItems:'center', justifyContent:'center',
-                transition:'all 0.15s',
-              }}
-              onMouseOver={e => { e.currentTarget.style.background = tv.borderHi; e.currentTarget.style.color = tv.white; }}
-              onMouseOut={e => { e.currentTarget.style.background = tv.panel; e.currentTarget.style.color = tv.textDim; }}
-            >
+            <button onClick={onClose} style={{
+              width:34, height:34, border:`1px solid ${tv.border}`,
+              borderRadius:6, background:tv.panel, color:tv.textDim,
+              cursor:'pointer', fontSize:16,
+            }}>
               ✕
             </button>
           </div>
         </div>
 
-        {/* ── TradingView Chart ── */}
-        <iframe
-          key={stock.stockCode}
-          srcDoc={getStockChartHtml(stock.stockCode)}
-          frameBorder="0"
-          scrolling="no"
-          style={{ flex:1, border:'none', display:'block', width:'100%' }}
-          title={`${stock.stockCode} Grafik`}
-        />
+        {/* ── Chart area ── */}
+        <div style={{ flex:1, padding:'20px 16px 8px', minHeight:0, position:'relative' }}>
+          {chartLoad ? (
+            <div style={{
+              display:'flex', alignItems:'center', justifyContent:'center',
+              height:'100%', color:tv.textDim, fontSize:13,
+              fontFamily:"'JetBrains Mono', monospace", gap:10,
+            }}>
+              <span style={{
+                display:'inline-block', width:14, height:14, borderRadius:'50%',
+                border:`2px solid ${tv.accent}`, borderTopColor:'transparent',
+                animation:'spin 0.8s linear infinite',
+              }} />
+              Veriler yükleniyor...
+            </div>
+          ) : history.length === 0 ? (
+            <div style={{
+              display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center',
+              height:'100%', gap:8,
+            }}>
+              <div style={{fontSize:28}}>📊</div>
+              <div style={{color:tv.textDim, fontSize:13, fontFamily:"'JetBrains Mono', monospace"}}>
+                {stock.stockCode} için geçmiş veri bulunamadı
+              </div>
+              <div style={{fontSize:11, color:tv.textFaint}}>Yahoo Finance'da bu hisse listelenmemiş olabilir</div>
+            </div>
+          ) : (
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={history} margin={{ top:10, right:16, left:0, bottom:0 }}>
+                <defs>
+                  <linearGradient id="stockGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%"  stopColor={color} stopOpacity={0.25} />
+                    <stop offset="95%" stopColor={color} stopOpacity={0}    />
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" stroke={tv.border} vertical={false} />
+                <XAxis
+                  dataKey="date"
+                  tick={{ fontSize:10, fill:tv.textDim, fontFamily:"'JetBrains Mono', monospace" }}
+                  tickLine={false}
+                  axisLine={{ stroke:tv.border }}
+                  interval={tickInterval}
+                  minTickGap={60}
+                  tickFormatter={d => {
+                    const dt = new Date(d);
+                    if (isNaN(dt)) return d;
+                    if (period === '1Y' || period === '6A')
+                      return dt.toLocaleDateString('tr-TR', { month:'short', year:'2-digit' });
+                    return dt.toLocaleDateString('tr-TR', { day:'2-digit', month:'short' });
+                  }}
+                />
+                <YAxis
+                  domain={yDomain}
+                  tick={{ fontSize:10, fill:tv.textDim, fontFamily:"'JetBrains Mono', monospace" }}
+                  tickLine={false}
+                  axisLine={false}
+                  width={72}
+                  tickFormatter={v => `₺${Number(v).toLocaleString('tr-TR', { minimumFractionDigits:2, maximumFractionDigits:2 })}`}
+                />
+                <Tooltip
+                  contentStyle={{
+                    background:tv.panel, border:`1px solid ${tv.border}`,
+                    borderRadius:8, color:tv.white,
+                    fontFamily:"'JetBrains Mono', monospace", fontSize:12,
+                  }}
+                  labelFormatter={fmtDate}
+                  formatter={v => [`₺${Number(v).toLocaleString('tr-TR', { minimumFractionDigits:2, maximumFractionDigits:2 })}`, stock.stockCode]}
+                  cursor={{ stroke:tv.textDim, strokeWidth:1, strokeDasharray:'4 2' }}
+                />
+                {/* Anlık fiyat referans çizgisi */}
+                <ReferenceLine
+                  y={Number(stock.currentPrice)}
+                  stroke={color}
+                  strokeDasharray="4 3"
+                  strokeWidth={1}
+                  label={{
+                    value: `₺${Number(stock.currentPrice).toFixed(2)}`,
+                    position:'insideTopRight',
+                    fill: color,
+                    fontSize: 10,
+                    fontFamily:"'JetBrains Mono', monospace",
+                  }}
+                />
+                <Area
+                  type="monotone"
+                  dataKey="price"
+                  stroke={color}
+                  strokeWidth={2}
+                  fill="url(#stockGrad)"
+                  dot={false}
+                  activeDot={{ r:4, fill:color, strokeWidth:0 }}
+                  connectNulls
+                />
+              </AreaChart>
+            </ResponsiveContainer>
+          )}
+        </div>
 
         {/* ── Footer ── */}
         <div style={{
@@ -270,8 +370,8 @@ const StockChartModal = ({ stock, onClose, onBuy, onSell }) => {
           background:tv.panel, flexShrink:0,
           fontSize:10, color:tv.textFaint, fontFamily:"'JetBrains Mono', monospace",
         }}>
-          <span>Kaynak: TradingView · Gecikmeli veri · Yatırım tavsiyesi değildir</span>
-          <span style={{color:tv.textDim}}>ESC veya dışarı tıkla · kapat</span>
+          <span>Kaynak: Yahoo Finance (BIST) · Gecikmeli veri · Yatırım tavsiyesi değildir</span>
+          <span>ESC veya dışarı tıkla · kapat</span>
         </div>
       </div>
     </div>
