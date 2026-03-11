@@ -7,6 +7,11 @@
 ::-webkit-scrollbar-thumb { background: #2a2e39; border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: #363a45; }
 
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
 @keyframes pulse {
   0%   { box-shadow: 0 0 0 0 rgba(38,166,154,.6); }
   70%  { box-shadow: 0 0 0 6px rgba(38,166,154,0); }

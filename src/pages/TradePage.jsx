@@ -98,6 +98,186 @@ const LiveDot = () => (
     boxShadow:`0 0 0 0 ${tv.green}`, animation:'pulse 2s infinite' }} />
 );
 
+/* ─── TradingView stock chart HTML ─────────────────────────────── */
+const getStockChartHtml = (stockCode) => `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { height: 100%; background: #131722; overflow: hidden; }
+  </style>
+</head>
+<body>
+  <div class="tradingview-widget-container" style="height:100%;width:100%;">
+    <div class="tradingview-widget-container__widget" style="height:100%;width:100%;"></div>
+    <script type="text/javascript"
+      src="https://s3.tradingview.com/external-embedding/embed-widget-advanced-chart.js"
+      async>
+    {
+      "autosize": true,
+      "symbol": "BIST:${stockCode}",
+      "interval": "D",
+      "timezone": "Europe/Istanbul",
+      "theme": "dark",
+      "style": "1",
+      "locale": "tr",
+      "enable_publishing": false,
+      "allow_symbol_change": false,
+      "hide_side_toolbar": false,
+      "save_image": false,
+      "calendar": false,
+      "hide_volume": false,
+      "backgroundColor": "rgba(13,17,23,1)",
+      "gridColor": "rgba(42,46,57,0.5)",
+      "support_host": "https://www.tradingview.com"
+    }
+    </script>
+  </div>
+</body>
+</html>`;
+
+/* ─── Stock Chart Modal ─────────────────────────────────────────── */
+const StockChartModal = ({ stock, onClose, onBuy, onSell }) => {
+  if (!stock) return null;
+  const chgPct = parseFloat((stock.changePercent || '0').replace('%', ''));
+  const isPos  = chgPct >= 0;
+
+  return (
+    <div
+      onClick={onClose}
+      style={{
+        position:'fixed', inset:0, zIndex:9999,
+        background:'rgba(0,0,0,0.82)',
+        display:'flex', alignItems:'center', justifyContent:'center',
+        backdropFilter:'blur(4px)',
+        animation:'fadeIn 0.15s ease',
+      }}
+    >
+      <div
+        onClick={e => e.stopPropagation()}
+        style={{
+          width:'92vw', maxWidth:1280, height:'88vh',
+          background:tv.surface, border:`1px solid ${tv.border}`,
+          borderRadius:12, display:'flex', flexDirection:'column',
+          overflow:'hidden', boxShadow:'0 24px 80px rgba(0,0,0,0.6)',
+        }}
+      >
+        {/* ── Header ── */}
+        <div style={{
+          display:'flex', alignItems:'center', justifyContent:'space-between',
+          padding:'14px 20px', borderBottom:`1px solid ${tv.border}`,
+          background:tv.panel, flexShrink:0,
+        }}>
+          <div style={{display:'flex', alignItems:'center', gap:20}}>
+            <div>
+              <div style={{
+                fontSize:20, fontWeight:700, color:tv.white,
+                fontFamily:"'JetBrains Mono', monospace", letterSpacing:'-0.01em',
+              }}>
+                {stock.stockCode}
+              </div>
+              <div style={{fontSize:11, color:tv.textDim, marginTop:2}}>{stock.stockName}</div>
+            </div>
+            <div style={{
+              fontSize:24, fontWeight:700, color:tv.white,
+              fontFamily:"'JetBrains Mono', monospace",
+            }}>
+              ₺{Number(stock.currentPrice||0).toFixed(2)}
+            </div>
+            <div style={{
+              display:'flex', flexDirection:'column', gap:3,
+            }}>
+              <span style={{
+                fontSize:13, fontWeight:700,
+                color: isPos ? tv.green : tv.red,
+                background: isPos ? tv.greenBg : tv.redBg,
+                padding:'3px 10px', borderRadius:5,
+                fontFamily:"'JetBrains Mono', monospace",
+              }}>
+                {isPos ? '+' : ''}{chgPct.toFixed(2)}%
+              </span>
+              {stock.change != null && (
+                <span style={{fontSize:11, color: isPos ? tv.green : tv.red, textAlign:'center'}}>
+                  {isPos ? '+' : ''}{Number(stock.change).toFixed(2)}
+                </span>
+              )}
+            </div>
+            <div style={{fontSize:10, color:tv.textFaint, fontFamily:"'JetBrains Mono', monospace"}}>
+              BIST · {stock.lastUpdate
+                ? new Date(stock.lastUpdate).toLocaleString('tr-TR',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'})
+                : '—'}
+            </div>
+          </div>
+          <div style={{display:'flex', alignItems:'center', gap:8}}>
+            <button
+              onClick={onBuy}
+              style={{
+                padding:'9px 22px', border:'none', borderRadius:6, cursor:'pointer',
+                background:tv.green, color:'#fff', fontSize:13, fontWeight:700,
+                fontFamily:"'JetBrains Mono', monospace", letterSpacing:'0.06em',
+                transition:'opacity 0.15s',
+              }}
+              onMouseOver={e => e.currentTarget.style.opacity = '0.85'}
+              onMouseOut={e => e.currentTarget.style.opacity = '1'}
+            >
+              ▲ ALIŞ
+            </button>
+            <button
+              onClick={onSell}
+              style={{
+                padding:'9px 22px', border:'none', borderRadius:6, cursor:'pointer',
+                background:tv.red, color:'#fff', fontSize:13, fontWeight:700,
+                fontFamily:"'JetBrains Mono', monospace", letterSpacing:'0.06em',
+                transition:'opacity 0.15s',
+              }}
+              onMouseOver={e => e.currentTarget.style.opacity = '0.85'}
+              onMouseOut={e => e.currentTarget.style.opacity = '1'}
+            >
+              ▼ SATIŞ
+            </button>
+            <button
+              onClick={onClose}
+              style={{
+                width:34, height:34, border:`1px solid ${tv.border}`,
+                borderRadius:6, background:tv.panel, color:tv.textDim,
+                cursor:'pointer', fontSize:16, display:'flex',
+                alignItems:'center', justifyContent:'center',
+                transition:'all 0.15s',
+              }}
+              onMouseOver={e => { e.currentTarget.style.background = tv.borderHi; e.currentTarget.style.color = tv.white; }}
+              onMouseOut={e => { e.currentTarget.style.background = tv.panel; e.currentTarget.style.color = tv.textDim; }}
+            >
+              ✕
+            </button>
+          </div>
+        </div>
+
+        {/* ── TradingView Chart ── */}
+        <iframe
+          key={stock.stockCode}
+          srcDoc={getStockChartHtml(stock.stockCode)}
+          frameBorder="0"
+          scrolling="no"
+          style={{ flex:1, border:'none', display:'block', width:'100%' }}
+          title={`${stock.stockCode} Grafik`}
+        />
+
+        {/* ── Footer ── */}
+        <div style={{
+          display:'flex', justifyContent:'space-between', alignItems:'center',
+          padding:'8px 20px', borderTop:`1px solid ${tv.border}`,
+          background:tv.panel, flexShrink:0,
+          fontSize:10, color:tv.textFaint, fontFamily:"'JetBrains Mono', monospace",
+        }}>
+          <span>Kaynak: TradingView · Gecikmeli veri · Yatırım tavsiyesi değildir</span>
+          <span style={{color:tv.textDim}}>ESC veya dışarı tıkla · kapat</span>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 /* ─── Mini sparkline using SVG ─────────────────────────────────── */
 const Spark = ({ positive }) => {
   const color = positive ? tv.green : tv.red;
@@ -139,6 +319,16 @@ const TradePage = ({ role }) => {
   const [tradeSuccess,  setTradeSuccess]  = useState(false);
   const [tradeHistory,  setTradeHistory]  = useState([]);
   const [commodities,   setCommodities]   = useState([]);
+
+  /* ── Grafik modal state'i ── */
+  const [chartStock,        setChartStock]        = useState(null);
+
+  /* ── ESC ile modal kapat ── */
+  useEffect(() => {
+    const handler = (e) => { if (e.key === 'Escape') setChartStock(null); };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, []);
 
   /* ── Emtia state'leri ── */
   const [activePanel,       setActivePanel]       = useState('hisse'); // 'hisse' | 'emtia'
@@ -1077,13 +1267,14 @@ const TradePage = ({ role }) => {
                         <tr
                           key={h.id}
                           className='tv-row'
-                          onClick={() => { setSelectedHisse(h); setActivePanel('hisse'); setLot(''); setTutar(''); }}
-                          style={{ background: isSelected ? `rgba(41,98,255,0.08)` : 'transparent' }}
+                          onClick={() => setChartStock(h)}
+                          style={{ background: isSelected ? `rgba(41,98,255,0.08)` : 'transparent', cursor:'pointer' }}
                         >
                           <td style={{...G.td, ...G.tdName}}>
                             <div style={{display:'flex', alignItems:'center', gap:6}}>
                               {isSelected && <span style={{color:tv.accent, fontSize:8}}>●</span>}
                               {h.stockCode}
+                              <span style={{fontSize:9, color:tv.textFaint}}>↗</span>
                             </div>
                           </td>
                           <td style={{...G.td, color:tv.textDim, maxWidth:160, overflow:'hidden', textOverflow:'ellipsis', whiteSpace:'nowrap', fontSize:11}}>
@@ -1296,6 +1487,26 @@ const TradePage = ({ role }) => {
 
         </main>
       </div>
+
+      {/* ── Hisse Grafik Modal ──────────────────────────────── */}
+      <StockChartModal
+        stock={chartStock}
+        onClose={() => setChartStock(null)}
+        onBuy={() => {
+          setIslemTipi('BUY');
+          setSelectedHisse(chartStock);
+          setActivePanel('hisse');
+          setLot(''); setTutar('');
+          setChartStock(null);
+        }}
+        onSell={() => {
+          setIslemTipi('SELL');
+          setSelectedHisse(chartStock);
+          setActivePanel('hisse');
+          setLot(''); setTutar('');
+          setChartStock(null);
+        }}
+      />
     </>
   );
 };
