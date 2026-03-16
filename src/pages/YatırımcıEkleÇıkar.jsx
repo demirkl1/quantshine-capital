@@ -3,12 +3,9 @@ import api from '../api';
 import toast from 'react-hot-toast';
 import "./YatırımcıEkleÇıkar.css";
 import { useAuth } from "../context/AuthContext";
-import { useTheme } from "../context/ThemeContext";
 import AdminSidebar from "../components/AdminSidebar";
 
 const YatırımcıEkleÇıkar = () => {
-  const { theme, toggleTheme } = useTheme();
-  const isDark = theme === "dark";
   const [isSidebarOpen, setSidebarOpen] = useState(true);
   const { user } = useAuth();
 
@@ -166,7 +163,7 @@ const YatırımcıEkleÇıkar = () => {
     padding: '10px 20px',
     cursor: 'pointer',
     borderBottom: activeTab === tabName ? '3px solid #3b82f6' : 'none',
-    color: activeTab === tabName ? '#3b82f6' : (isDark ? '#94a3b8' : '#64748b'),
+    color: activeTab === tabName ? '#3b82f6' : '#64748b',
     fontWeight: 'bold',
     background: 'transparent',
     border: 'none',
@@ -174,15 +171,12 @@ const YatırımcıEkleÇıkar = () => {
   });
 
   return (
-    <div className={`admin-wrapper ${isDark ? "dark" : ""}`}>
+    <div className="admin-wrapper">
       <AdminSidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
 
       <main className={`admin-main ${isSidebarOpen ? "sidebar-open" : "sidebar-collapsed"}`}>
         <header className="admin-header">
           <div className="header-right">
-            <button className="theme-toggle" onClick={toggleTheme}>
-              {isDark ? "☀️ Light Mode" : "🌙 Dark Mode"}
-            </button>
             <div className="user-profile">
               <div className="avatar-initials">
                 {user?.name
@@ -232,7 +226,7 @@ const YatırımcıEkleÇıkar = () => {
           )}
 
           {activeTab === 'my-investors' && (
-            <div style={{ backgroundColor: isDark ? '#1e293b' : 'white', padding: '20px', borderRadius: '10px' }}>
+            <div style={{ backgroundColor: 'white', padding: '20px', borderRadius: '10px' }}>
             <div className="istek-table-wrapper">
               <table className="istek-table">
                 <thead>
@@ -265,8 +259,8 @@ const YatırımcıEkleÇıkar = () => {
                               padding: '6px',
                               borderRadius: '6px',
                               border: '1px solid #334155',
-                              backgroundColor: isDark ? '#1e293b' : '#f8fafc',
-                              color: isDark ? 'white' : '#1e293b',
+                              backgroundColor: '#f8fafc',
+                              color: '#1e293b',
                               fontSize: '0.85rem'
                             }}
                             value={transferSelections[inv.id] || ""}
@@ -320,7 +314,7 @@ const YatırımcıEkleÇıkar = () => {
                     <div style={{
                       marginTop: '15px',
                       padding: '12px',
-                      backgroundColor: isDark ? '#0f172a' : '#f0fdf4',
+                      backgroundColor: '#f0fdf4',
                       borderRadius: '8px',
                       border: '1px solid #22c55e'
                     }}>

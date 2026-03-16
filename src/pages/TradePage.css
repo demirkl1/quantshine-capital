@@ -86,9 +86,7 @@
 }
 
 @media (max-width: 1024px) {
-  /* main padding - mobile topbar offset */
-  div[style*="padding: 20px 24px"],
-  div[style*="padding:20px 24px"] {
+  .trade-main {
     padding: 72px 12px 12px !important;
   }
 

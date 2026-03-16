@@ -702,7 +702,7 @@ const TradePage = ({ role }) => {
     <>
       <div style={G.wrapper}>
         <Sidebar />
-        <main style={G.main}>
+        <main style={G.main} className="trade-main">
 
           {/* ── TOP BALANCE CARD ─────────────────────────────── */}
           <div style={{...G.card, animation:'fadeSlide 0.4s ease'}}>
