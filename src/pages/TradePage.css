@@ -91,6 +91,10 @@
   div[style*="padding:20px 24px"] {
     padding: 72px 12px 12px !important;
   }
+
+  .trade-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 768px) {

@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
   MdAccountBalanceWallet,
   MdHistory,
   MdDateRange,
   MdSupportAgent,
+  MdAccountCircle,
   MdLogout,
   MdMenu,
   MdClose
@@ -15,8 +16,15 @@ import './InvestorSidebar.css';
 
 const InvestorSidebar = () => {
   const location = useLocation();
-  const { token } = useAuth();
+  const navigate = useNavigate();
+  const { token, logout } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
+
+  const handleLogout = async () => {
+    setIsOpen(false);
+    await logout();
+    navigate('/');
+  };
 
   // Yatırımcı DB kaydını senkronize et (Keycloak'ta var ama DB'de yoksa oluşturur)
   useEffect(() => {
@@ -29,6 +37,7 @@ const InvestorSidebar = () => {
     { path: '/yatirim-gecmisim', name: 'Yatırım Geçmişim', icon: <MdHistory /> },
     { path: '/haftalik-rapor', name: 'Haftalık Rapor', icon: <MdDateRange /> },
     { path: '/danisman-profili', name: 'Danışman Profili', icon: <MdSupportAgent /> },
+    { path: '/profil', name: 'Profilim', icon: <MdAccountCircle /> },
   ];
 
   return (
@@ -61,10 +70,10 @@ const InvestorSidebar = () => {
         </nav>
 
         <div className="sidebar-footer">
-          <Link to="/" className="nav-item logout-btn" onClick={() => setIsOpen(false)}>
+          <button className="nav-item logout-btn" onClick={handleLogout}>
             <span className="nav-icon"><MdLogout /></span>
             <span className="nav-text">Çıkış Yap</span>
-          </Link>
+          </button>
         </div>
       </div>
     </>

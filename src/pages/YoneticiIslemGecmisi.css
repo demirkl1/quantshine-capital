@@ -89,3 +89,18 @@
 
 .badge-fund.TEK { background: rgba(41, 98, 255, 0.12); color: #2962ff; }
 .badge-fund.HSF { background: rgba(38, 166, 154, 0.12); color: #26a69a; }
+
+@media (max-width: 768px) {
+  .search-container {
+    width: 100%;
+  }
+
+  .search-box {
+    width: 100%;
+  }
+
+  .table-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}

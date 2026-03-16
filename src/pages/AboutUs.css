@@ -127,3 +127,37 @@
     justify-content: center;
   }
 }
+
+@media (max-width: 768px) {
+  .page-title-section {
+    padding: 80px 16px 50px;
+  }
+
+  .page-title {
+    font-size: 2.2rem;
+    letter-spacing: 2px;
+  }
+
+  .about-section {
+    padding: 40px 5% 80px;
+  }
+
+  .section-heading {
+    font-size: 1.8rem;
+  }
+
+  .about-values {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-title {
+    font-size: 1.8rem;
+  }
+
+  .about-text p {
+    font-size: 1rem;
+  }
+}

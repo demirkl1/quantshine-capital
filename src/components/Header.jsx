@@ -2,7 +2,13 @@ import React from "react";
 import "./Header.css";
 import { Link } from "react-router-dom";
 
-const Header = ({ showAuthButtons, onLoginClick, onRegisterClick }) => {
+const Header = ({ showAuthButtons, user, onLoginClick, onRegisterClick }) => {
+  const dashboardPath = user?.isAdmin
+    ? '/admin-anasayfa'
+    : user?.isAdvisor
+    ? '/danisman-anasayfa'
+    : '/yatirimci-anasayfa';
+
   return (
     <header className="header-container">
       {/* 1. LOGO ALANI */}
@@ -32,12 +38,16 @@ const Header = ({ showAuthButtons, onLoginClick, onRegisterClick }) => {
 
       {/* 3. AUTH BUTTONS (Sağ) */}
       <div className="auth-section">
-        {showAuthButtons && (
+        {showAuthButtons ? (
           <div className="auth-buttons-group">
             <button className="btn-login" onClick={onLoginClick}>Giriş Yap</button>
             <button className="btn-register" onClick={onRegisterClick}>Üye Ol</button>
           </div>
-        )}
+        ) : user ? (
+          <div className="auth-buttons-group">
+            <Link to={dashboardPath} className="btn-register">Panele Git</Link>
+          </div>
+        ) : null}
       </div>
     </header>
   );

@@ -124,3 +124,23 @@
 .btn-edit-inline { color: #2962ff; }
 .btn-save-inline { color: #26a69a; }
 .btn-cancel-inline { color: #ef5350; }
+
+@media (max-width: 768px) {
+  .profile-details {
+    grid-template-columns: 1fr;
+  }
+
+  .full-width {
+    grid-column: span 1;
+  }
+
+  .profile-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .profile-card {
+    padding: 16px;
+  }
+}

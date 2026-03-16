@@ -58,6 +58,7 @@ body {
 @media (max-width: 1024px) {
   .admin-main {
     padding: 72px 16px 16px !important;
+    box-sizing: border-box;
   }
 }
 
@@ -77,9 +78,14 @@ body {
     gap: 12px;
   }
 
+  .page-header h1 {
+    font-size: 1.2rem !important;
+  }
+
   .chart-header,
   .chart-header-row {
     flex-direction: column;
+    align-items: flex-start;
     gap: 10px;
   }
 
@@ -88,23 +94,38 @@ body {
   }
 
   .history-table-container,
-  .table-container {
+  .table-container,
+  .istek-table-wrapper {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
   }
 
-  .custom-table {
-    min-width: 600px;
+  .custom-table,
+  .istek-table {
+    min-width: 560px;
   }
 
   .fon-table {
-    min-width: 500px;
+    min-width: 480px;
   }
 
-  .modal-overlay .transfer-modal {
+  .modal-overlay .transfer-modal,
+  .modal-overlay .fon-modal {
     width: 95% !important;
+    max-width: 95vw !important;
     padding: 16px !important;
-    margin: 16px !important;
+    margin: 8px !important;
+  }
+
+  .search-box {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .header-flex {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
   }
 }
 
@@ -115,5 +136,10 @@ body {
 
   .admin-content {
     padding: 0;
+  }
+
+  .filter-btn {
+    padding: 5px 8px;
+    font-size: 10px;
   }
 }

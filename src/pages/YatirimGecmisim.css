@@ -104,7 +104,20 @@
 .text-white { color: #ffffff !important; }
 .font-bold { font-weight: 700; }
 
+@media (max-width: 1024px) {
+  .admin-main {
+    padding: 72px 16px 16px;
+  }
+}
+
 @media (max-width: 768px) {
+  .page-header h1 { font-size: 1.1rem; }
+
+  .history-table-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
   .date-cell {
     font-size: 10px !important;
     white-space: nowrap;

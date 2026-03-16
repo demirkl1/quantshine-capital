@@ -292,8 +292,8 @@ const YoneticiFon = () => {
                       <label>Hangi Danışmanı Taşıyacaksınız?</label>
                       <select className="combobox" onChange={e => setSelectedAdvisorTc(e.target.value)}>
                         <option value="">Seçiniz...</option>
-                        {advisors.filter(a => a.managedFundCode === selectedFon?.code).map(a => (
-                          <option key={a.id} value={a.tcNo}>{a.firstName} {a.lastName} (TC: {a.tcNo})</option>
+                        {advisors.filter(a => a.managedFund === selectedFon?.code).map(a => (
+                          <option key={a.tcNo} value={a.tcNo}>{a.fullName} (TC: {a.tcNo})</option>
                         ))}
                       </select>
                     </div>
@@ -317,8 +317,8 @@ const YoneticiFon = () => {
                       <label>Fondan Çıkarılacak Danışman</label>
                       <select className="combobox" onChange={e => setSelectedAdvisorTc(e.target.value)} value={selectedAdvisorTc}>
                         <option value="">Seçiniz...</option>
-                        {advisors.filter(a => a.managedFundCode === selectedFon?.code).map(a => (
-                          <option key={a.id} value={a.tcNo}>{a.firstName} {a.lastName} (TC: {a.tcNo})</option>
+                        {advisors.filter(a => a.managedFund === selectedFon?.code).map(a => (
+                          <option key={a.tcNo} value={a.tcNo}>{a.fullName} (TC: {a.tcNo})</option>
                         ))}
                       </select>
                     </div>
@@ -416,8 +416,8 @@ const YoneticiFon = () => {
                       <select className="combobox" onChange={e => setSelectedAdvisorTc(e.target.value)}>
                         <option value="">Kişi Seçin...</option>
                         {advisors.map(a => (
-                          <option key={a.id} value={a.tcNo}>
-                            {a.firstName} {a.lastName} {a.role === 'ADMIN' ? '(YÖNETİCİ)' : '(DANIŞMAN)'} - {a.managedFundCode || 'Boşta'}
+                          <option key={a.tcNo} value={a.tcNo}>
+                            {a.fullName} {a.role === 'ADMIN' ? '(YÖNETİCİ)' : '(DANIŞMAN)'} - {a.managedFund || 'Boşta'}
                           </option>
                         ))}
                       </select>
@@ -459,7 +459,7 @@ const YoneticiFon = () => {
       {selectedDetailFon && (() => {
         const ALLOC_COLORS = ['#4f46e5', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4', '#f97316'];
         const fonDanismanlari = advisors.filter(a =>
-          a.managedFundCode === selectedDetailFon.code || a.managedFund === selectedDetailFon.code
+          a.managedFund === selectedDetailFon.code
         );
         const allocData = (detailFund?.allocation || []).map(item => ({
           name: item.name,

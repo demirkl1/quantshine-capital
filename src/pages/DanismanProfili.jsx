@@ -67,7 +67,7 @@ const DanismanProfili = () => {
               <div className="advisor-profile-card">
                 <div className="advisor-card-header">
                   <div className="advisor-avatar large">
-                    {selectedAdvisor.firstName[0]}{selectedAdvisor.lastName[0]}
+                    {selectedAdvisor.firstName?.[0] || ''}{selectedAdvisor.lastName?.[0] || ''}
                   </div>
                   <div className="advisor-main-info">
                     <h2>{selectedAdvisor.firstName} {selectedAdvisor.lastName}</h2>

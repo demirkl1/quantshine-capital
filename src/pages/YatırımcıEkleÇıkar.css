@@ -36,9 +36,17 @@
   padding: 20px 0;
 }
 
+/* --- Tablo Sarici (Kaydırma) --- */
+.istek-table-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  width: 100%;
+}
+
 /* --- Tablo Temel --- */
 .istek-table {
   width: 100%;
+  min-width: 500px;
   border-collapse: collapse;
   margin-top: 16px;
   background-color: #131722;
@@ -236,4 +244,24 @@
 
 .close-x:hover {
   color: #ef5350;
+}
+
+@media (max-width: 1024px) {
+  .admin-main {
+    padding: 72px 16px 16px;
+  }
+}
+
+@media (max-width: 768px) {
+  .modal-content {
+    width: 95%;
+    max-width: 400px;
+    margin: 0 16px;
+    padding: 16px;
+  }
+
+  .istek-table th:last-child,
+  .istek-table td:last-child {
+    min-width: 160px;
+  }
 }

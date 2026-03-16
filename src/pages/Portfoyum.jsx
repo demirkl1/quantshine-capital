@@ -88,7 +88,7 @@ const Portfoyum = () => {
     return Math.max(0, Math.ceil(len / 6) - 1);
   };
 
-  if (loading && myFunds.length > 0) return <div className="loading">Veriler Yükleniyor...</div>;
+  if (loading) return <div className="loading">Veriler Yükleniyor...</div>;
 
   return (
     <div className="admin-wrapper">

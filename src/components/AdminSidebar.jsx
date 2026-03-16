@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
   MdDashboard,
   MdSupportAgent,
@@ -12,12 +12,16 @@ import {
   MdAccountCircle,
   MdLogout,
   MdMenu,
-  MdClose
+  MdClose,
+  MdPersonAddAlt1
 } from 'react-icons/md';
+import { useAuth } from '../context/AuthContext';
 import './AdminSidebar.css';
 
 const AdminSidebar = () => {
   const location = useLocation();
+  const navigate = useNavigate();
+  const { logout } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
 
   const menuItems = [
@@ -25,12 +29,19 @@ const AdminSidebar = () => {
     { path: '/danismanlar', name: 'Danışmanlar', icon: <MdSupportAgent /> },
     { path: '/yatirimcilar', name: 'Yatırımcılar', icon: <MdPeople /> },
     { path: '/yatirimci-istekleri', name: 'İstekler', icon: <MdPersonAdd /> },
+    { path: '/yatirimci-ekle-cikar', name: 'Yatırımcı Ekle/Çıkar', icon: <MdPersonAddAlt1 /> },
     { path: '/islem-sayfasi', name: 'İşlem Sayfası', icon: <MdSwapHoriz /> },
     { path: '/yonetici-fon', name: 'Fonlar', icon: <MdPieChart /> },
     { path: '/yonetici-islem-gecmisi', name: 'İşlem Geçmişi', icon: <MdHistory /> },
     { path: '/raporlama', name: 'Raporlama', icon: <MdAssessment /> },
     { path: '/profil', name: 'Profil', icon: <MdAccountCircle /> },
   ];
+
+  const handleLogout = async () => {
+    setIsOpen(false);
+    await logout();
+    navigate('/');
+  };
 
   return (
     <>
@@ -62,10 +73,10 @@ const AdminSidebar = () => {
         </nav>
 
         <div className="sidebar-footer">
-          <Link to="/" className="nav-item logout-btn" onClick={() => setIsOpen(false)}>
+          <button className="nav-item logout-btn" onClick={handleLogout}>
             <span className="nav-icon"><MdLogout /></span>
             <span className="nav-text">Çıkış Yap</span>
-          </Link>
+          </button>
         </div>
       </div>
     </>

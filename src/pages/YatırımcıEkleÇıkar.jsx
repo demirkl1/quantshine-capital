@@ -207,6 +207,7 @@ const YatırımcıEkleÇıkar = () => {
           </div>
 
           {activeTab === 'pending' && (
+            <div className="istek-table-wrapper">
             <table className="istek-table">
               <thead>
                 <tr><th>Ad Soyad</th><th>Email</th><th>Talep Tarihi</th><th>İşlemler</th></tr>
@@ -227,10 +228,12 @@ const YatırımcıEkleÇıkar = () => {
                 ))}
               </tbody>
             </table>
+            </div>
           )}
 
           {activeTab === 'my-investors' && (
             <div style={{ backgroundColor: isDark ? '#1e293b' : 'white', padding: '20px', borderRadius: '10px' }}>
+            <div className="istek-table-wrapper">
               <table className="istek-table">
                 <thead>
                   <tr>
@@ -289,6 +292,7 @@ const YatırımcıEkleÇıkar = () => {
                   ))}
                 </tbody>
               </table>
+            </div>
             </div>
           )}
 

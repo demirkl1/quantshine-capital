@@ -53,8 +53,8 @@ const YatirimGecmisim = () => {
                 {historyData.map((item) => {
                   // Kâr/Zarar Renk Analizi (Örn: Şu anki değer 1.0 ise)
                   
-                  const currentPrice = item.currentPrice || item.unitPrice;
-                  const isProfit = currentPrice >= item.unitPrice;
+                  const currentPrice = Number(item.currentPrice || item.unitPrice) || 0;
+                  const isProfit = currentPrice >= Number(item.unitPrice);
 
                   return (
                     <tr key={item.id}>
@@ -72,7 +72,7 @@ const YatirimGecmisim = () => {
                       <td>₺{item.unitPrice}</td>
                       <td className={isProfit ? 'text-profit' : 'text-loss'} style={{ fontWeight: 'bold' }}>
         ₺{currentPrice.toFixed(2)}
-        {currentPrice > item.unitPrice ? ' ↑' : currentPrice < item.unitPrice ? ' ↓' : ''}
+        {currentPrice > Number(item.unitPrice) ? ' ↑' : currentPrice < Number(item.unitPrice) ? ' ↓' : ''}
       </td>
                     </tr>
                   );

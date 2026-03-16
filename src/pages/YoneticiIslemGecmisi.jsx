@@ -73,13 +73,13 @@ const YoneticiIslemGecmisi = () => {
                 {filteredHistory.map((item) => {
                   const tcNo = item.investorTc || "-";
                   const name = item.investorName || "Bilinmiyor";
-                  const lotCount = item.lot || 0;
-                  const bPrice = item.boughtPrice || 0;
-                  const cPrice = item.currentPrice || 0;
+                  const lotCount = item.lotCount || item.lot || 0;
+                  const bPrice = parseFloat(item.unitPrice || item.boughtPrice || 0);
+                  const cPrice = parseFloat(item.currentPrice || 0);
 
-                  const profitRate = bPrice !== 0 
-                    ? (((cPrice - bPrice) / bPrice) * 100).toFixed(2) 
-                    : "0.00";
+                  const profitRate = bPrice !== 0 && cPrice !== 0
+                    ? (((cPrice - bPrice) / bPrice) * 100).toFixed(2)
+                    : "—";
                   const isProfit = cPrice >= bPrice;
 
                   return (
@@ -100,8 +100,12 @@ const YoneticiIslemGecmisi = () => {
                       <td>{lotCount}</td>
                       <td>
                         <div className="price-stack">
-                          <span className="old-price">İşlem: ₺{bPrice.toFixed(2)}</span>
-                          <span className="new-price">Güncel: ₺{cPrice.toFixed(2)}</span>
+                          <span className="old-price">İşlem: ₺{bPrice.toFixed(4)}</span>
+                          {cPrice > 0 && (
+                            <span className={`new-price ${isProfit ? 'text-profit' : 'text-loss'}`}>
+                              Güncel: ₺{cPrice.toFixed(4)}
+                            </span>
+                          )}
                         </div>
                       </td>
                     

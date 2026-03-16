@@ -662,3 +662,26 @@
   .fon-perf-grid { grid-template-columns: repeat(3, 1fr); }
   .fon-alloc-pie-row { flex-direction: column; align-items: flex-start; }
 }
+
+@media (max-width: 600px) {
+  .fon-modal {
+    width: 95%;
+    max-width: 95vw;
+    padding: 16px;
+  }
+
+  .fon-detail-stats { grid-template-columns: 1fr 1fr; }
+  .fon-founding-grid { grid-template-columns: 1fr; }
+  .fon-perf-grid { grid-template-columns: repeat(2, 1fr); }
+
+  .header-flex {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .fon-securities-table-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}

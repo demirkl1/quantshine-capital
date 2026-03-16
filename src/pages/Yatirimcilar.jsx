@@ -298,12 +298,12 @@ const handleAssign = async () => {
                   borderLeft: '4px solid #10b981' 
                 }}>
                   <div style={{ fontSize: '0.8rem', color: '#94a3b8', marginBottom: '5px' }}>
-                    <strong>{h.fundCode}</strong> | {lotSayisi.toLocaleString()} Lot
+                    <strong>{h.fundCode}</strong> | {Number(lotSayisi || 0).toLocaleString('tr-TR', { minimumFractionDigits: 4 })} Lot
                   </div>
 
                   <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.85rem' }}>
                     <span style={{ color: '#fff', fontWeight: 'bold' }}>Güncel Değer:</span>
-                    <span style={{ color: '#10b981', fontWeight: 'bold' }}>₺{guncelDeger.toLocaleString('tr-TR')}</span>
+                    <span style={{ color: '#10b981', fontWeight: 'bold' }}>₺{Number(guncelDeger || 0).toLocaleString('tr-TR')}</span>
                   </div>
                 </div>
               );

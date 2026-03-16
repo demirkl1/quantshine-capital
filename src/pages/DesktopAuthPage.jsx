@@ -138,8 +138,13 @@ const RegisterForm = ({ onSwitchToLogin }) => {
       toast.success('Kayıt isteğiniz gönderildi. Admin onayı bekleniyor.');
       onSwitchToLogin();
     } catch (err) {
-      const msg = err.response?.data?.error || err.response?.data?.message || 'Sunucuya ulaşılamıyor.';
-      toast.error('Kayıt başarısız: ' + msg);
+      const status = err.response?.status;
+      const msg = status === 409
+        ? 'Bu e-posta veya TC No zaten kayıtlı.'
+        : status === 400
+        ? 'Girdiğiniz bilgileri kontrol edin.'
+        : 'Kayıt işlemi şu an gerçekleştirilemiyor. Lütfen tekrar deneyin.';
+      toast.error(msg);
     } finally {
       setLoading(false);
     }

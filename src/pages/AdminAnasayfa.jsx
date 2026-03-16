@@ -37,7 +37,6 @@ const AdminAnasayfa = () => {
     fonKarZararTl: 0
   });
   const [fonListesi, setFonListesi] = useState([]);
-  const [grafikVerisi, setGrafikVerisi] = useState([]); // legacy, kullanılmıyor
 
 
   // Admin DB kaydını senkronize et (Keycloak'ta oluşturulmuş kullanıcılar için gerekli)
@@ -64,12 +63,15 @@ const AdminAnasayfa = () => {
     return () => clearInterval(interval);
   }, [token]);
 
-  // selectedFonlar'ı kullanıcı yüklenince başlat
+  // selectedFonlar'ı kullanıcı veya fon listesi yüklenince başlat
   useEffect(() => {
-    if (selectedFonlar === null && user?.managedFundCode) {
+    if (selectedFonlar !== null) return;
+    if (user?.managedFundCode) {
       setSelectedFonlar([user.managedFundCode]);
+    } else if (fonListesi.length > 0) {
+      setSelectedFonlar([fonListesi[0].fundCode]);
     }
-  }, [user, selectedFonlar]);
+  }, [user, selectedFonlar, fonListesi]);
 
   // Fon listesi
   useEffect(() => {
@@ -111,7 +113,6 @@ const AdminAnasayfa = () => {
             .filter(d => d.date)
             .sort((a, b) => a.date.localeCompare(b.date));
         });
-        console.log('[AdminChart] fundSeriesData:', newSeries);
         setFundSeriesData(newSeries);
       } catch (e) { console.error("Fon grafik hatası:", e); }
     };

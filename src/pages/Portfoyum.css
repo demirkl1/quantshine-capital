@@ -172,17 +172,34 @@
   100% { opacity: 1; }
 }
 
+@media (max-width: 1024px) {
+  .admin-main {
+    padding: 72px 16px 16px;
+  }
+}
+
 @media (max-width: 768px) {
   .fon-selector-container {
     flex-direction: column;
     align-items: flex-start;
     gap: 8px;
+    width: 100%;
   }
 
-  .header-content {
+  .combobox {
+    width: 100%;
+  }
+
+  .page-header {
     flex-direction: column;
     align-items: flex-start;
     gap: 12px;
+  }
+
+  .chart-header-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
   }
 
   .chart-section .recharts-responsive-container {

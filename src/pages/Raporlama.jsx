@@ -17,12 +17,14 @@ const Raporlama = () => {
     if (token) {
       api.get('/users/my-investors')
       .then(res => {
-        const unpackedInvestors = res.data.map(item => ({
-          id: item.investor.id,
-          firstName: item.investor.firstName,
-          lastName: item.investor.lastName,
-          tcNo: item.investor.tcNo
-        }));
+        const unpackedInvestors = (Array.isArray(res.data) ? res.data : [])
+          .filter(item => item && item.investor)
+          .map(item => ({
+            id: item.investor.id,
+            firstName: item.investor.firstName,
+            lastName: item.investor.lastName,
+            tcNo: item.investor.tcNo
+          }));
         setInvestors(unpackedInvestors);
       })
       .catch(err => console.error("Yatırımcılar çekilemedi:", err));

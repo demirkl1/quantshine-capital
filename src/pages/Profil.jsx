@@ -2,12 +2,14 @@ import React, { useState, useEffect } from 'react';
 import api from '../api';
 import { useAuth } from '../context/AuthContext';
 import AdminSidebar from '../components/AdminSidebar';
+import AdvisorSidebar from '../components/AdvisorSidebar';
+import InvestorSidebar from '../components/InvestorSidebar';
 import { MdEdit, MdSave, MdCancel, MdEmail, MdBadge, MdBusinessCenter } from 'react-icons/md';
 import toast from 'react-hot-toast';
 import './Profil.css';
 
 const Profil = () => {
-  const { token } = useAuth();
+  const { token, user: authUser } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(true);
   
@@ -45,11 +47,15 @@ const Profil = () => {
     }
   };
 
+  const Sidebar = authUser?.isAdmin ? AdminSidebar
+    : authUser?.isAdvisor ? AdvisorSidebar
+    : InvestorSidebar;
+
   if (loading) return <div className="loading">Yükleniyor...</div>;
 
   return (
     <div className="admin-wrapper">
-      <AdminSidebar />
+      <Sidebar />
       <main className="admin-main">
         <header className="page-header">
           <h1>Profil Bilgilerim</h1>

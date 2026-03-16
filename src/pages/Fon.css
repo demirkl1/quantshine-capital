@@ -177,3 +177,29 @@
 
 /* Özel sütun genişlikleri */
 .col-name { min-width: 250px; color: #ffffff; }
+
+@media (max-width: 768px) {
+  .fund-container {
+    padding: 100px 4% 60px;
+  }
+
+  .fund-container h1 {
+    font-size: 1.8rem;
+  }
+
+  .fund-table th,
+  .fund-table td {
+    padding: 14px 10px;
+    font-size: 0.82rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .fund-container {
+    padding: 90px 3% 40px;
+  }
+
+  .fund-container h1 {
+    font-size: 1.5rem;
+  }
+}

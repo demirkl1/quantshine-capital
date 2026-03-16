@@ -89,7 +89,8 @@ const AppContent = ({
     <>
       {showHeaderAndFooter && (
         <Header
-          showAuthButtons={true}
+          showAuthButtons={!user}
+          user={user}
           onLoginClick={() => setLoginModalOpen(true)}
           onRegisterClick={() => setRegisterModalOpen(true)}
         />

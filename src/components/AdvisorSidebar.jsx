@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import {
   MdDashboard,
   MdPeople,
@@ -14,7 +15,15 @@ import './AdvisorSidebar.css';
 
 const AdvisorSidebar = () => {
   const location = useLocation();
+  const navigate = useNavigate();
+  const { logout } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
+
+  const handleLogout = async () => {
+    setIsOpen(false);
+    await logout();
+    navigate('/');
+  };
 
   const menuItems = [
     { path: '/danisman-anasayfa', name: 'Ana Sayfa', icon: <MdDashboard /> },
@@ -54,10 +63,10 @@ const AdvisorSidebar = () => {
         </nav>
 
         <div className="sidebar-footer">
-          <Link to="/" className="nav-item logout-btn" onClick={() => setIsOpen(false)}>
+          <button className="nav-item logout-btn" onClick={handleLogout}>
             <span className="nav-icon"><MdLogout /></span>
             <span className="nav-text">Çıkış Yap</span>
-          </Link>
+          </button>
         </div>
       </div>
     </>

@@ -67,3 +67,10 @@
   background-color: rgba(240, 185, 11, 0.12);
   color: #f0b90b;
 }
+
+@media (max-width: 768px) {
+  .table-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}

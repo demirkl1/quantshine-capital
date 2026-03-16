@@ -59,7 +59,25 @@ const HaftalikRapor = () => {
     <div className="admin-wrapper">
       <InvestorSidebar />
       <main className="admin-main">
-        {/* ... Header kısımları aynı ... */}
+        <header className="page-header">
+          <h1>Haftalık Raporlar</h1>
+          <p>Danışmanlarınız tarafından gönderilen portföy analiz raporları.</p>
+          {advisors.length > 1 && (
+            <div className="fon-selector-container" style={{ marginTop: 12 }}>
+              <label><MdPerson style={{ verticalAlign: 'middle' }} /> Danışmana Göre Filtrele:</label>
+              <select
+                className="combobox"
+                value={selectedAdvisorId}
+                onChange={(e) => setSelectedAdvisorId(e.target.value)}
+              >
+                <option value="all">Tüm Danışmanlar</option>
+                {advisors.map(adv => (
+                  <option key={adv.id} value={adv.id}>{adv.name}</option>
+                ))}
+              </select>
+            </div>
+          )}
+        </header>
 
         <div className="admin-content">
           <div className="reports-grid">
