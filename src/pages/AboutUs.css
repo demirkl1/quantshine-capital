@@ -1,0 +1,163 @@
+/* src/pages/AboutUs.css */
+
+:root {
+  --navy-dark: #0b0e14;
+  --navy-primary: #1e40af;
+  --navy-light: #3b82f6;
+  --text-bright: #ffffff;
+  --text-soft: #cbd5e1;
+}
+
+.about-container {
+  background-color: var(--navy-dark);
+  min-height: 100vh;
+  width: 100%;
+}
+
+/* Sayfa Başlığı Alanı */
+.page-title-section {
+  padding: 120px 0 80px;
+  background: linear-gradient(to bottom, rgba(30, 64, 175, 0.1), transparent);
+  text-align: center;
+}
+
+.page-title {
+  font-size: 3.5rem;
+  font-weight: 800;
+  color: var(--text-bright);
+  letter-spacing: 4px;
+  margin-bottom: 10px;
+}
+
+.title-separator {
+  width: 60px;
+  height: 4px;
+  background: var(--navy-light);
+  margin: 20px auto;
+  border-radius: 2px;
+}
+
+.page-subtitle {
+  color: var(--text-soft);
+  font-size: 1.2rem;
+  font-weight: 400;
+}
+
+/* İçerik Bölümü */
+.about-section {
+  padding: 60px 10% 120px;
+}
+
+.about-content {
+  display: flex;
+  align-items: center;
+  gap: 80px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Görsel Çerçevesi */
+.about-media {
+  flex: 1;
+}
+
+.media-glass-frame {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 20px;
+  border-radius: 30px;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+}
+
+.about-media img {
+  width: 100%;
+  border-radius: 20px;
+  filter: brightness(0.9);
+}
+
+/* Metin Alanı */
+.about-text {
+  flex: 1;
+}
+
+.section-heading {
+  color: var(--text-bright);
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 25px;
+}
+
+.about-text p {
+  color: var(--text-soft);
+  font-size: 1.1rem;
+  line-height: 1.8;
+  margin-bottom: 20px;
+}
+
+.about-text strong {
+  color: var(--navy-light);
+}
+
+/* Değerler Etiketleri */
+.about-values {
+  display: flex;
+  gap: 15px;
+  margin-top: 30px;
+}
+
+.value-tag {
+  background: rgba(30, 64, 175, 0.2);
+  color: var(--navy-light);
+  padding: 8px 20px;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  border: 1px solid rgba(59, 130, 246, 0.3);
+}
+
+/* Mobil Uyumu */
+@media (max-width: 968px) {
+  .about-content {
+    flex-direction: column;
+    text-align: center;
+    gap: 50px;
+  }
+  .about-values {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 768px) {
+  .page-title-section {
+    padding: 80px 16px 50px;
+  }
+
+  .page-title {
+    font-size: 2.2rem;
+    letter-spacing: 2px;
+  }
+
+  .about-section {
+    padding: 40px 5% 80px;
+  }
+
+  .section-heading {
+    font-size: 1.8rem;
+  }
+
+  .about-values {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .page-title {
+    font-size: 1.8rem;
+  }
+
+  .about-text p {
+    font-size: 1rem;
+  }
+}

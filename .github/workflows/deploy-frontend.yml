@@ -1,0 +1,85 @@
+# =============================================================================
+# QuantShine Capital - Frontend CI/CD
+# Tetikleyici: main branch'e push
+# Akış: Build React → S3'e yükle → CloudFront cache temizle
+#
+# GitHub Secrets (Repo → Settings → Secrets and variables → Actions):
+#   AWS_ACCESS_KEY_ID           : AWS IAM kullanıcı access key
+#   AWS_SECRET_ACCESS_KEY       : AWS IAM kullanıcı secret key
+#   AWS_REGION                  : Örn: eu-central-1
+#   S3_BUCKET_NAME              : Örn: quantshine-frontend-prod
+#   CLOUDFRONT_DISTRIBUTION_ID  : CloudFront distribution ID
+#   REACT_APP_API_BASE_URL      : Örn: https://api.yourdomain.com/api
+#   REACT_APP_KEYCLOAK_URL      : Örn: https://auth.yourdomain.com
+#   REACT_APP_KEYCLOAK_REALM    : quantshine
+#   REACT_APP_KEYCLOAK_CLIENT_ID: quantshine-backend
+# =============================================================================
+
+name: Deploy Frontend
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'src/**'
+      - 'public/**'
+      - 'package*.json'
+      - '.github/workflows/deploy-frontend.yml'
+
+jobs:
+  build-and-deploy:
+    name: Build & Deploy to S3
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        env:
+          CI: false
+          REACT_APP_API_BASE_URL: ${{ secrets.REACT_APP_API_BASE_URL }}
+          REACT_APP_KEYCLOAK_URL: ${{ secrets.REACT_APP_KEYCLOAK_URL }}
+          REACT_APP_KEYCLOAK_REALM: ${{ secrets.REACT_APP_KEYCLOAK_REALM }}
+          REACT_APP_KEYCLOAK_CLIENT_ID: ${{ secrets.REACT_APP_KEYCLOAK_CLIENT_ID }}
+        run: npm run build
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      - name: Sync to S3
+        run: |
+          # HTML dosyalarını cache'siz yükle (her zaman güncel kalsın)
+          aws s3 sync build/ s3://${{ secrets.S3_BUCKET_NAME }} \
+            --delete \
+            --exclude "*.js" \
+            --exclude "*.css" \
+            --cache-control "no-cache, no-store, must-revalidate"
+
+          # JS/CSS dosyalarını uzun süreli cache ile yükle (hash'li dosyalar değişmez)
+          aws s3 sync build/ s3://${{ secrets.S3_BUCKET_NAME }} \
+            --delete \
+            --exclude "*.html" \
+            --cache-control "public, max-age=31536000, immutable"
+
+      - name: Invalidate CloudFront cache
+        run: |
+          aws cloudfront create-invalidation \
+            --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} \
+            --paths "/*"
+
+      - name: Deploy summary
+        run: echo "✅ Frontend başarıyla deploy edildi!"

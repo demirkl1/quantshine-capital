@@ -1,0 +1,16 @@
+/* src/styles/variables.css */
+:root {
+  --primary-dark-blue: #1A202C; /* Koyu lacivert */
+  --secondary-white: #FFFFFF; /* Beyaz */
+  --text-light-gray: #E2E8F0; /* Açık gri metinler için */
+  --text-dark-gray: #4A5568; /* Koyu gri metinler için */
+  --accent-green: #38A169; /* Satın al butonu veya pozitif değişim için */
+  --accent-red: #E53E3E; /* Satış butonu veya negatif değişim için */
+  --border-color: #2D3748; /* Kenarlıklar için daha koyu bir ton */
+}
+body {
+  font-family: 'Inter', sans-serif; /* Modern ve okunaklı bir font */
+  background-color: var(--primary-dark-blue);
+  color: var(--secondary-white);
+  margin: 0;
+}

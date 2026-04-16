@@ -1,0 +1,267 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&display=swap');
+
+/* --- Avatar --- */
+.avatar-initials {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: #3b82f6;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.8rem;
+  flex-shrink: 0;
+  letter-spacing: 0.5px;
+  user-select: none;
+}
+
+/* --- Genel Sayfa Yapisi --- */
+.admin-wrapper {
+  display: flex;
+  min-height: 100vh;
+  background-color: #0e1117;
+  color: #d1d4dc;
+  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+}
+
+.admin-main {
+  flex: 1;
+  padding: 20px 24px;
+  box-sizing: border-box;
+}
+
+.admin-content {
+  padding: 20px 0;
+}
+
+/* --- Tablo Sarici (Kaydırma) --- */
+.istek-table-wrapper {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  width: 100%;
+}
+
+/* --- Tablo Temel --- */
+.istek-table {
+  width: 100%;
+  min-width: 500px;
+  border-collapse: collapse;
+  margin-top: 16px;
+  background-color: #131722;
+  border-radius: 8px;
+  overflow: visible;
+  border: 1px solid #2a2e39;
+}
+
+/* --- Baslik (th) ve Hucre (td) Stili --- */
+.istek-table th,
+.istek-table td {
+  padding: 9px 12px;
+  text-align: left;
+  border-bottom: 1px solid #2a2e39;
+  vertical-align: middle;
+}
+
+.istek-table th {
+  background-color: #0e1117;
+  color: #787b86;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.istek-table td {
+  color: #d1d4dc;
+  font-size: 12px;
+  font-family: 'JetBrains Mono', monospace;
+  border-bottom: 1px solid #434651;
+}
+
+/* --- Buton ve Dropdown Konteynerlari --- */
+.flex,
+.transfer-container {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: flex-start;
+  flex-wrap: nowrap;
+}
+
+.istek-table th:last-child,
+.istek-table td:last-child {
+  min-width: 220px;
+  width: auto;
+}
+
+/* --- Buton Stilleri --- */
+.accept-btn,
+.reject-btn,
+.transfer-btn {
+  padding: 6px 12px;
+  border: none;
+  border-radius: 4px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-size: 11px;
+  color: white;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  flex-shrink: 0;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.accept-btn {
+  background-color: rgba(38, 166, 154, 0.15);
+  color: #26a69a;
+  border: 1px solid #26a69a;
+}
+
+.accept-btn:hover {
+  background-color: rgba(38, 166, 154, 0.25);
+}
+
+.reject-btn {
+  background-color: rgba(239, 83, 80, 0.15);
+  color: #ef5350;
+  border: 1px solid #ef5350;
+}
+
+.reject-btn:hover {
+  background-color: rgba(239, 83, 80, 0.25);
+}
+
+.transfer-btn {
+  background-color: rgba(41, 98, 255, 0.15);
+  color: #2962ff;
+  border: 1px solid #2962ff;
+  font-size: 14px;
+  padding: 5px 10px;
+}
+
+.transfer-btn:hover {
+  background-color: rgba(41, 98, 255, 0.25);
+}
+
+/* --- Select (ComboBox) Stili --- */
+.istek-table select {
+  padding: 6px 10px;
+  border: 1px solid #2a2e39;
+  border-radius: 4px;
+  background-color: #1c2030;
+  color: #d1d4dc;
+  outline: none;
+  cursor: pointer;
+  min-width: 150px;
+  font-size: 11px;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.istek-table select:focus {
+  border-color: #2962ff;
+}
+
+/* --- Satir Hover Efekti --- */
+.istek-table tbody tr {
+  transition: background 0.1s;
+}
+
+.istek-table tbody tr:hover td {
+  background-color: rgba(41, 98, 255, 0.06);
+}
+
+/* Metin kesme */
+.istek-table td {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
+}
+
+.istek-table td:last-child {
+  overflow: visible;
+  max-width: none;
+}
+
+/* Modal */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: #131722;
+  padding: 24px;
+  border-radius: 8px;
+  width: 400px;
+  border: 1px solid #2a2e39;
+}
+
+.modal-input {
+  width: 100%;
+  padding: 10px;
+  margin: 12px 0;
+  border: 1px solid #2a2e39;
+  border-radius: 6px;
+  font-size: 13px;
+  background: #1c2030;
+  color: #d1d4dc;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.modal-input:focus {
+  outline: none;
+  border-color: #2962ff;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.close-x {
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: #787b86;
+}
+
+.close-x:hover {
+  color: #ef5350;
+}
+
+@media (max-width: 1024px) {
+  .admin-main {
+    padding: 72px 16px 16px;
+  }
+}
+
+@media (max-width: 768px) {
+  .modal-content {
+    width: 95%;
+    max-width: 400px;
+    margin: 0 16px;
+    padding: 16px;
+  }
+
+  .istek-table th:last-child,
+  .istek-table td:last-child {
+    min-width: 160px;
+  }
+}

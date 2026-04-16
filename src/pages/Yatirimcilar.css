@@ -1,0 +1,566 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&display=swap');
+
+/* Tablar */
+.tab-container {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.tab-btn {
+  background: #1c2030;
+  color: #787b86;
+  border: 1px solid #2a2e39;
+  padding: 8px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.15s;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+.tab-btn.active {
+  background: #2962ff;
+  color: white;
+  border-color: #2962ff;
+}
+
+/* Transfer Butonu */
+.btn-transfer {
+  background: #2962ff;
+  color: white;
+  border: none;
+  padding: 4px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 11px;
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.badge-danisman {
+  display: inline-block;
+  background-color: rgba(41, 98, 255, 0.12);
+  color: #2962ff;
+  padding: 2px 8px;
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: 700;
+  border: 1px solid rgba(41, 98, 255, 0.3);
+}
+
+/* Modal */
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
+
+.transfer-modal {
+  background: #131722;
+  padding: 24px;
+  border-radius: 8px;
+  width: 380px;
+  color: #d1d4dc;
+  border: 1px solid #2a2e39;
+}
+
+.transfer-modal h3 { margin-bottom: 16px; color: #2962ff; font-size: 13px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+
+.combobox {
+  width: 100%;
+  padding: 10px 12px;
+  background: #1c2030;
+  color: #d1d4dc;
+  border: 1px solid #2a2e39;
+  border-radius: 6px;
+  margin-top: 4px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.btn-save {
+  background: #26a69a;
+  border: none;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+}
+
+.btn-cancel {
+  background: transparent;
+  color: #787b86;
+  border: none;
+  cursor: pointer;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.custom-table td {
+  vertical-align: middle;
+  padding: 9px 12px;
+}
+
+.actions-cell {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-start;
+}
+
+.atama-yok {
+  color: #434651;
+  font-style: italic;
+  font-size: 11px;
+}
+
+@media (max-width: 768px) {
+  .transfer-modal {
+    width: 95%;
+    padding: 16px;
+    margin: 0 16px;
+  }
+
+  .tab-container {
+    flex-wrap: wrap;
+  }
+}
+
+/* ── Yatırımcı Detay Modalı ──────────────────────────── */
+.investor-detail-modal {
+  width: 780px;
+  max-width: 96vw;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.investor-detail-modal .advisor-modal-body {
+  overflow-y: auto;
+  flex: 1;
+}
+
+/* Sekmeler */
+.investor-detail-tabs {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid #2a2e39;
+  margin: 0 0 16px;
+  padding: 0 24px;
+}
+
+.investor-detail-tab {
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: #787b86;
+  padding: 10px 18px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  cursor: pointer;
+  transition: 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.investor-detail-tab.active {
+  color: #2962ff;
+  border-bottom-color: #2962ff;
+}
+.investor-detail-tab:hover:not(.active) {
+  color: #d1d4dc;
+}
+
+.history-count-badge {
+  background: #2962ff;
+  color: #fff;
+  font-size: 9px;
+  padding: 1px 5px;
+  border-radius: 10px;
+}
+
+/* Pasta grafiği */
+.investor-pie-section {
+  margin-bottom: 16px;
+}
+
+.investor-pie-row {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.investor-pie-legend {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.pie-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+}
+
+.pie-legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.pie-legend-code {
+  font-weight: 700;
+  color: #d1d4dc;
+  min-width: 48px;
+}
+
+.pie-legend-pct {
+  color: #94a3b8;
+  min-width: 44px;
+}
+
+.pie-legend-val {
+  color: #10b981;
+  font-weight: 700;
+  margin-left: auto;
+}
+
+/* İşlem Geçmişi tablosu */
+.investor-history-section {
+  overflow-x: auto;
+}
+
+.investor-history-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+}
+
+.investor-history-table th {
+  color: #787b86;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  padding: 8px 10px;
+  border-bottom: 1px solid #2a2e39;
+  text-align: left;
+}
+
+.investor-history-table td {
+  padding: 9px 10px;
+  border-bottom: 1px solid #1c2030;
+  color: #94a3b8;
+}
+
+.investor-history-table tr:hover td {
+  background: #1c2030;
+}
+
+.status-badge-small {
+  display: inline-block;
+  padding: 2px 7px;
+  border-radius: 3px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+.status-badge-small.buy {
+  background: rgba(16, 185, 129, 0.12);
+  color: #10b981;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+.status-badge-small.sell {
+  background: rgba(239, 68, 68, 0.12);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+}
+
+.investor-holdings-section {
+  margin-bottom: 16px;
+}
+
+.investor-holding-card {
+  background: #1c2030;
+  border: 1px solid #2a2e39;
+  border-left: 3px solid #10b981;
+  border-radius: 6px;
+  padding: 12px 14px;
+  margin-bottom: 8px;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.investor-holding-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.investor-holding-code {
+  font-size: 12px;
+  font-weight: 700;
+  color: #2962ff;
+  background: rgba(41,98,255,0.1);
+  padding: 2px 8px;
+  border-radius: 3px;
+}
+
+.investor-holding-lots {
+  font-size: 11px;
+  color: #787b86;
+}
+
+.investor-holding-value {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+}
+
+/* ── Tehlikeli Alan ───────────────────────────────────── */
+.investor-danger-zone {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 20px;
+  padding: 12px 16px;
+  background: rgba(239, 68, 68, 0.05);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  border-radius: 8px;
+}
+
+.investor-danger-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: #ef4444;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.btn-delete-investor {
+  background: transparent;
+  border: 1px solid #ef4444;
+  color: #ef4444;
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+  cursor: pointer;
+  transition: 0.15s;
+  letter-spacing: 0.04em;
+}
+.btn-delete-investor:hover {
+  background: #ef4444;
+  color: #fff;
+}
+
+/* ── Silme Onay Modalı ────────────────────────────────── */
+.investor-delete-modal {
+  background: #131722;
+  border: 1px solid #2a2e39;
+  border-radius: 12px;
+  padding: 32px 28px;
+  width: 440px;
+  max-width: 95vw;
+  text-align: center;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.7);
+}
+
+.delete-modal-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: rgba(239, 68, 68, 0.12);
+  font-size: 26px;
+  margin-bottom: 16px;
+}
+
+.delete-modal-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #ef4444;
+  margin: 0 0 8px;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.delete-modal-subtitle {
+  font-size: 13px;
+  color: #94a3b8;
+  margin: 0 0 20px;
+  line-height: 1.6;
+}
+
+.delete-warning-box {
+  background: rgba(239, 68, 68, 0.07);
+  border: 1px solid rgba(239, 68, 68, 0.25);
+  border-radius: 8px;
+  padding: 14px 16px;
+  text-align: left;
+  margin-bottom: 24px;
+}
+
+.delete-warning-head {
+  font-size: 11px;
+  font-weight: 700;
+  color: #fca5a5;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  margin: 0 0 8px;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.delete-warning-list {
+  color: #fca5a5;
+  font-size: 12px;
+  padding-left: 18px;
+  margin: 0 0 10px;
+  line-height: 1.8;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.delete-warning-keep {
+  font-size: 11px;
+  color: #64748b;
+  margin: 0;
+  font-style: italic;
+}
+
+.delete-confirm-tc {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #1c2030;
+  border: 1px solid #2a2e39;
+  border-radius: 6px;
+  padding: 8px 16px;
+  margin-bottom: 14px;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.delete-confirm-tc-label {
+  font-size: 10px;
+  color: #787b86;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  font-weight: 700;
+}
+
+.delete-confirm-tc-value {
+  font-size: 14px;
+  font-weight: 700;
+  color: #f1f5f9;
+  letter-spacing: 0.06em;
+}
+
+.delete-confirm-input {
+  width: 100%;
+  padding: 10px 14px;
+  background: #1c2030;
+  border: 1px solid #ef4444;
+  border-radius: 6px;
+  color: #f1f5f9;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  text-align: center;
+  letter-spacing: 0.05em;
+  box-sizing: border-box;
+  margin-bottom: 6px;
+}
+.delete-confirm-input:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.3);
+}
+
+.delete-input-error {
+  font-size: 11px;
+  color: #ef4444;
+  margin: 0 0 12px;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.delete-modal-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.btn-delete-next {
+  background: rgba(239, 68, 68, 0.12);
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  color: #ef4444;
+  padding: 10px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+  cursor: pointer;
+  transition: 0.15s;
+}
+.btn-delete-next:hover {
+  background: rgba(239, 68, 68, 0.2);
+}
+
+.btn-delete-final {
+  background: #ef4444;
+  border: none;
+  color: #fff;
+  padding: 11px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+  cursor: pointer;
+  transition: 0.15s;
+}
+.btn-delete-final:hover:not(:disabled) {
+  background: #dc2626;
+}
+.btn-delete-final:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.btn-delete-cancel {
+  background: transparent;
+  border: 1px solid #2a2e39;
+  color: #787b86;
+  padding: 9px;
+  border-radius: 8px;
+  font-size: 11px;
+  font-family: 'JetBrains Mono', monospace;
+  cursor: pointer;
+  transition: 0.15s;
+}
+.btn-delete-cancel:hover {
+  border-color: #64748b;
+  color: #94a3b8;
+}

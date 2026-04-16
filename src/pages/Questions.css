@@ -1,0 +1,114 @@
+.faq-page-container {
+  background-color: #050a12; /* Tasarımdaki ana koyu renk */
+  color: #ffffff;
+  min-height: 100vh;
+  padding: 120px 10% 80px;
+}
+
+.faq-hero {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.faq-header-content {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.faq-main-title {
+  font-size: 3rem;
+  font-weight: 700;
+  margin-bottom: 15px;
+}
+
+.faq-subtitle {
+  color: #b0b8c4;
+  font-size: 1.1rem;
+}
+
+/* Accordion Yapısı */
+.accordion-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.faq-item {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid #1a2332;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.faq-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: #4a90e2;
+}
+
+.faq-item.active {
+  background: rgba(10, 17, 30, 0.8);
+  border-color: #4a90e2;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.faq-question-btn {
+  width: 100%;
+  padding: 22px 30px;
+  background: none;
+  border: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  color: #ffffff;
+  text-align: left;
+}
+
+.faq-question-text {
+  font-size: 1.1rem;
+  font-weight: 500;
+  padding-right: 20px;
+}
+
+/* Ok İkonu */
+.faq-arrow-icon {
+  width: 12px;
+  height: 12px;
+  border-right: 2px solid #4a90e2;
+  border-bottom: 2px solid #4a90e2;
+  transform: rotate(45deg);
+  transition: transform 0.3s ease;
+}
+
+.faq-item.active .faq-arrow-icon {
+  transform: rotate(-135deg);
+}
+
+/* Cevap Alanı Animasyonu */
+.faq-answer-container {
+  max-height: 0;
+  transition: max-height 0.4s cubic-bezier(0, 1, 0, 1);
+  background: rgba(0, 0, 0, 0.2);
+}
+
+.faq-item.active .faq-answer-container {
+  max-height: 1000px; /* İçeriğe göre genişler */
+  transition: max-height 0.4s ease-in;
+}
+
+.faq-answer-content {
+  padding: 0 30px 25px;
+  color: #b0b8c4;
+  line-height: 1.7;
+}
+
+/* Mobil Uyumluluk */
+@media (max-width: 768px) {
+  .faq-main-title {
+    font-size: 2.2rem;
+  }
+  .faq-page-container {
+    padding: 100px 5% 50px;
+  }
+}

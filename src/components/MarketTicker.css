@@ -1,0 +1,45 @@
+.ticker-container {
+    width: 100%;
+    background: rgba(10, 17, 30, 0.95); /* Header ile uyumlu koyu zemin */
+    overflow: hidden;
+    white-space: nowrap;
+    border-bottom: 1px solid rgba(59, 130, 246, 0.2);
+    padding: 8px 0;
+    z-index: 999;
+}
+
+.ticker-wrapper {
+    display: inline-flex;
+    animation: ticker-animation 30s linear infinite; /* Kayma hızı */
+}
+
+.ticker-item {
+    display: flex;
+    align-items: center;
+    padding: 0 25px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.symbol {
+    color: #ffffff;
+    margin-right: 8px;
+}
+
+.price {
+    color: #cbd5e1;
+    margin-right: 8px;
+}
+
+.change.up { color: #22c55e; } /* Yeşil */
+.change.down { color: #ef4444; } /* Kırmızı */
+
+.divider {
+    margin-left: 20px;
+    color: rgba(255, 255, 255, 0.1);
+}
+
+@keyframes ticker-animation {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); } /* İkinci yarıya gelince başa sarar */
+}

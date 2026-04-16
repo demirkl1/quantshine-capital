@@ -1,0 +1,187 @@
+/* ── SplashScreen.css ─────────────────────────────────── */
+
+.splash-root {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #020b18;
+  overflow: hidden;
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+/* Phases */
+.splash-enter  { opacity: 0; transform: scale(1.04); }
+.splash-visible { opacity: 1; transform: scale(1); }
+.splash-exit   { opacity: 0; transform: scale(0.97); }
+
+/* Arka plan ızgara deseni */
+.splash-bg-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(16, 185, 129, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(16, 185, 129, 0.04) 1px, transparent 1px);
+  background-size: 48px 48px;
+  pointer-events: none;
+}
+
+/* Işıltı topları */
+.splash-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  pointer-events: none;
+  animation: orbFloat 4s ease-in-out infinite alternate;
+}
+
+.splash-orb-1 {
+  width: 400px;
+  height: 400px;
+  top: -100px;
+  left: -80px;
+  background: radial-gradient(circle, rgba(14, 165, 233, 0.18), transparent 70%);
+  animation-delay: 0s;
+}
+
+.splash-orb-2 {
+  width: 350px;
+  height: 350px;
+  bottom: -80px;
+  right: -60px;
+  background: radial-gradient(circle, rgba(16, 185, 129, 0.15), transparent 70%);
+  animation-delay: 1.5s;
+}
+
+@keyframes orbFloat {
+  from { transform: translate(0, 0) scale(1); }
+  to   { transform: translate(20px, 20px) scale(1.08); }
+}
+
+/* İçerik */
+.splash-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.4rem;
+  animation: splashFadeUp 0.9s ease both;
+  animation-delay: 0.15s;
+}
+
+@keyframes splashFadeUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Logo */
+.splash-logo-wrap {
+  width: 88px;
+  height: 88px;
+  border-radius: 22px;
+  background: linear-gradient(135deg, rgba(14,165,233,0.15), rgba(16,185,129,0.1));
+  border: 1px solid rgba(14, 165, 233, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 40px rgba(14, 165, 233, 0.2);
+}
+
+.splash-logo {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+}
+
+/* Başlık */
+.splash-text-wrap {
+  text-align: center;
+}
+
+.splash-title {
+  font-family: 'Poppins', 'Inter', sans-serif;
+  font-size: 3rem;
+  font-weight: 800;
+  letter-spacing: 0.18em;
+  margin: 0;
+  line-height: 1;
+}
+
+.splash-title-quant {
+  color: #f0f9ff;
+}
+
+.splash-title-shine {
+  background: linear-gradient(135deg, #0ea5e9, #10b981);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.splash-subtitle {
+  font-family: 'Poppins', 'Inter', sans-serif;
+  font-size: 1.05rem;
+  font-weight: 400;
+  letter-spacing: 0.45em;
+  color: #94a3b8;
+  margin: 0.4rem 0 0;
+}
+
+/* Divider */
+.splash-divider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: center;
+  margin: 0.9rem 0 0.5rem;
+}
+
+.splash-divider-line {
+  display: block;
+  width: 56px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #0ea5e9, transparent);
+}
+
+.splash-divider-dot {
+  display: block;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #10b981;
+  box-shadow: 0 0 8px #10b981;
+}
+
+.splash-tagline {
+  font-family: 'Poppins', 'Inter', sans-serif;
+  font-size: 0.82rem;
+  letter-spacing: 0.2em;
+  color: #64748b;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+/* Yükleme çubuğu */
+.splash-loader {
+  width: 180px;
+  height: 2px;
+  background: rgba(255,255,255,0.07);
+  border-radius: 99px;
+  overflow: hidden;
+  margin-top: 0.5rem;
+}
+
+.splash-loader-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #0ea5e9, #10b981);
+  border-radius: 99px;
+  animation: loaderFill 1.5s ease forwards;
+  animation-delay: 0.3s;
+  width: 0%;
+}
+
+@keyframes loaderFill {
+  from { width: 0%; }
+  to   { width: 100%; }
+}

@@ -1,0 +1,145 @@
+/* src/App.css */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
+@import './styles/variables.css';
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Poppins:wght@400;500;600;700;800&display=swap');
+
+* {
+  box-sizing: border-box;
+  /* Bu çok önemli! */
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', sans-serif;
+  height: 100%;
+}
+
+html {
+  scroll-behavior: smooth;
+  /* Bu satırı ekleyin */
+}
+
+#root {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  /* root'un arka planı tüm boş alanı doldursun */
+  background-color: var(--secondary-white);
+}
+
+.App {
+  width: 100%;
+  /* App div'i tam genişlik kaplasın */
+  display: flex;
+  flex-direction: column;
+  /* App'in içinde header hariç her şey ortalanacak. */
+  /* Bu yüzden Header'ı doğrudan App.js'te tutacağız ve LandingPage'i ayrı bir container içinde ortalayacağız. */
+}
+
+:root[data-theme='light'] {
+  --bg-color: #ffffff;
+  --text-color: #111111;
+}
+
+:root[data-theme='dark'] {
+  --bg-color: #121212;
+  --text-color: #f1f1f1;
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+/* ─── Global Responsive Rules ─── */
+@media (max-width: 1024px) {
+  .admin-main {
+    padding: 72px 16px 16px !important;
+    box-sizing: border-box;
+  }
+}
+
+@media (max-width: 768px) {
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 12px !important;
+  }
+
+  .advisor-stats-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .page-header h1 {
+    font-size: 1.2rem !important;
+  }
+
+  .chart-header,
+  .chart-header-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .time-filter-group {
+    flex-wrap: wrap;
+  }
+
+  .history-table-container,
+  .table-container,
+  .istek-table-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .custom-table,
+  .istek-table {
+    min-width: 560px;
+  }
+
+  .fon-table {
+    min-width: 480px;
+  }
+
+  .modal-overlay .transfer-modal,
+  .modal-overlay .fon-modal {
+    width: 95% !important;
+    max-width: 95vw !important;
+    padding: 16px !important;
+    margin: 8px !important;
+  }
+
+  .search-box {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .header-flex {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .stats-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .admin-content {
+    padding: 0;
+  }
+
+  .filter-btn {
+    padding: 5px 8px;
+    font-size: 10px;
+  }
+}

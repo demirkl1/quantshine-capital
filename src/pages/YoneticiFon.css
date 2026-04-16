@@ -1,0 +1,687 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&display=swap');
+
+/* Fonlar Sayfası */
+.btn-transfer-action {
+  background-color: #2962ff;
+  color: white;
+  border: none;
+  padding: 4px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 11px;
+  font-family: 'JetBrains Mono', monospace;
+  transition: 0.15s;
+}
+
+.btn-transfer-action:hover {
+  background-color: #1e53e5;
+}
+
+.btn-investor-action {
+  background-color: #d97706;
+  color: white;
+  border: none;
+  padding: 4px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 11px;
+  font-family: 'JetBrains Mono', monospace;
+  transition: 0.15s;
+}
+
+.btn-investor-action:hover {
+  background-color: #b45309;
+}
+
+/* Modal Tab */
+.modal-tabs {
+  display: flex;
+  border-bottom: 1px solid #2a2e39;
+  margin-bottom: 16px;
+}
+
+.modal-tab {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: #787b86;
+  padding: 10px;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 11px;
+  font-family: 'JetBrains Mono', monospace;
+  transition: 0.15s;
+  letter-spacing: 0.06em;
+}
+
+.modal-tab.active {
+  color: #2962ff;
+  border-bottom: 2px solid #2962ff;
+}
+
+.fon-modal {
+  background: #131722;
+  width: 420px;
+  padding: 20px;
+  border-radius: 8px;
+  border: 1px solid #2a2e39;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+}
+
+.modal-body h3 {
+  font-size: 12px;
+  margin-bottom: 12px;
+  color: #d1d4dc;
+  font-weight: 700;
+}
+
+.btn-confirm {
+  background: #26a69a;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+}
+
+.btn-close {
+  background: transparent;
+  color: #787b86;
+  border: 1px solid #2a2e39;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+}
+
+/* Başlık */
+.header-flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.btn-add-fund {
+  background-color: #2962ff;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  transition: 0.15s;
+}
+
+.btn-add-fund:hover {
+  background-color: #1e53e5;
+}
+
+.modal-input {
+  width: 100%;
+  padding: 10px 12px;
+  background-color: #1c2030;
+  border: 1px solid #2a2e39;
+  border-radius: 6px;
+  color: #d1d4dc;
+  margin-top: 4px;
+  font-size: 12px;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.modal-input:focus {
+  outline: none;
+  border-color: #2962ff;
+  box-shadow: 0 0 0 2px rgba(41, 98, 255, 0.2);
+}
+
+.form-group {
+  margin-bottom: 14px;
+}
+
+.form-group label {
+  display: block;
+  color: #787b86;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.btn-delete-fund {
+  background: transparent;
+  border: 1px solid #ef4444;
+  color: #ef4444;
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.btn-delete-fund:hover {
+  background: #ef4444;
+  color: #fff;
+}
+
+.btn-delete-confirm {
+  background: #ef4444;
+  color: #fff;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.btn-delete-confirm:hover {
+  background: #dc2626;
+}
+
+.btn-delete-confirm:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* ── Fon Kodu Badge ───────────────────────────────────── */
+.badge-fon-code,
+.fon-code-badge {
+  display: inline-block;
+  background-color: rgba(41, 98, 255, 0.12);
+  color: #2962ff;
+  padding: 2px 8px;
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: 700;
+  border: 1px solid rgba(41, 98, 255, 0.3);
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* ── Fon Detay Modalı ─────────────────────────────────── */
+.fon-detail-overlay {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(4px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 3000;
+}
+
+.fon-detail-modal {
+  background: #131722;
+  width: 680px;
+  max-width: 95vw;
+  max-height: 88vh;
+  overflow-y: auto;
+  border-radius: 12px;
+  border: 1px solid #2a2e39;
+  box-shadow: 0 24px 60px rgba(0,0,0,0.6);
+  padding: 24px;
+}
+
+.fon-detail-modal::-webkit-scrollbar { width: 4px; }
+.fon-detail-modal::-webkit-scrollbar-track { background: transparent; }
+.fon-detail-modal::-webkit-scrollbar-thumb { background: #2a2e39; border-radius: 2px; }
+
+.fon-detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20px;
+}
+
+.fon-detail-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #e2e8f0;
+  margin: 6px 0 4px;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.fon-detail-type {
+  font-size: 11px;
+  color: #787b86;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.fon-detail-close {
+  background: transparent;
+  border: 1px solid #2a2e39;
+  color: #787b86;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: 0.15s;
+}
+.fon-detail-close:hover { color: #ef4444; border-color: #ef4444; }
+
+.fon-detail-loading {
+  text-align: center;
+  color: #787b86;
+  padding: 40px 0;
+  font-size: 13px;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* Stats grid */
+.fon-detail-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.fon-stat-card {
+  background: #1c2030;
+  border: 1px solid #2a2e39;
+  border-radius: 8px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.fon-stat-label {
+  font-size: 10px;
+  color: #787b86;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  font-weight: 700;
+}
+
+.fon-stat-value {
+  font-size: 16px;
+  font-weight: 700;
+  color: #e2e8f0;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.fon-stat-small {
+  font-size: 13px;
+}
+
+/* Section labels */
+.fon-section-label {
+  font-size: 10px;
+  color: #787b86;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 700;
+  margin: 0 0 10px;
+}
+
+/* Performance pills */
+.fon-perf-section { margin-bottom: 20px; }
+
+.fon-perf-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 8px;
+}
+
+.fon-perf-pill {
+  border-radius: 8px;
+  padding: 8px 6px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  border: 1px solid transparent;
+}
+
+.fon-perf-pill.positive { background: rgba(16,185,129,0.1); border-color: rgba(16,185,129,0.25); }
+.fon-perf-pill.negative { background: rgba(239,68,68,0.1); border-color: rgba(239,68,68,0.25); }
+.fon-perf-pill.neutral  { background: rgba(120,123,134,0.1); border-color: rgba(120,123,134,0.2); }
+
+.fon-perf-label {
+  font-size: 9px;
+  color: #787b86;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-weight: 700;
+}
+
+.fon-perf-val {
+  font-size: 12px;
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.fon-perf-pill.positive .fon-perf-val { color: #10b981; }
+.fon-perf-pill.negative .fon-perf-val { color: #ef4444; }
+.fon-perf-pill.neutral  .fon-perf-val { color: #787b86; }
+
+/* Chart section */
+.fon-chart-section { margin-bottom: 20px; }
+
+.fon-chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.fon-period-btns { display: flex; gap: 4px; }
+
+.fon-period-btn {
+  background: transparent;
+  border: 1px solid #2a2e39;
+  color: #787b86;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+  cursor: pointer;
+  transition: 0.15s;
+  letter-spacing: 0.06em;
+}
+
+.fon-period-btn:hover { border-color: #4f46e5; color: #818cf8; }
+.fon-period-btn.active { background: #4f46e5; border-color: #4f46e5; color: #fff; }
+
+.fon-no-chart {
+  text-align: center;
+  color: #787b86;
+  font-size: 12px;
+  padding: 30px 0;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* Allocation bars */
+.fon-alloc-section { }
+.fon-alloc-bars { display: flex; flex-direction: column; gap: 8px; }
+
+.fon-alloc-row {
+  display: grid;
+  grid-template-columns: 100px 1fr 48px;
+  align-items: center;
+  gap: 10px;
+}
+
+.fon-alloc-name {
+  font-size: 11px;
+  color: #d1d4dc;
+  font-family: 'JetBrains Mono', monospace;
+  white-space: nowrap;
+}
+
+.fon-alloc-bar-bg {
+  height: 6px;
+  background: #1c2030;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.fon-alloc-bar-fill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.4s ease;
+}
+
+.fon-alloc-pct {
+  font-size: 11px;
+  color: #787b86;
+  font-family: 'JetBrains Mono', monospace;
+  text-align: right;
+}
+
+/* ── Genel Section Wrapper ────────────────────────────── */
+.fon-section {
+  margin-bottom: 24px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #1c2030;
+}
+.fon-section:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+/* ── Modal genişliği güncelleme ───────────────────────── */
+.fon-detail-modal {
+  width: 820px;
+}
+
+/* ── Kuruluş Bilgileri ────────────────────────────────── */
+.fon-founding-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.fon-founding-item {
+  background: #1c2030;
+  border: 1px solid #2a2e39;
+  border-radius: 8px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.fon-founding-key {
+  font-size: 10px;
+  color: #787b86;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  font-weight: 700;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.fon-founding-val {
+  font-size: 13px;
+  font-weight: 700;
+  color: #e2e8f0;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.fon-description-box {
+  background: #1c2030;
+  border: 1px solid #2a2e39;
+  border-left: 3px solid #4f46e5;
+  border-radius: 8px;
+  padding: 12px 14px;
+}
+
+.fon-description-text {
+  font-size: 12px;
+  color: #94a3b8;
+  line-height: 1.7;
+  margin: 0;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* ── Danışman Kartları ────────────────────────────────── */
+.fon-advisor-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.fon-advisor-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #1c2030;
+  border: 1px solid #2a2e39;
+  border-radius: 8px;
+  padding: 12px 14px;
+}
+
+.fon-advisor-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #4f46e5, #7c3aed);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  font-weight: 700;
+  color: #fff;
+  flex-shrink: 0;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.fon-advisor-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: #e2e8f0;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.fon-advisor-tc {
+  font-size: 11px;
+  color: #787b86;
+  font-family: 'JetBrains Mono', monospace;
+  margin-top: 2px;
+}
+
+.fon-advisor-role {
+  margin-left: auto;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-family: 'JetBrains Mono', monospace;
+  letter-spacing: 0.06em;
+}
+.fon-advisor-role.advisor {
+  background: rgba(16, 185, 129, 0.12);
+  color: #10b981;
+  border: 1px solid rgba(16, 185, 129, 0.3);
+}
+.fon-advisor-role.admin {
+  background: rgba(79, 70, 229, 0.12);
+  color: #818cf8;
+  border: 1px solid rgba(79, 70, 229, 0.3);
+}
+
+.fon-empty-state {
+  color: #434651;
+  font-size: 12px;
+  font-style: italic;
+  text-align: center;
+  padding: 16px 0;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+/* ── Pasta Grafiği + Legend ───────────────────────────── */
+.fon-alloc-pie-row {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.fon-alloc-legend {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.fon-alloc-legend-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.fon-alloc-legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.fon-alloc-legend-name {
+  font-size: 11px;
+  color: #d1d4dc;
+  min-width: 90px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── Menkul Kıymetler Tablosu ─────────────────────────── */
+.fon-securities-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+}
+
+.fon-securities-table th {
+  color: #787b86;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  padding: 8px 10px;
+  border-bottom: 1px solid #2a2e39;
+  text-align: left;
+}
+
+.fon-securities-table td {
+  padding: 9px 10px;
+  border-bottom: 1px solid #1c2030;
+  color: #94a3b8;
+}
+
+.fon-securities-table tr:hover td {
+  background: #1c2030;
+}
+
+/* Responsive */
+@media (max-width: 860px) {
+  .fon-detail-modal { width: 96vw; }
+  .fon-detail-stats { grid-template-columns: repeat(2, 1fr); }
+  .fon-founding-grid { grid-template-columns: repeat(2, 1fr); }
+  .fon-perf-grid { grid-template-columns: repeat(3, 1fr); }
+  .fon-alloc-pie-row { flex-direction: column; align-items: flex-start; }
+}
+
+@media (max-width: 600px) {
+  .fon-modal {
+    width: 95%;
+    max-width: 95vw;
+    padding: 16px;
+  }
+
+  .fon-detail-stats { grid-template-columns: 1fr 1fr; }
+  .fon-founding-grid { grid-template-columns: 1fr; }
+  .fon-perf-grid { grid-template-columns: repeat(2, 1fr); }
+
+  .header-flex {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .fon-securities-table-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}

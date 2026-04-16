@@ -1,0 +1,349 @@
+/* src/pages/LandingPage.css */
+
+:root {
+  --bg-dark: #0b0e14;
+  --primary-purple: #1e40af;
+  --text-bright: #ffffff;
+  --text-soft: #f1f5f9;
+  --glass-bg: rgba(17, 22, 35, 0.7);
+  --glass-border: rgba(255, 255, 255, 0.1);
+}
+
+.landing-page-container {
+  position: relative;
+  width: 100%;
+  background-color: var(--bg-dark);
+}
+
+/* Üst Ticker */
+.ticker-fixed-wrapper {
+  position: relative;
+  z-index: 50;
+  background: var(--bg-dark);
+  border-bottom: 1px solid var(--glass-border);
+}
+
+/* VİDEO SİSTEMİ: Yanları sıfırlar ve tüm orta alanı kaplar */
+.main-hero-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  min-height: 100vh;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.video-full-bg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.85;
+  /* filter kaldırıldı — yüksek DPI ekranlarda pikselleşme yapıyordu */
+  transform: translateZ(0);          /* GPU compositing layer → native çözünürlük */
+  -webkit-transform: translateZ(0);
+  will-change: transform;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.video-overlay-pro {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  /* Kaldırılan filter'ı overlay üzerinden telafi et */
+  background:
+    radial-gradient(circle, transparent 20%, var(--bg-dark) 90%),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.35));
+}
+
+/* İÇERİK KATMANI */
+.main-content-scroll {
+  position: relative;
+  z-index: 10;
+}
+
+.hero-section {
+  height: 90vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.hero-main-title {
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  font-weight: 800;
+  color: var(--text-bright);
+  background: linear-gradient(to bottom, #fff, #94a3b8);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+}
+
+.hero-sub-text {
+  color: var(--text-soft);
+  font-size: 1.2rem;
+  margin-bottom: 30px;
+}
+
+/* GRAFİK VE KUTULAR: Cam Efekti */
+.chart-container-premium, .grid-item {
+  background: var(--glass-bg) !important;
+  backdrop-filter: blur(20px); /* Videoyu arkada yumuşatır */
+  border: 1px solid var(--glass-border);
+  border-radius: 24px;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+  padding: 40px;
+}
+
+.chart-split-section {
+  padding: 40px 10% 100px;
+}
+
+.social-proof-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 30px;
+  padding: 0 10% 100px;
+}
+
+.cta-button {
+  background: var(--primary-purple);
+  color: white;
+  padding: 16px 48px;
+  border-radius: 50px;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 10px 30px rgba(124, 58, 237, 0.4);
+  transition: 0.3s;
+}
+
+.cta-button:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 45px rgba(124, 58, 237, 0.6);
+}
+/* --- KUTUCUK İÇİ YAZI VE OKUNABİLİRLİK DÜZENLEMESİ --- */
+
+/* Grafik Panelinin İçindeki Başlıklar */
+.chart-header-info h3 {
+  color: var(--text-bright) !important; /* Saf Beyaz */
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+  letter-spacing: -0.5px;
+}
+
+.chart-subtitle {
+  color: #cbd5e1; /* Açık gri/mavi tonu - Okunabilirliği yüksektir */
+  font-size: 1rem;
+  opacity: 0.9;
+}
+
+/* Bilgi Kutucukları (Grid Items) İçindeki Yazılar */
+.grid-item h4 {
+  color: var(--text-bright) !important; /* Başlıklar parlasın */
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-top: 15px;
+  margin-bottom: 12px;
+}
+
+.grid-item p {
+  color: #cbd5e1 !important; /* Açıklama metinleri için en iyi kontrast */
+  font-size: 1.05rem;
+  line-height: 1.6;
+  font-weight: 400;
+}
+
+/* İkonların Parlaması İçin (Opsiyonel) */
+.grid-icon-box {
+  font-size: 2.5rem;
+  filter: drop-shadow(0 0 10px rgba(124, 58, 237, 0.3)); /* Mor hafif ışıltı */
+  margin-bottom: 10px;
+}
+
+/* Canlı Veri Etiketi */
+.live-tag {
+  color: #ffffff !important;
+  font-weight: 800;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+}
+/* --- BLOG VE MAKALE ALANI --- */
+
+.landing-blog-section {
+  padding: 80px 10%;
+  margin-top: 50px;
+}
+
+.blog-section-header {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.section-title {
+  color: var(--text-bright) !important;
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin-bottom: 15px;
+}
+
+.section-subtitle {
+  color: #cbd5e1 !important; /* Açık ve okunaklı gri */
+  font-size: 1.1rem;
+}
+
+/* Makale Kartları Grid Yapısı */
+.article-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+  margin-top: 40px;
+}
+
+.article-card {
+  background: var(--glass-bg);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--glass-border);
+  border-radius: 24px;
+  padding: 35px;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.article-card:hover {
+  transform: translateY(-8px);
+  border-color: var(--primary-purple);
+}
+
+.article-tag {
+  background: var(--primary-purple);
+  color: white;
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  display: inline-block;
+  margin-bottom: 20px;
+}
+
+.article-card h3 {
+  color: var(--text-bright) !important;
+  font-size: 1.5rem;
+  margin-bottom: 15px;
+  line-height: 1.3;
+}
+
+.article-card p {
+  color: #cbd5e1 !important; /* Okunması kolay açık renk */
+  line-height: 1.6;
+  font-size: 1rem;
+  margin-bottom: 25px;
+}
+
+.article-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #94a3b8;
+  font-size: 0.85rem;
+}
+
+.read-more-link {
+  background: transparent;
+  border: none;
+  color: var(--primary-purple);
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.read-more-link:hover {
+  color: #a78bfa;
+  text-decoration: underline;
+}
+.news-component-wrapper {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px 0;
+}
+
+/* NewsSection içindeki grid yapısının LandingPage ile uyumlu olması için */
+.article-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 25px;
+    width: 100%;
+}
+.news-component-wrapper {
+    width: 100%;
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+/* NewsSection içindeki kartların dizilimi */
+.article-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 30px;
+    width: 100%;
+}
+
+@media (max-width: 768px) {
+  .hero-section {
+    height: 70vh;
+    padding: 0 16px;
+  }
+
+  .hero-sub-text {
+    font-size: 1rem;
+  }
+
+  .chart-split-section {
+    padding: 20px 5% 60px;
+  }
+
+  .social-proof-grid {
+    padding: 0 5% 60px;
+    gap: 20px;
+  }
+
+  .landing-blog-section {
+    padding: 50px 5%;
+  }
+
+  .section-title {
+    font-size: 1.8rem;
+  }
+
+  .article-card {
+    padding: 24px;
+  }
+
+  .chart-container-premium,
+  .grid-item {
+    padding: 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-section {
+    height: 65vh;
+  }
+
+  .cta-button {
+    padding: 14px 32px;
+    font-size: 0.95rem;
+  }
+
+  .social-proof-grid {
+    grid-template-columns: 1fr;
+  }
+}

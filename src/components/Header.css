@@ -1,0 +1,210 @@
+/* --- RENK DEĞİŞKENLERİ --- */
+:root {
+  --bg-dark: #0b0e14;
+  --primary-navy: #1e40af; 
+  --secondary-navy: #1d4ed8;
+  --text-bright: #ffffff;
+  --text-soft: #cbd5e1; 
+  --accent-blue: #3b82f6;
+  --dropdown-bg: rgba(15, 23, 42, 0.98);
+}
+
+/* HEADER KONTEYNER */
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 6%;
+  height: 80px;
+  width: 100%;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-sizing: border-box;
+  background: rgba(11, 14, 20, 0.9);
+  backdrop-filter: blur(15px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* 1. LOGO ALANI */
+.logo-section { 
+  flex: 1; 
+  display: flex; 
+  justify-content: flex-start; 
+}
+
+.logo-link {
+  text-decoration: none;
+}
+
+.logo { 
+  font-size: 1.5rem; 
+  font-weight: 800; 
+  color: var(--text-bright); 
+  margin: 0; 
+  letter-spacing: -0.5px;
+}
+
+.logo .highlight { 
+  color: var(--accent-blue); 
+  text-shadow: 0 0 15px rgba(59, 130, 246, 0.3); 
+}
+
+/* 2. NAVİGASYON (Orta) */
+.nav-section { 
+  flex: 2; 
+  display: flex; 
+  justify-content: center; 
+}
+
+.nav-section ul { 
+  display: flex; 
+  list-style: none; 
+  gap: 30px; 
+  margin: 0; 
+  padding: 0; 
+  align-items: center;
+}
+
+.nav-section a, 
+.dropdown-trigger {
+  color: var(--text-soft);
+  text-decoration: none;
+  font-size: 0.95rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: 0.3s ease;
+  padding: 10px 0; /* Tıklama ve hover alanını genişletir */
+}
+
+.nav-section a:hover, 
+.dropdown:hover .dropdown-trigger { 
+  color: var(--text-bright); 
+}
+
+/* --- DROPDOWN AYARLARI --- */
+.dropdown { 
+  position: relative; 
+  display: flex; 
+  align-items: center; 
+}
+
+.nav-section .dropdown-content {
+  display: none; /* JS olmadan hover ile kontrol edeceğiz */
+  position: absolute;
+  top: 100%; /* Başlığın hemen altından başlar */
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--dropdown-bg);
+  min-width: 220px;
+  border-radius: 12px;
+  padding: 10px 0;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6);
+  z-index: 9999;
+  flex-direction: column;
+}
+
+/* GÖRÜNMEZ KÖPRÜ: Başlık ile menü arasındaki 15px boşluğu kapatır */
+.dropdown-content::before {
+  content: "";
+  position: absolute;
+  top: -20px; /* Menünün üstündeki boşluğu kapatan hayali alan */
+  left: 0;
+  right: 0;
+  height: 25px;
+  background: transparent;
+}
+
+.nav-section .dropdown:hover .dropdown-content {
+  display: flex;
+  animation: dropdownFadeIn 0.3s ease;
+  margin-top: 10px; /* Görsel olarak aşağıda durur ama köprü sayesinde kapanmaz */
+}
+
+@keyframes dropdownFadeIn {
+  from { opacity: 0; transform: translateX(-50%) translateY(10px); }
+  to { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+.dropdown-content li {
+  width: 100%;
+}
+
+.dropdown-content a {
+  display: block;
+  padding: 12px 20px !important;
+  font-size: 0.9rem;
+  transition: 0.2s;
+  color: var(--text-soft) !important;
+}
+
+.dropdown-content a:hover {
+  background: rgba(59, 130, 246, 0.1);
+  color: var(--accent-blue) !important;
+  padding-left: 25px !important; /* Hafif yana kayma efekti */
+}
+
+/* 3. AUTH BUTONLARI (Sağ) */
+.auth-section { 
+  flex: 1; 
+  display: flex; 
+  justify-content: flex-end; 
+}
+
+.auth-buttons-group { 
+  display: flex; 
+  gap: 12px; 
+}
+
+.btn-login {
+  background: transparent;
+  color: var(--text-bright);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 10px 22px;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn-login:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
+.btn-register {
+  background: var(--primary-navy);
+  color: white;
+  border: none;
+  padding: 10px 24px;
+  border-radius: 10px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(30, 64, 175, 0.3);
+  transition: 0.3s;
+}
+
+.btn-register:hover {
+  background: var(--secondary-navy);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(30, 64, 175, 0.5);
+}
+
+/* MOBİL UYUM */
+@media (max-width: 1024px) {
+  .nav-section { display: none; }
+  .header-container { padding: 0 4%; height: 70px; }
+}
+
+@media (max-width: 768px) {
+  .header-container { padding: 0 16px; height: 64px; }
+  .logo { font-size: 1.2rem; }
+  .btn-login { padding: 8px 14px; font-size: 0.85rem; }
+  .btn-register { padding: 8px 16px; font-size: 0.85rem; }
+  .auth-buttons-group { gap: 8px; }
+}
+
+@media (max-width: 480px) {
+  .btn-login { display: none; }
+}
