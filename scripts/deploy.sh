@@ -80,8 +80,8 @@ if [[ "$TARGET" == "backend" || "$TARGET" == "all" ]]; then
     git stash push -m "deploy-otomatik-stash-$TIMESTAMP"
   fi
 
-  git fetch origin master 2>&1 | tee -a "$LOG_FILE"
-  git reset --hard origin/master 2>&1 | tee -a "$LOG_FILE"
+  git fetch origin main 2>&1 | tee -a "$LOG_FILE"
+  git reset --hard origin/main 2>&1 | tee -a "$LOG_FILE"
 
   cd ..
 
