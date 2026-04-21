@@ -20,6 +20,7 @@ ENV REACT_APP_KEYCLOAK_CLIENT_ID=$REACT_APP_KEYCLOAK_CLIENT_ID
 ENV CI=false
 ENV NODE_OPTIONS=--max-old-space-size=1536
 
+COPY tsconfig.json ./
 COPY public ./public
 COPY src ./src
 
