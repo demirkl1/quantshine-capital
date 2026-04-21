@@ -8,7 +8,7 @@ set -euo pipefail  # Hata, ayarsız değişken ve pipe hataları için dur
 TARGET=${1:-all}
 DEPLOY_DIR="/opt/quantshine"
 COMPOSE_FILE="docker-compose.prod.yml"
-TRUSTED_REMOTE="git@github.com:quantshine"   # Güvenilen uzak repo prefix'i
+TRUSTED_REMOTE="https://github.com/demirkl1/"   # Güvenilen uzak repo prefix'i
 LOG_FILE="/var/log/quantshine-deploy.log"
 TIMESTAMP=$(date '+%Y-%m-%d %H:%M:%S')
 
