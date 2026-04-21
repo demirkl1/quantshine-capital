@@ -48,7 +48,8 @@ const MarketTicker = () => (
         srcDoc={TICKER_HTML}
         frameBorder="0"
         scrolling="no"
-        allowTransparency={true}
+        // @ts-ignore - React tip tanımında allowTransparency yok ama tarayıcı destekler
+        allowtransparency="true"
         style={{
             width: '100%',
             height: '46px',

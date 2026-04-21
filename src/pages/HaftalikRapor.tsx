@@ -20,21 +20,22 @@ const HaftalikRapor = () => {
       try {
         await api.get('/users/me'); // Kullanıcıyı DB'ye sync et
         const res = await api.get('/reports/my-reports');
-        
-        const validReports = res.data.filter(r => r.advisor !== null);
-        
+
+        const raw = Array.isArray(res.data) ? res.data : [];
+        const validReports = raw.filter(r => r && r.advisor && r.advisor.id != null);
+
         setReports(validReports);
         setFilteredReports(validReports);
 
         const uniqueAdvisors = [];
         const map = new Map();
-        
+
         for (const r of validReports) {
-          if(!map.has(r.advisor.id)){
+          if (!map.has(r.advisor.id)) {
             map.set(r.advisor.id, true);
             uniqueAdvisors.push({
               id: r.advisor.id,
-              name: `${r.advisor.firstName} ${r.advisor.lastName}`
+              name: `${r.advisor.firstName ?? ''} ${r.advisor.lastName ?? ''}`.trim() || 'Danışman'
             });
           }
         }

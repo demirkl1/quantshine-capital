@@ -85,7 +85,13 @@ const AdvisorAnaSayfa = () => {
       }
       try {
         const res = await api.get(`/funds/history/${realFundCode}?filter=${activeFilter}`);
-        setChartData(res.data.map(item => ({ name: item.date, fiyat: item.price })));
+        const raw = Array.isArray(res.data) ? res.data : [];
+        setChartData(
+          raw
+            .map(item => ({ name: item.date, fiyat: Number(item.price) || 0 }))
+            .filter(d => d.name && Number.isFinite(d.fiyat))
+            .sort((a, b) => String(a.name).localeCompare(String(b.name)))
+        );
       } catch (err) {
         console.error("Grafik Hatası:", err.response?.data || err.message);
       } finally {

@@ -15,7 +15,7 @@ const YatirimGecmisim = () => {
     const fetchMyHistory = async () => {
       try {
         const res = await api.get('/trade/my-history');
-        setHistoryData(res.data);
+        setHistoryData(Array.isArray(res.data) ? res.data : []);
         setLoading(false);
       } catch (err) {
         console.error("Geçmiş yüklenemedi:", err);

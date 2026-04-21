@@ -16,11 +16,24 @@ const DanismanProfili = () => {
     const fetchAdvisors = async () => {
       try {
         const res = await api.get('/users/my-advisors-profiles');
-        setAdvisors(res.data);
-        if (res.data.length > 0) setSelectedAdvisor(res.data[0]);
-        setLoading(false);
+        const raw = Array.isArray(res.data) ? res.data : [];
+        const seen = new Map();
+        raw.forEach(item => {
+          if (!item) return;
+          const adv = item.advisor ?? item;
+          if (!adv || adv.id == null || seen.has(adv.id)) return;
+          seen.set(adv.id, adv);
+        });
+        const list = Array.from(seen.values());
+        setAdvisors(list);
+        if (list.length > 0) setSelectedAdvisor(list[0]);
       } catch (err) {
-        console.error("Danışman profilleri yüklenemedi:", err);
+        console.error(
+          "Danışman profilleri yüklenemedi:",
+          err.response?.status,
+          err.response?.data || err.message
+        );
+      } finally {
         setLoading(false);
       }
     };

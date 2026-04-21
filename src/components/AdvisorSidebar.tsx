@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import api from '../api';
 import {
   MdDashboard,
   MdPeople,
@@ -16,8 +17,13 @@ import './AdvisorSidebar.css';
 const AdvisorSidebar = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { logout } = useAuth();
+  const { token, logout } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    if (!token) return;
+    api.get('/users/me').catch(() => {});
+  }, [token]);
 
   const handleLogout = async () => {
     setIsOpen(false);

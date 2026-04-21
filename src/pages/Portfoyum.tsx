@@ -60,10 +60,14 @@ const Portfoyum = () => {
 
         const chartRes = await api.get(`/funds/history/${selectedFon}?filter=${activeFilter}`);
 
-        const formattedData = chartRes.data.map(item => ({
-          tarih: item.date,
-          deger: item.price
-        }));
+        const raw = Array.isArray(chartRes.data) ? chartRes.data : [];
+        const formattedData = raw
+          .map(item => ({
+            tarih: item.date,
+            deger: Number(item.price) || 0
+          }))
+          .filter(d => d.tarih && Number.isFinite(d.deger))
+          .sort((a, b) => String(a.tarih).localeCompare(String(b.tarih)));
 
         setChartData(formattedData);
 
@@ -87,6 +91,19 @@ const Portfoyum = () => {
     const len = chartData.length;
     if (len <= 7) return 0;
     return Math.max(0, Math.ceil(len / 6) - 1);
+  };
+
+  const formatXAxis = (tickItem) => {
+    if (!tickItem) return "";
+    const date = new Date(tickItem);
+    if (isNaN(date.getTime())) return tickItem;
+    if (activeFilter === "1Y" || activeFilter === "6A") {
+      return date.toLocaleDateString('tr-TR', { month: 'short', year: '2-digit' });
+    }
+    if (activeFilter === "3A" || activeFilter === "1A") {
+      return date.toLocaleDateString('tr-TR', { day: '2-digit', month: 'short' });
+    }
+    return date.toLocaleDateString('tr-TR', { weekday: 'short', day: 'numeric' });
   };
 
   if (loading) return <div className="loading">Veriler Yükleniyor...</div>;
@@ -193,6 +210,7 @@ const Portfoyum = () => {
     stroke="#2d3748"
     tick={{ fontSize: 11, fill: '#94a3b8' }}
     tickMargin={8}
+    tickFormatter={formatXAxis}
     interval={getTickInterval()}
     minTickGap={50}
     axisLine={{ stroke: '#2d3748' }}

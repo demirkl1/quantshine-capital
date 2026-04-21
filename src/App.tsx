@@ -148,7 +148,7 @@ const AppContent: React.FC<AppContentProps> = ({
 
             {/* Ortak */}
             <Route path="/profil" element={user ? <Profil /> : <Navigate to="/" />} />
-            <Route path="/raporlama" element={user ? <Raporlama /> : <Navigate to="/" />} />
+            <Route path="/raporlama" element={user?.isAdmin ? <Raporlama /> : <Navigate to="/" />} />
           </Routes>
         </Suspense>
       </main>

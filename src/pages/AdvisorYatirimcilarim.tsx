@@ -15,19 +15,53 @@ const AdvisorYatirimcilar = () => {
     if (!token) return;
     try {
       const res = await api.get('/users/my-investors');
-      
-      // Investment listesinden investor bilgilerini ayıklıyoruz
-      const processedInvestors = res.data
-        .filter(item => item && item.investor)
-        .map(item => item.investor);
+      const raw = Array.isArray(res.data) ? res.data : [];
 
+      // Hem sarmalı ({investor, fundCode, lotCount, balance}) hem düz
+      // ({id, firstName, ...}) cevabı destekle; id'ye göre deduplicate et,
+      // holdings geldiyse cevaptan al (ayrıca /portfolio çağırmaya gerek yok).
+      const investorMap = new Map();
+      let hasEmbeddedHoldings = false;
+
+      raw.forEach(item => {
+        if (!item) return;
+        const investor = item.investor ?? item;
+        if (!investor || investor.id == null) return;
+
+        const holding = item.investor
+          ? {
+              id: item.id ?? `${investor.id}-${item.fundCode}`,
+              fundCode: item.fundCode,
+              lotCount: item.lotCount,
+              balance: item.balance,
+            }
+          : null;
+
+        if (holding && holding.fundCode) hasEmbeddedHoldings = true;
+
+        if (investorMap.has(investor.id)) {
+          if (holding) investorMap.get(investor.id).holdings.push(holding);
+        } else {
+          investorMap.set(investor.id, {
+            ...investor,
+            holdings: holding ? [holding] : [],
+          });
+        }
+      });
+
+      const processedInvestors = Array.from(investorMap.values());
       setInvestors(processedInvestors);
-      
-      // Portföyleri izlemek için çekiyoruz
-      processedInvestors.forEach(inv => fetchPortfolio(inv.id));
+
+      if (hasEmbeddedHoldings) {
+        const portfolioMap = {};
+        processedInvestors.forEach(inv => { portfolioMap[inv.id] = inv.holdings; });
+        setPortfolios(portfolioMap);
+      } else {
+        processedInvestors.forEach(inv => fetchPortfolio(inv.id));
+      }
       setLoading(false);
     } catch (err) {
-      console.error("Veri çekme hatası:", err);
+      console.error("Veri çekme hatası:", err.response?.status, err.response?.data || err.message);
       setLoading(false);
     }
   };
@@ -71,6 +105,13 @@ const AdvisorYatirimcilar = () => {
 
 
 <tbody>
+  {investors.length === 0 && (
+    <tr>
+      <td colSpan={5} className="no-data-msg" style={{ textAlign: 'center', padding: '30px', color: '#94a3b8' }}>
+        Size atanmış yatırımcı bulunmuyor.
+      </td>
+    </tr>
+  )}
   {investors.map(inv => (
     <tr key={inv.id}>
       <td>{inv.tcNo}</td>

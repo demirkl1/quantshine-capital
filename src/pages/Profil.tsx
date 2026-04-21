@@ -51,6 +51,11 @@ const Profil = () => {
     : authUser?.isAdvisor ? AdvisorSidebar
     : InvestorSidebar;
 
+  const roleLabel = user.role === 'ADMIN' ? 'Sistem Yöneticisi'
+    : user.role === 'ADVISOR' ? 'Portföy Danışmanı'
+    : 'Yatırımcı';
+  const showFundField = user.role === 'ADMIN' || user.role === 'ADVISOR';
+
   if (loading) return <div className="loading">Yükleniyor...</div>;
 
   return (
@@ -71,7 +76,7 @@ const Profil = () => {
               </div>
               <div className="profile-title">
                 <h2>{user.firstName} {user.lastName}</h2>
-                <span className="role-badge">{user.role === 'ADMIN' ? 'Sistem Yöneticisi' : 'Portföy Danışmanı'}</span>
+                <span className="role-badge">{roleLabel}</span>
               </div>
             </div>
 
@@ -88,17 +93,19 @@ const Profil = () => {
                 <p>{user.tcNo || "Belirtilmemiş"}</p>
               </div>
 
-              {/* Sorumlu Olduğu Fon */}
-              <div className="detail-item">
-                <label><MdBusinessCenter /> Sorumlu Olduğunuz Fon</label>
-                <div className="profile-badges">
-                   {user.managedFundCode ? (
-                     <span className="badge-fon-profile">{user.managedFundCode}</span>
-                   ) : (
-                     <span className="badge-fon-profile">Genel Yönetim</span>
-                   )}
+              {/* Sorumlu Olduğu Fon — sadece admin/advisor için */}
+              {showFundField && (
+                <div className="detail-item">
+                  <label><MdBusinessCenter /> Sorumlu Olduğunuz Fon</label>
+                  <div className="profile-badges">
+                     {user.managedFundCode ? (
+                       <span className="badge-fon-profile">{user.managedFundCode}</span>
+                     ) : (
+                       <span className="badge-fon-profile">Genel Yönetim</span>
+                     )}
+                  </div>
                 </div>
-              </div>
+              )}
 
               {/* Açıklama Alanı (Sadece Burası Düzenlenebilir) */}
               <div className="detail-item full-width">
@@ -120,7 +127,9 @@ const Profil = () => {
                   value={user.description || ""}
                   onChange={(e) => setUser({...user, description: e.target.value})}
                   readOnly={!isEditing}
-                  placeholder="Yatırımcılarınızın sizi tanıması için kendinizden bahsedin..."
+                  placeholder={showFundField
+                    ? "Yatırımcılarınızın sizi tanıması için kendinizden bahsedin..."
+                    : "Kendiniz hakkında kısa bir açıklama ekleyebilirsiniz..."}
                 />
               </div>
             </div>

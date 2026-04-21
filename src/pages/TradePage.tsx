@@ -5,10 +5,6 @@ import toast from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext';
 import AdminSidebar from '../components/AdminSidebar';
 import AdvisorSidebar from '../components/AdvisorSidebar';
-import {
-  AreaChart, Area, XAxis, YAxis, CartesianGrid,
-  Tooltip, ResponsiveContainer, ReferenceLine
-} from 'recharts';
 import './TradePage.css';
 
 /* ─── TradingView-inspired dark theme ─────────────────────────── */
@@ -103,53 +99,44 @@ const LiveDot = () => (
     boxShadow:`0 0 0 0 ${tv.green}`, animation:'pulse 2s infinite' }} />
 );
 
-/* ─── Periyot → gün eşlemesi ────────────────────────────────────── */
-const PERIOD_DAYS = { '1H': 7, '1A': 30, '3A': 90, '6A': 180, '1Y': 365 };
-const PERIODS     = Object.keys(PERIOD_DAYS);
-
-/* ─── Stock Chart Modal ─────────────────────────────────────────── */
+/* ─── Stock Chart Modal — Investing.com ─────────────────────────
+ * TradingView free embed bazı küçük BIST hisselerini göstermiyordu
+ * (A1CAP → AAPL'a düşüyordu). Tüm BIST sembolleri için Investing.com
+ * sslcharts widget'ına geçtik. Backend `/api/stocks/{code}/chart-meta`
+ * endpoint'i pair_ID'yi bulup iframe URL'ini döndürüyor.
+ */
 const StockChartModal = ({ stock, onClose, onBuy, onSell }) => {
-  const [period,    setPeriod]    = useState('1A');
-  const [history,   setHistory]   = useState([]);
-  const [chartLoad, setChartLoad] = useState(false);
+  const [chartUrl,  setChartUrl]  = useState(null);
+  const [chartState, setChartState] = useState('loading'); // 'loading' | 'ready' | 'missing'
+  const stockCode = stock?.stockCode;
 
   useEffect(() => {
-    if (!stock) return;
-    setChartLoad(true);
-    const days = PERIOD_DAYS[period] || 30;
-    api.get(`/market/stock-history/${stock.stockCode}?days=${days}`)
-      .then(r => {
-        const data = Object.entries(r.data || {})
-          .map(([date, price]) => ({ date, price }))
-          .sort((a, b) => a.date.localeCompare(b.date));
-        setHistory(data);
-      })
-      .catch(() => setHistory([]))
-      .finally(() => setChartLoad(false));
-  }, [stock, period]);
+    if (!stockCode) return;
+    let cancelled = false;
+    setChartState('loading');
+    setChartUrl(null);
+    (async () => {
+      try {
+        const { data } = await api.get(`/stocks/${stockCode}/chart-meta`);
+        if (cancelled) return;
+        if (data?.iframeUrl) {
+          setChartUrl(data.iframeUrl);
+          setChartState('ready');
+        } else {
+          setChartState('missing');
+        }
+      } catch (e) {
+        if (!cancelled) setChartState('missing');
+      }
+    })();
+    return () => { cancelled = true; };
+  }, [stockCode]);
 
   if (!stock) return null;
 
   const chgPct = parseFloat((stock.changePercent || '0').replace('%', ''));
   const isPos  = chgPct >= 0;
   const color  = isPos ? tv.green : tv.red;
-
-  /* Tooltip formatter */
-  const fmtDate = (d) => {
-    if (!d) return '';
-    const dt = new Date(d);
-    return isNaN(dt) ? d : dt.toLocaleDateString('tr-TR', { day:'numeric', month:'long', year:'numeric' });
-  };
-
-  /* X eksen etiket sayısı */
-  const tickInterval = history.length <= 10 ? 0 : Math.ceil(history.length / 7) - 1;
-
-  /* fiyat aralığı — %3 padding */
-  const prices  = history.map(d => d.price).filter(Boolean);
-  const minP    = prices.length ? Math.min(...prices) : 0;
-  const maxP    = prices.length ? Math.max(...prices) : 100;
-  const pad     = (maxP - minP) * 0.03 || 1;
-  const yDomain = [Math.max(0, minP - pad), maxP + pad];
 
   return (
     <div
@@ -224,24 +211,6 @@ const StockChartModal = ({ stock, onClose, onBuy, onSell }) => {
           </div>
 
           <div style={{display:'flex', alignItems:'center', gap:8}}>
-            {/* Periyot seçici */}
-            <div style={{
-              display:'flex', gap:2, background:tv.bg,
-              borderRadius:6, padding:3, border:`1px solid ${tv.border}`,
-            }}>
-              {PERIODS.map(p => (
-                <button key={p} onClick={() => setPeriod(p)} style={{
-                  padding:'5px 10px', border:'none', borderRadius:4,
-                  background: period === p ? tv.accent : 'transparent',
-                  color: period === p ? tv.white : tv.textDim,
-                  fontSize:11, fontWeight:700, cursor:'pointer',
-                  fontFamily:"'JetBrains Mono', monospace", transition:'all 0.15s',
-                }}>
-                  {p}
-                </button>
-              ))}
-            </div>
-
             <button onClick={onBuy} style={{
               padding:'9px 20px', border:'none', borderRadius:6, cursor:'pointer',
               background:tv.green, color:'#fff', fontSize:13, fontWeight:700,
@@ -266,101 +235,40 @@ const StockChartModal = ({ stock, onClose, onBuy, onSell }) => {
           </div>
         </div>
 
-        {/* ── Chart area ── */}
-        <div style={{ flex:1, padding:'20px 16px 8px', minHeight:0, position:'relative' }}>
-          {chartLoad ? (
-            <div style={{
-              display:'flex', alignItems:'center', justifyContent:'center',
-              height:'100%', color:tv.textDim, fontSize:13,
-              fontFamily:"'JetBrains Mono', monospace", gap:10,
-            }}>
-              <span style={{
-                display:'inline-block', width:14, height:14, borderRadius:'50%',
-                border:`2px solid ${tv.accent}`, borderTopColor:'transparent',
-                animation:'spin 0.8s linear infinite',
-              }} />
-              Veriler yükleniyor...
+        {/* ── Chart area (Investing.com) ── */}
+        <div style={{ flex:1, minHeight:0, position:'relative', background:tv.surface,
+                      display:'flex', alignItems:'center', justifyContent:'center' }}>
+          {chartState === 'loading' && (
+            <div style={{color:tv.textDim, fontSize:13, fontFamily:"'JetBrains Mono', monospace"}}>
+              Grafik yükleniyor…
             </div>
-          ) : history.length === 0 ? (
-            <div style={{
-              display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center',
-              height:'100%', gap:10,
-            }}>
-              <div style={{fontSize:32}}>📊</div>
-              <div style={{color:tv.textDim, fontSize:13, fontFamily:"'JetBrains Mono', monospace"}}>
-                {stock.stockCode} için {period} döneminde veri bulunamadı
+          )}
+          {chartState === 'missing' && (
+            <div style={{color:tv.textDim, fontSize:13, textAlign:'center', padding:20}}>
+              <div style={{color:tv.white, fontWeight:700, marginBottom:6}}>
+                {stock.stockCode}
               </div>
-              <div style={{fontSize:11, color:tv.textFaint}}>Farklı bir periyot deneyin</div>
+              Investing.com'da bu sembol için grafik bulunamadı.
             </div>
-          ) : (
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={history} margin={{ top:10, right:16, left:0, bottom:0 }}>
-                <defs>
-                  <linearGradient id="stockGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%"  stopColor={color} stopOpacity={0.25} />
-                    <stop offset="95%" stopColor={color} stopOpacity={0}    />
-                  </linearGradient>
-                </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke={tv.border} vertical={false} />
-                <XAxis
-                  dataKey="date"
-                  tick={{ fontSize:10, fill:tv.textDim, fontFamily:"'JetBrains Mono', monospace" }}
-                  tickLine={false}
-                  axisLine={{ stroke:tv.border }}
-                  interval={tickInterval}
-                  minTickGap={60}
-                  tickFormatter={d => {
-                    const dt = new Date(d);
-                    if (isNaN(dt)) return d;
-                    if (period === '1Y' || period === '6A')
-                      return dt.toLocaleDateString('tr-TR', { month:'short', year:'2-digit' });
-                    return dt.toLocaleDateString('tr-TR', { day:'2-digit', month:'short' });
-                  }}
-                />
-                <YAxis
-                  domain={yDomain}
-                  tick={{ fontSize:10, fill:tv.textDim, fontFamily:"'JetBrains Mono', monospace" }}
-                  tickLine={false}
-                  axisLine={false}
-                  width={72}
-                  tickFormatter={v => `₺${Number(v).toLocaleString('tr-TR', { minimumFractionDigits:2, maximumFractionDigits:2 })}`}
-                />
-                <Tooltip
-                  contentStyle={{
-                    background:tv.panel, border:`1px solid ${tv.border}`,
-                    borderRadius:8, color:tv.white,
-                    fontFamily:"'JetBrains Mono', monospace", fontSize:12,
-                  }}
-                  labelFormatter={fmtDate}
-                  formatter={v => [`₺${Number(v).toLocaleString('tr-TR', { minimumFractionDigits:2, maximumFractionDigits:2 })}`, stock.stockCode]}
-                  cursor={{ stroke:tv.textDim, strokeWidth:1, strokeDasharray:'4 2' }}
-                />
-                {/* Anlık fiyat referans çizgisi */}
-                <ReferenceLine
-                  y={Number(stock.currentPrice)}
-                  stroke={color}
-                  strokeDasharray="4 3"
-                  strokeWidth={1}
-                  label={{
-                    value: `₺${Number(stock.currentPrice).toFixed(2)}`,
-                    position:'insideTopRight',
-                    fill: color,
-                    fontSize: 10,
-                    fontFamily:"'JetBrains Mono', monospace",
-                  }}
-                />
-                <Area
-                  type="monotone"
-                  dataKey="price"
-                  stroke={color}
-                  strokeWidth={2}
-                  fill="url(#stockGrad)"
-                  dot={false}
-                  activeDot={{ r:4, fill:color, strokeWidth:0 }}
-                  connectNulls
-                />
-              </AreaChart>
-            </ResponsiveContainer>
+          )}
+          {chartState === 'ready' && chartUrl && (
+            <iframe
+              key={chartUrl}
+              src={chartUrl}
+              frameBorder="0"
+              scrolling="no"
+              // @ts-ignore
+              allowtransparency="true"
+              allow="fullscreen"
+              style={{
+                width:'100%',
+                height:'100%',
+                border:'none',
+                display:'block',
+                background:tv.surface,
+              }}
+              title={`${stock.stockCode} Investing Chart`}
+            />
           )}
         </div>
 
@@ -371,7 +279,7 @@ const StockChartModal = ({ stock, onClose, onBuy, onSell }) => {
           background:tv.panel, flexShrink:0,
           fontSize:10, color:tv.textFaint, fontFamily:"'JetBrains Mono', monospace",
         }}>
-          <span>Kaynak: Yahoo Finance (BIST) · Gecikmeli veri · Yatırım tavsiyesi değildir</span>
+          <span>Kaynak: Investing.com · Yatırım tavsiyesi değildir</span>
           <span>ESC veya dışarı tıkla · kapat</span>
         </div>
       </div>

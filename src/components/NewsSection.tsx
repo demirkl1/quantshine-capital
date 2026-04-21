@@ -134,7 +134,8 @@ const NewsSection = () => {
                 srcDoc={getNewsHtml(active)}
                 frameBorder="0"
                 scrolling="no"
-                allowTransparency={true}
+                // @ts-ignore
+                allowtransparency="true"
                 style={{
                     width:      '100%',
                     height:     '620px',

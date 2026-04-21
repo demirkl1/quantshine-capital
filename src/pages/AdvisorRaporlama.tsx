@@ -18,17 +18,22 @@ const AdvisorRaporlama = () => {
     if (token) {
       api.get('/users/my-investors')
       .then(res => {
-        const unpackedInvestors = (Array.isArray(res.data) ? res.data : [])
-          .filter(item => item && item.investor)
-          .map(item => ({
-            id: item.investor.id,
-            firstName: item.investor.firstName,
-            lastName: item.investor.lastName,
-            tcNo: item.investor.tcNo
-          }));
-        setInvestors(unpackedInvestors);
+        const raw = Array.isArray(res.data) ? res.data : [];
+        const seen = new Map();
+        raw.forEach(item => {
+          if (!item) return;
+          const inv = item.investor ?? item;
+          if (!inv || inv.id == null || seen.has(inv.id)) return;
+          seen.set(inv.id, {
+            id: inv.id,
+            firstName: inv.firstName,
+            lastName: inv.lastName,
+            tcNo: inv.tcNo,
+          });
+        });
+        setInvestors(Array.from(seen.values()));
       })
-      .catch(err => console.error("Yatırımcı listesi alınamadı:", err));
+      .catch(err => console.error("Yatırımcı listesi alınamadı:", err.response?.status, err.response?.data || err.message));
     }
   }, [token]);
 
