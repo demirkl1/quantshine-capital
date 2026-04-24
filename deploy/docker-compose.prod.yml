@@ -55,7 +55,7 @@ services:
 
   backend:
     build:
-      context: ../../quantshine_capital_backend
+      context: ./quantshine_capital_backend
       dockerfile: Dockerfile
     container_name: quantshine-backend
     restart: unless-stopped
@@ -82,7 +82,7 @@ services:
 
   frontend:
     build:
-      context: ..
+      context: ./quantshine-capital
       dockerfile: Dockerfile
       args:
         REACT_APP_API_BASE_URL: /api
