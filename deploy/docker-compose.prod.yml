@@ -1,0 +1,131 @@
+name: quantshine
+
+# Single-EC2 production stack.
+# Assumed layout on the server:
+#   /opt/quantshine/
+#   ├── docker-compose.prod.yml     (this file)
+#   ├── .env
+#   ├── nginx/
+#   │   └── default.conf.template
+#   ├── postgres/
+#   │   └── init.sql
+#   ├── quantshine-capital/          (git clone — frontend)
+#   └── quantshine_capital_backend/  (git clone — backend)
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: quantshine-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./postgres/init.sql:/docker-entrypoint-initdb.d/01-init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    networks: [quantshine]
+
+  keycloak:
+    image: quay.io/keycloak/keycloak:22.0.0
+    container_name: quantshine-keycloak
+    restart: unless-stopped
+    command: ["start", "--http-relative-path=/auth"]
+    environment:
+      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://postgres:5432/keycloak_database
+      KC_DB_USERNAME: ${POSTGRES_USER}
+      KC_DB_PASSWORD: ${POSTGRES_PASSWORD}
+      KC_HOSTNAME: ${DOMAIN}
+      KC_HOSTNAME_STRICT: "false"
+      KC_HOSTNAME_STRICT_HTTPS: "false"
+      KC_PROXY: edge
+      KC_HTTP_ENABLED: "true"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks: [quantshine]
+
+  backend:
+    build:
+      context: ../../quantshine_capital_backend
+      dockerfile: Dockerfile
+    container_name: quantshine-backend
+    restart: unless-stopped
+    environment:
+      DB_URL: jdbc:postgresql://postgres:5432/quantshine_database
+      DB_USERNAME: ${POSTGRES_USER}
+      DB_PASSWORD: ${POSTGRES_PASSWORD}
+      KEYCLOAK_URL: http://keycloak:8080/auth
+      KEYCLOAK_REALM: ${KEYCLOAK_REALM}
+      KEYCLOAK_CLIENT_ID: ${KEYCLOAK_CLIENT_ID}
+      KEYCLOAK_ISSUER_URI: https://${DOMAIN}/auth/realms/${KEYCLOAK_REALM}
+      KEYCLOAK_ADMIN_USERNAME: ${KEYCLOAK_ADMIN}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
+      ENCRYPTION_SECRET: ${ENCRYPTION_SECRET}
+      ENCRYPTION_SALT: ${ENCRYPTION_SALT}
+      FINNHUB_API_KEY: ${FINNHUB_API_KEY}
+      NEWSAPI_KEY: ${NEWSAPI_KEY}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      keycloak:
+        condition: service_started
+    networks: [quantshine]
+
+  frontend:
+    build:
+      context: ..
+      dockerfile: Dockerfile
+      args:
+        REACT_APP_API_BASE_URL: /api
+        REACT_APP_KEYCLOAK_URL: https://${DOMAIN}/auth
+        REACT_APP_KEYCLOAK_REALM: ${KEYCLOAK_REALM}
+        REACT_APP_KEYCLOAK_CLIENT_ID: ${KEYCLOAK_CLIENT_ID}
+    container_name: quantshine-frontend
+    restart: unless-stopped
+    networks: [quantshine]
+
+  nginx:
+    image: nginx:1.27-alpine
+    container_name: quantshine-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      DOMAIN: ${DOMAIN}
+    volumes:
+      - ./nginx/default.conf.template:/etc/nginx/templates/default.conf.template:ro
+      - letsencrypt:/etc/letsencrypt:ro
+      - certbot_webroot:/var/www/certbot:ro
+    depends_on:
+      - frontend
+      - backend
+      - keycloak
+    networks: [quantshine]
+
+  certbot:
+    image: certbot/certbot:latest
+    container_name: quantshine-certbot
+    restart: unless-stopped
+    volumes:
+      - letsencrypt:/etc/letsencrypt
+      - certbot_webroot:/var/www/certbot
+    entrypoint: /bin/sh -c 'trap exit TERM; while :; do certbot renew --webroot -w /var/www/certbot --quiet; sleep 12h & wait $${!}; done'
+
+volumes:
+  postgres_data:
+  letsencrypt:
+  certbot_webroot:
+
+networks:
+  quantshine:
+    driver: bridge

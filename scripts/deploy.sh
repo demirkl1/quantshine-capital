@@ -33,12 +33,15 @@ log "========================================="
 
 cd "$DEPLOY_DIR" || die "Deploy dizinine geçilemedi."
 
+FRONTEND_DIR="quantshine-capital"
+BACKEND_DIR="quantshine_capital_backend"
+
 # ── Frontend ──────────────────────────────────────────────────────────
 if [[ "$TARGET" == "frontend" || "$TARGET" == "all" ]]; then
   log ""
   log "▶ Frontend güncelleniyor..."
 
-  cd frontend || die "frontend dizinine geçilemedi."
+  cd "$FRONTEND_DIR" || die "$FRONTEND_DIR dizinine geçilemedi."
 
   # Uzak origin güven kontrolü
   REMOTE_URL=$(git remote get-url origin 2>/dev/null || echo "")
@@ -56,6 +59,11 @@ if [[ "$TARGET" == "frontend" || "$TARGET" == "all" ]]; then
   git fetch origin main 2>&1 | tee -a "$LOG_FILE"
   git reset --hard origin/main 2>&1 | tee -a "$LOG_FILE"
 
+  # deploy/ altındaki IaC değişikliklerini /opt/quantshine seviyesine senkron et
+  cp -r deploy/docker-compose.prod.yml "$DEPLOY_DIR/"
+  cp -r deploy/nginx "$DEPLOY_DIR/"
+  cp -r deploy/postgres "$DEPLOY_DIR/"
+
   cd ..
 
   # Docker build
@@ -68,7 +76,7 @@ if [[ "$TARGET" == "backend" || "$TARGET" == "all" ]]; then
   log ""
   log "▶ Backend güncelleniyor..."
 
-  cd quantshine_capital || die "quantshine_capital dizinine geçilemedi."
+  cd "$BACKEND_DIR" || die "$BACKEND_DIR dizinine geçilemedi."
 
   REMOTE_URL=$(git remote get-url origin 2>/dev/null || echo "")
   if [[ "$REMOTE_URL" != "$TRUSTED_REMOTE"* ]]; then
