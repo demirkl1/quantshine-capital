@@ -48,15 +48,18 @@ services:
       KC_HOSTNAME_STRICT_HTTPS: "false"
       KC_PROXY: edge
       KC_HTTP_ENABLED: "true"
+      # t3.micro için heap küçültme (default 512m → 256m)
+      JAVA_OPTS_APPEND: "-Xms128m -Xmx256m"
+    mem_limit: 350m
     depends_on:
       postgres:
         condition: service_healthy
     networks: [quantshine]
 
   backend:
-    build:
-      context: ./quantshine_capital_backend
-      dockerfile: Dockerfile
+    # Image Mac'te build'lenip Docker Hub'a push edilir. Build komutu:
+    #   deploy/build-push.sh
+    image: ${DOCKER_HUB_USER:-ddemirkl1}/quantshine-backend:latest
     container_name: quantshine-backend
     restart: unless-stopped
     environment:
@@ -73,6 +76,9 @@ services:
       ENCRYPTION_SALT: ${ENCRYPTION_SALT}
       FINNHUB_API_KEY: ${FINNHUB_API_KEY}
       NEWSAPI_KEY: ${NEWSAPI_KEY}
+      # t3.micro için heap küçültme
+      JAVA_TOOL_OPTIONS: "-Xms128m -Xmx256m"
+    mem_limit: 350m
     depends_on:
       postgres:
         condition: service_healthy
@@ -81,16 +87,10 @@ services:
     networks: [quantshine]
 
   frontend:
-    build:
-      context: ./quantshine-capital
-      dockerfile: Dockerfile
-      args:
-        REACT_APP_API_BASE_URL: /api
-        REACT_APP_KEYCLOAK_URL: https://${DOMAIN}/auth
-        REACT_APP_KEYCLOAK_REALM: ${KEYCLOAK_REALM}
-        REACT_APP_KEYCLOAK_CLIENT_ID: ${KEYCLOAK_CLIENT_ID}
+    image: ${DOCKER_HUB_USER:-ddemirkl1}/quantshine-frontend:latest
     container_name: quantshine-frontend
     restart: unless-stopped
+    mem_limit: 64m
     networks: [quantshine]
 
   nginx:
