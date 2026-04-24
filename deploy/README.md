@@ -20,7 +20,7 @@ Tek EC2 içinde 6 container:
 │   certbot (cert renewal)                               │
 └────────────────────────────────────────────────────────┘
             ↑
-     quantshinecapital.com (A record → EC2 IP)
+     quant-shine.com (A record → EC2 IP)
 ```
 
 ## AWS EC2 açma
@@ -44,7 +44,7 @@ Domain registrar'ında (GoDaddy/Namecheap/vb.) **A record**:
 | A    | @    | 1.2.3.4                | 300 |
 | A    | www  | 1.2.3.4                | 300 |
 
-Yayılmayı bekle (`dig quantshinecapital.com +short` ile kontrol — birkaç dakika).
+Yayılmayı bekle (`dig quant-shine.com +short` ile kontrol — birkaç dakika).
 
 ## Sunucuda kurulum
 
@@ -58,7 +58,7 @@ sudo bash quantshine-capital/deploy/bootstrap.sh
 
 # 2. .env'yi doldur
 sudo nano /opt/quantshine/.env
-# DOMAIN=quantshinecapital.com
+# DOMAIN=quant-shine.com
 # LETSENCRYPT_EMAIL=senin@email.com
 # POSTGRES_PASSWORD=$(openssl rand -base64 32)
 # ... (diğerleri için .env.example'a bak)
@@ -70,7 +70,7 @@ sudo docker compose -f docker-compose.prod.yml up -d postgres keycloak backend f
 # 4. DNS yayıldıktan sonra TLS kur
 sudo ./init-letsencrypt.sh
 
-# 5. Hazır. Site: https://quantshinecapital.com
+# 5. Hazır. Site: https://quant-shine.com
 ```
 
 ## Güncelleme (deploy)
@@ -87,13 +87,13 @@ sudo bash quantshine-capital/scripts/deploy.sh        # git pull + rebuild
 
 `init-letsencrypt.sh` bitince:
 
-1. `https://quantshinecapital.com/auth/admin` → KEYCLOAK_ADMIN / KEYCLOAK_ADMIN_PASSWORD ile gir
+1. `https://quant-shine.com/auth/admin` → KEYCLOAK_ADMIN / KEYCLOAK_ADMIN_PASSWORD ile gir
 2. Realm oluştur: `quantshine` (.env'deki KEYCLOAK_REALM ile aynı)
 3. Client oluştur: `quantshine-backend`
    - Client authentication: Off (public)
    - Direct access grants: On
-   - Valid redirect URIs: `https://quantshinecapital.com/*`
-   - Web origins: `https://quantshinecapital.com`
+   - Valid redirect URIs: `https://quant-shine.com/*`
+   - Web origins: `https://quant-shine.com`
 4. Kullanıcı ekle → Credentials sekmesinde şifre ata
 
 ## Log/debug
