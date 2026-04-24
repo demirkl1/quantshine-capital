@@ -54,7 +54,8 @@ else
 fi
 
 echo "▶ IaC dosyaları yerleştiriliyor..."
-cp -r quantshine-capital/deploy/* "$DEPLOY_DIR/"
+# `.env.example` gizli dosya — `*` glob gizli dosyaları atlar; `/.` trailing ile hepsi kopyalanır
+cp -a quantshine-capital/deploy/. "$DEPLOY_DIR/"
 
 if [[ ! -f "$DEPLOY_DIR/.env" ]]; then
   cp "$DEPLOY_DIR/.env.example" "$DEPLOY_DIR/.env"
