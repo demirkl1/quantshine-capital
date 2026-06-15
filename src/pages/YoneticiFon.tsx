@@ -623,7 +623,7 @@ const YoneticiFon = () => {
                                 ))}
                               </Pie>
                               <Tooltip
-                                contentStyle={{ background: '#131722', border: '1px solid #2a2e39', borderRadius: 8, fontSize: 11, color: '#fff' }}
+                                contentStyle={{ background: '#111623', border: '1px solid #222a3a', borderRadius: 8, fontSize: 11, color: '#fff' }}
                                 formatter={(v) => [`%${Number(v).toFixed(2)}`, '']}
                               />
                             </PieChart>
@@ -665,12 +665,12 @@ const YoneticiFon = () => {
                             {detailFund.securities.map((s, i) => (
                               <tr key={i}>
                                 <td><span className="fon-code-badge">{s.symbol || s.ticker || '—'}</span></td>
-                                <td style={{ color: '#d1d4dc' }}>{s.name || '—'}</td>
+                                <td style={{ color: '#cbd5e1' }}>{s.name || '—'}</td>
                                 <td style={{ color: '#94a3b8' }}>{s.type || s.assetType || '—'}</td>
                                 <td style={{ color: '#f59e0b', fontWeight: 700 }}>
                                   {s.weight != null ? `%${Number(s.weight).toFixed(2)}` : '—'}
                                 </td>
-                                <td style={{ color: '#d1d4dc' }}>
+                                <td style={{ color: '#cbd5e1' }}>
                                   {s.lotCount != null ? Number(s.lotCount).toLocaleString('tr-TR') : s.quantity != null ? Number(s.quantity).toLocaleString('tr-TR') : '—'}
                                 </td>
                                 <td style={{ color: '#10b981', fontWeight: 700 }}>
@@ -710,8 +710,8 @@ const YoneticiFon = () => {
                             </linearGradient>
                           </defs>
                           <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
-                          <XAxis dataKey="priceDate" tickFormatter={v => v ? v.substring(0, 10) : ''} tick={{ fill: '#787b86', fontSize: 10 }} axisLine={false} tickLine={false} />
-                          <YAxis tick={{ fill: '#787b86', fontSize: 10 }} axisLine={false} tickLine={false} width={55} tickFormatter={v => `₺${v.toLocaleString('tr-TR')}`} />
+                          <XAxis dataKey="priceDate" tickFormatter={v => v ? v.substring(0, 10) : ''} tick={{ fill: '#94a3b8', fontSize: 10 }} axisLine={false} tickLine={false} />
+                          <YAxis tick={{ fill: '#94a3b8', fontSize: 10 }} axisLine={false} tickLine={false} width={55} tickFormatter={v => `₺${v.toLocaleString('tr-TR')}`} />
                           <Tooltip
                             contentStyle={{ background: '#1e293b', border: '1px solid #334155', borderRadius: 6, fontSize: 11 }}
                             labelStyle={{ color: '#94a3b8' }}

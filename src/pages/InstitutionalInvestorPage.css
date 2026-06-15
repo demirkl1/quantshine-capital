@@ -87,7 +87,10 @@
 /* Logonun içindeki "Q" görseli için ekstra netlik */
 .logo-card img {
   width: 100%;
+  max-width: 320px;
   height: auto;
+  display: block;
+  margin: 0 auto;
   opacity: 0.9;
   filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.05));
 }

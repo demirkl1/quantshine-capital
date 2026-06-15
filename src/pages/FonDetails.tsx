@@ -22,8 +22,8 @@ const PERIODS = [
 ];
 
 const PIE_COLORS = [
-  "#2962ff", "#26a69a", "#f59e0b",
-  "#ef5350", "#ab47bc", "#26c6da", "#9ccc65",
+  "#3b82f6", "#22c55e", "#f59e0b",
+  "#f87171", "#ab47bc", "#26c6da", "#9ccc65",
 ];
 
 /* ── Yardımcı ──────────────────────────────────────────────── */
@@ -116,7 +116,7 @@ export default function FundDetail() {
     return (
       <div className="fund-detail-container">
         <div className="fund-detail-inner">
-          <p style={{ color: "#ef5350", textAlign: "center", padding: "60px 0" }}>
+          <p style={{ color: "#f87171", textAlign: "center", padding: "60px 0" }}>
             Geçersiz fon kodu.
           </p>
           <div className="auth-buttons-section">
@@ -133,7 +133,7 @@ export default function FundDetail() {
       <div className="fund-detail-container">
         <div className="fund-detail-inner" style={{ textAlign: "center", padding: "100px 0" }}>
           <Spinner style={{ margin: "0 auto 16px" }} />
-          <p style={{ color: "#787b86" }}>Fon bilgileri yükleniyor...</p>
+          <p style={{ color: "#94a3b8" }}>Fon bilgileri yükleniyor...</p>
         </div>
       </div>
     );
@@ -144,7 +144,7 @@ export default function FundDetail() {
     return (
       <div className="fund-detail-container">
         <div className="fund-detail-inner">
-          <p style={{ color: "#ef5350", textAlign: "center", padding: "60px 0" }}>
+          <p style={{ color: "#f87171", textAlign: "center", padding: "60px 0" }}>
             {fundError || "Fon bulunamadı."}
           </p>
           <div className="auth-buttons-section">
@@ -256,20 +256,20 @@ export default function FundDetail() {
               >
                 <defs>
                   <linearGradient id="fundGrad" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="5%"  stopColor="#2962ff" stopOpacity={0.35} />
-                    <stop offset="95%" stopColor="#2962ff" stopOpacity={0}    />
+                    <stop offset="5%"  stopColor="#3b82f6" stopOpacity={0.35} />
+                    <stop offset="95%" stopColor="#3b82f6" stopOpacity={0}    />
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="#2a2e39" vertical={false} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#222a3a" vertical={false} />
                 <XAxis
                   dataKey="date"
-                  stroke="#434651"
-                  tick={{ fontSize: 11, fill: "#787b86", fontFamily: "JetBrains Mono, monospace" }}
+                  stroke="#2a3346"
+                  tick={{ fontSize: 11, fill: "#94a3b8", fontFamily: "Inter, sans-serif" }}
                   minTickGap={30}
                 />
                 <YAxis
-                  stroke="#434651"
-                  tick={{ fontSize: 11, fill: "#787b86", fontFamily: "JetBrains Mono, monospace" }}
+                  stroke="#2a3346"
+                  tick={{ fontSize: 11, fill: "#94a3b8", fontFamily: "Inter, sans-serif" }}
                   width={55}
                   tickFormatter={(n) =>
                     n >= 1000 ? `${(n / 1000).toFixed(1)}k` : String(n)
@@ -277,28 +277,28 @@ export default function FundDetail() {
                 />
                 <Tooltip
                   contentStyle={{
-                    background: "#131722",
-                    border: "1px solid #2a2e39",
+                    background: "#111623",
+                    border: "1px solid #222a3a",
                     borderRadius: "8px",
                     color: "#f8fafc",
                     fontSize: 12,
-                    fontFamily: "JetBrains Mono, monospace",
+                    fontFamily: "Inter, sans-serif",
                   }}
                   labelStyle={{ color: "#94a3b8" }}
                 />
                 <Area
                   type="monotone"
                   dataKey="value"
-                  stroke="#2962ff"
+                  stroke="#3b82f6"
                   strokeWidth={2}
                   fill="url(#fundGrad)"
                   dot={false}
-                  activeDot={{ r: 4, strokeWidth: 0, fill: "#2962ff" }}
+                  activeDot={{ r: 4, strokeWidth: 0, fill: "#3b82f6" }}
                 />
               </AreaChart>
             </ResponsiveContainer>
           ) : (
-            <p style={{ textAlign: "center", color: "#787b86", padding: "40px 0", fontSize: 13 }}>
+            <p style={{ textAlign: "center", color: "#94a3b8", padding: "40px 0", fontSize: 13 }}>
               Bu dönem için grafik verisi bulunamadı.
             </p>
           )}
@@ -318,7 +318,7 @@ export default function FundDetail() {
                   cy="50%"
                   outerRadius={110}
                   label={({ name, value }) => `${name}: %${value}`}
-                  labelLine={{ stroke: "#434651" }}
+                  labelLine={{ stroke: "#2a3346" }}
                 >
                   {fund.allocation.map((_, i) => (
                     <Cell
@@ -329,8 +329,8 @@ export default function FundDetail() {
                 </Pie>
                 <Tooltip
                   contentStyle={{
-                    background: "#131722",
-                    border: "1px solid #2a2e39",
+                    background: "#111623",
+                    border: "1px solid #222a3a",
                     borderRadius: "8px",
                     color: "#f8fafc",
                     fontSize: 12,

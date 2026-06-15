@@ -1,11 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&display=swap');
 
 .advisor-sidebar {
   width: 240px;
   min-width: 240px;
   height: 100vh;
-  background-color: #131722;
-  color: #d1d4dc;
+  background-color: #111623;
+  color: #cbd5e1;
   display: flex;
   flex-direction: column;
   position: sticky;
@@ -14,27 +13,27 @@
   box-sizing: border-box;
   z-index: 100;
   overflow-y: auto;
-  border-right: 1px solid #2a2e39;
+  border-right: 1px solid #222a3a;
 }
 
 .sidebar-logo {
   text-align: center;
   margin-bottom: 24px;
   padding-bottom: 16px;
-  border-bottom: 1px solid #2a2e39;
+  border-bottom: 1px solid #222a3a;
 }
 
 .sidebar-logo h2 {
-  color: #2962ff;
+  color: #3b82f6;
   margin: 0;
   font-size: 1.3rem;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Inter', sans-serif;
   font-weight: 700;
 }
 
 .sidebar-logo span {
   font-size: 10px;
-  color: #787b86;
+  color: #94a3b8;
   text-transform: uppercase;
   letter-spacing: 0.1em;
 }
@@ -49,25 +48,25 @@
 .nav-item {
   display: flex;
   align-items: center;
-  color: #787b86;
+  color: #94a3b8;
   text-decoration: none;
   padding: 10px 14px;
   border-radius: 6px;
   transition: all 0.15s;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Inter', sans-serif;
   font-size: 12px;
   font-weight: 600;
 }
 
 .nav-item:hover {
-  background-color: rgba(41, 98, 255, 0.08);
-  color: #d1d4dc;
+  background-color: rgba(59, 130, 246, 0.08);
+  color: #cbd5e1;
 }
 
 .nav-item.active {
-  background-color: rgba(41, 98, 255, 0.15);
-  color: #2962ff;
-  border-left: 2px solid #2962ff;
+  background-color: rgba(59, 130, 246, 0.15);
+  color: #3b82f6;
+  border-left: 2px solid #3b82f6;
 }
 
 .nav-icon {
@@ -80,11 +79,11 @@
 .sidebar-footer {
   margin-top: auto;
   padding-top: 12px;
-  border-top: 1px solid #2a2e39;
+  border-top: 1px solid #222a3a;
 }
 
 .logout-btn {
-  color: #ef5350 !important;
+  color: #f87171 !important;
   background: none;
   border: none;
   cursor: pointer;
@@ -104,8 +103,8 @@
   left: 0;
   right: 0;
   height: 56px;
-  background-color: #131722;
-  border-bottom: 1px solid #2a2e39;
+  background-color: #111623;
+  border-bottom: 1px solid #222a3a;
   align-items: center;
   justify-content: space-between;
   padding: 0 16px;
@@ -114,9 +113,9 @@
 }
 
 .mobile-logo {
-  color: #2962ff;
+  color: #3b82f6;
   font-size: 1.1rem;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Inter', sans-serif;
   font-weight: 700;
   margin: 0;
 }
@@ -124,7 +123,7 @@
 .hamburger-btn {
   background: transparent;
   border: none;
-  color: #d1d4dc;
+  color: #cbd5e1;
   font-size: 1.5rem;
   cursor: pointer;
   display: flex;

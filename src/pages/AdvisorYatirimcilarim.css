@@ -1,11 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&display=swap');
 
 .admin-wrapper {
   display: flex;
-  background-color: #0e1117;
+  background-color: #0b0e14;
   min-height: 100vh;
-  color: #d1d4dc;
-  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  color: #cbd5e1;
+  font-family: 'Inter', sans-serif;
 }
 
 .admin-main {
@@ -17,20 +16,20 @@
   color: #ffffff;
   font-size: 1.3rem;
   margin-bottom: 6px;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Inter', sans-serif;
 }
 
 .page-header p {
-  color: #787b86;
+  color: #94a3b8;
   margin-bottom: 20px;
   font-size: 12px;
 }
 
 .table-container {
-  background: #131722;
+  background: #111623;
   border-radius: 8px;
   padding: 20px;
-  border: 1px solid #2a2e39;
+  border: 1px solid #222a3a;
 }
 
 .custom-table {
@@ -39,14 +38,14 @@
 }
 
 .custom-table th {
-  color: #787b86;
+  color: #94a3b8;
   text-align: left;
   padding: 8px 12px;
   font-size: 10px;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   font-weight: 700;
-  border-bottom: 1px solid #2a2e39;
+  border-bottom: 1px solid #222a3a;
 }
 
 .custom-table tbody tr {
@@ -54,28 +53,28 @@
 }
 
 .custom-table tbody tr:hover {
-  background: rgba(41, 98, 255, 0.06);
+  background: rgba(59, 130, 246, 0.06);
 }
 
 .custom-table td {
   padding: 9px 12px;
-  color: #d1d4dc;
+  color: #cbd5e1;
   font-size: 12px;
-  font-family: 'JetBrains Mono', monospace;
-  border-bottom: 1px solid #434651;
+  font-family: 'Inter', sans-serif;
+  border-bottom: 1px solid #2a3346;
 }
 
-.text-highlight { color: #2962ff !important; font-weight: 700; }
-.text-invest { color: #2962ff !important; font-weight: 700; }
-.text-profit { color: #26a69a !important; font-weight: 700; }
-.text-loss { color: #ef5350 !important; font-weight: 700; }
+.text-highlight { color: #3b82f6 !important; font-weight: 700; }
+.text-invest { color: #3b82f6 !important; font-weight: 700; }
+.text-profit { color: #22c55e !important; font-weight: 700; }
+.text-loss { color: #f87171 !important; font-weight: 700; }
 
 .contact-info {
   display: flex;
   flex-direction: column;
 }
 
-.contact-info small { color: #787b86; font-size: 10px; }
+.contact-info small { color: #94a3b8; font-size: 10px; }
 
 @media (max-width: 1024px) {
   .admin-main {

@@ -231,7 +231,7 @@ const calculatePerc = (profit, total) => {
                 )}
                 {s.kzTl !== undefined && Number(s.kzTl) !== 0 && (
                   <div style={{ marginTop: 8, display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'center' }}>
-                    <span style={{ fontSize: 12, fontWeight: 700, color: parseFloat(s.kzTl) >= 0 ? '#26a69a' : '#ef5350' }}>
+                    <span style={{ fontSize: 12, fontWeight: 700, color: parseFloat(s.kzTl) >= 0 ? '#22c55e' : '#f87171' }}>
                       K/Z&nbsp;{parseFloat(s.kzTl) >= 0 ? '+' : ''}₺{Number(s.kzTl || 0).toLocaleString('tr-TR', { minimumFractionDigits: 2 })}
                     </span>
                     <span className={parseFloat(s.kzPct) >= 0 ? "text-profit" : "text-loss"}>
@@ -320,7 +320,7 @@ const calculatePerc = (profit, total) => {
               {showUsd && marketData.usd.length > 0 && (
                 <span className="fon-chip" style={{ borderColor: '#f59e0b', color: '#f59e0b' }}>USD/TRY</span>
               )}
-              <span style={{ fontSize: 10, color: '#434651', alignSelf: 'center', fontFamily: 'JetBrains Mono, monospace' }}>
+              <span style={{ fontSize: 10, color: '#2a3346', alignSelf: 'center', fontFamily: 'Inter, sans-serif' }}>
                 Sol eksen: ₺ (fon) · Sağ eksen: piyasa
               </span>
             </div>
@@ -379,7 +379,7 @@ const calculatePerc = (profit, total) => {
                     <YAxis yAxisId="usd" orientation="right" hide />
                   )}
                   <Tooltip
-                    contentStyle={{ backgroundColor: '#161b2c', border: '1px solid #2a2e39', borderRadius: '10px', color: '#fff' }}
+                    contentStyle={{ backgroundColor: '#161b2c', border: '1px solid #222a3a', borderRadius: '10px', color: '#fff' }}
                     labelFormatter={label => {
                       const d = new Date(label);
                       return isNaN(d) ? label : d.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' });

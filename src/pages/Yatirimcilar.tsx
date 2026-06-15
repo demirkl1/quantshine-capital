@@ -669,7 +669,7 @@ const handleAssign = async () => {
                                   ))}
                                 </Pie>
                                 <Tooltip
-                                  contentStyle={{ background: '#131722', border: '1px solid #2a2e39', borderRadius: 8, color: '#fff', fontSize: 12 }}
+                                  contentStyle={{ background: '#111623', border: '1px solid #222a3a', borderRadius: 8, color: '#fff', fontSize: 12 }}
                                   formatter={(value) => [`₺${Number(value).toLocaleString('tr-TR', { minimumFractionDigits: 2 })}`, '']}
                                 />
                               </PieChart>
@@ -700,7 +700,7 @@ const handleAssign = async () => {
                               <span className="investor-holding-lots">{Number(h.lots || 0).toLocaleString('tr-TR', { minimumFractionDigits: 4 })} Lot</span>
                             </div>
                             <div className="investor-holding-value">
-                              <span style={{ color: '#787b86', fontSize: 11 }}>Güncel Değer</span>
+                              <span style={{ color: '#94a3b8', fontSize: 11 }}>Güncel Değer</span>
                               <span style={{ color: '#10b981', fontWeight: 700 }}>
                                 ₺{Number(h.tlValue || 0).toLocaleString('tr-TR', { minimumFractionDigits: 2 })}
                               </span>
@@ -711,7 +711,7 @@ const handleAssign = async () => {
                     )}
 
                     {(!selectedDetailInvestor.holdings || selectedDetailInvestor.holdings.length === 0) && (
-                      <div style={{ textAlign: 'center', padding: '20px', color: '#434651', fontSize: 12 }}>
+                      <div style={{ textAlign: 'center', padding: '20px', color: '#2a3346', fontSize: 12 }}>
                         Bu yatırımcının henüz aktif fon pozisyonu bulunmuyor.
                       </div>
                     )}
@@ -741,7 +741,7 @@ const handleAssign = async () => {
                     {historyLoading ? (
                       <div style={{ textAlign: 'center', padding: 30, color: '#94a3b8', fontSize: 13 }}>Geçmiş yükleniyor...</div>
                     ) : investorHistory.length === 0 ? (
-                      <div style={{ textAlign: 'center', padding: 30, color: '#434651', fontSize: 12 }}>Bu yatırımcıya ait işlem kaydı bulunamadı.</div>
+                      <div style={{ textAlign: 'center', padding: 30, color: '#2a3346', fontSize: 12 }}>Bu yatırımcıya ait işlem kaydı bulunamadı.</div>
                     ) : (
                       <table className="investor-history-table">
                         <thead>
@@ -762,7 +762,7 @@ const handleAssign = async () => {
                               <td>{new Date(item.createdAt).toLocaleDateString('tr-TR', { day: '2-digit', month: '2-digit', year: 'numeric' })}</td>
                               <td><span className="investor-holding-code">{item.fundCode}</span></td>
                               <td><span className={`status-badge-small ${item.type === 'BUY' ? 'buy' : 'sell'}`}>{item.type === 'BUY' ? 'ALIŞ' : 'SATIŞ'}</span></td>
-                              <td style={{ color: '#d1d4dc' }}>{Number(item.lotCount || 0).toLocaleString('tr-TR', { minimumFractionDigits: 4 })}</td>
+                              <td style={{ color: '#cbd5e1' }}>{Number(item.lotCount || 0).toLocaleString('tr-TR', { minimumFractionDigits: 4 })}</td>
                               <td style={{ color: '#f59e0b', fontWeight: 700 }}>₺{Number(item.amount || 0).toLocaleString('tr-TR', { minimumFractionDigits: 2 })}</td>
                               <td style={{ color: '#94a3b8' }}>₺{Number(item.unitPrice || 0).toFixed(4)}</td>
                             </tr>

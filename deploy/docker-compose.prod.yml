@@ -43,9 +43,14 @@ services:
       KC_DB_URL: jdbc:postgresql://postgres:5432/keycloak_database
       KC_DB_USERNAME: ${POSTGRES_USER}
       KC_DB_PASSWORD: ${POSTGRES_PASSWORD}
-      KC_HOSTNAME: ${DOMAIN}
+      # KC_HOSTNAME ve KC_HOSTNAME_URL birlikte kullanılamaz; URL formu seçildi
+      # çünkü scheme (https) içeriyor — internal http çağrılarında bile token
+      # issuer https://${DOMAIN}/auth/realms/... olarak üretilir. Bu Spring Security
+      # tarafındaki KEYCLOAK_ISSUER_URI doğrulaması için zorunlu.
+      KC_HOSTNAME_URL: https://${DOMAIN}/auth
       KC_HOSTNAME_STRICT: "false"
       KC_HOSTNAME_STRICT_HTTPS: "false"
+      KC_HOSTNAME_STRICT_BACKCHANNEL: "true"
       KC_PROXY: edge
       KC_HTTP_ENABLED: "true"
       # t3.micro için heap küçültme (default 512m → 256m)

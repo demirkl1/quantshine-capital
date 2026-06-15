@@ -176,19 +176,6 @@ const YatırımcıEkleÇıkar = () => {
       <AdminSidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
 
       <main className={`admin-main ${isSidebarOpen ? "sidebar-open" : "sidebar-collapsed"}`}>
-        <header className="admin-header">
-          <div className="header-right">
-            <div className="user-profile">
-              <div className="avatar-initials">
-                {user?.name
-                  ? user.name.split(' ').filter(Boolean).map(n => n[0]).slice(0, 2).join('').toUpperCase()
-                  : 'Q'}
-              </div>
-              <span>{user?.name}</span>
-            </div>
-          </div>
-        </header>
-
         <div className="admin-content">
           <h1>👥 Yatırımcı Yönetimi</h1>
 

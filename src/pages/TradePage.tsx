@@ -9,27 +9,27 @@ import './TradePage.css';
 
 /* ─── TradingView-inspired dark theme ─────────────────────────── */
 const tv = {
-  bg:        '#0e1117',
-  surface:   '#131722',
-  panel:     '#1c2030',
-  border:    '#2a2e39',
+  bg:        '#0b0e14',
+  surface:   '#111623',
+  panel:     '#171d2c',
+  border:    '#222a3a',
   borderHi:  '#363a45',
-  accent:    '#2962ff',
+  accent:    '#3b82f6',
   accentHo:  '#1e53e5',
-  green:     '#26a69a',
+  green:     '#22c55e',
   greenBg:   'rgba(38,166,154,0.12)',
-  red:       '#ef5350',
+  red:       '#f87171',
   redBg:     'rgba(239,83,80,0.12)',
   gold:      '#f0b90b',
-  text:      '#d1d4dc',
-  textDim:   '#787b86',
-  textFaint: '#434651',
+  text:      '#cbd5e1',
+  textDim:   '#94a3b8',
+  textFaint: '#2a3346',
   white:     '#ffffff',
 };
 
 const G = {
   /* layout */
-  wrapper:   { display:'flex', minHeight:'100vh', background:tv.bg, fontFamily:"'JetBrains Mono', 'Fira Code', 'Consolas', monospace" },
+  wrapper:   { display:'flex', minHeight:'100vh', background:tv.bg, fontFamily:"'Inter', sans-serif" },
   main:      { flex:1, display:'flex', flexDirection:'column', gap:16, padding:'20px 24px', overflowX:'hidden' },
 
   /* cards */
@@ -39,7 +39,7 @@ const G = {
   /* top bar */
   topBar:    { display:'flex', alignItems:'center', justifyContent:'space-between', flexWrap:'wrap', gap:12 },
   fundLabel: { fontSize:11, color:tv.textDim, letterSpacing:'0.1em', textTransform:'uppercase', marginBottom:4 },
-  bigNum:    { fontSize:28, fontWeight:700, color:tv.white, letterSpacing:'-0.02em', fontFamily:"'JetBrains Mono', monospace" },
+  bigNum:    { fontSize:28, fontWeight:700, color:tv.white, letterSpacing:'-0.02em', fontFamily:"'Inter', sans-serif" },
   subRow:    { display:'flex', gap:24, marginTop:6, flexWrap:'wrap' },
   subItem:   { fontSize:12, color:tv.textDim },
   subVal:    { color:tv.text, fontWeight:600 },
@@ -48,7 +48,7 @@ const G = {
   tickerBar:  { display:'flex', gap:20, alignItems:'center', padding:'10px 16px', background:tv.panel, borderRadius:6, borderBottom:`1px solid ${tv.border}`, flexWrap:'wrap' },
   tickerItem: { display:'flex', flexDirection:'column', minWidth:80 },
   tickerCode: { fontSize:10, fontWeight:700, letterSpacing:'0.08em', color:tv.textDim },
-  tickerPrice:{ fontSize:13, fontWeight:700, color:tv.text, fontFamily:"'JetBrains Mono', monospace" },
+  tickerPrice:{ fontSize:13, fontWeight:700, color:tv.text, fontFamily:"'Inter', sans-serif" },
 
   /* grid */
   grid:      { display:'grid', gridTemplateColumns:'380px 1fr', gap:16, alignItems:'start' },
@@ -62,14 +62,14 @@ const G = {
     width:'100%', boxSizing:'border-box',
     background:tv.panel, border:`1px solid ${tv.border}`,
     borderRadius:6, padding:'10px 12px',
-    color:tv.text, fontSize:13, fontFamily:"'JetBrains Mono', monospace",
+    color:tv.text, fontSize:13, fontFamily:"'Inter', sans-serif",
     outline:'none', transition:'border 0.15s',
   },
   select:    {
     width:'100%', boxSizing:'border-box',
     background:tv.panel, border:`1px solid ${tv.border}`,
     borderRadius:6, padding:'10px 12px',
-    color:tv.text, fontSize:12, fontFamily:"'JetBrains Mono', monospace",
+    color:tv.text, fontSize:12, fontFamily:"'Inter', sans-serif",
     outline:'none', cursor:'pointer', appearance:'none',
   },
 
@@ -79,7 +79,7 @@ const G = {
   /* table */
   table:     { width:'100%', borderCollapse:'collapse', fontSize:12 },
   th:        { padding:'8px 12px', textAlign:'left', fontSize:10, fontWeight:700, letterSpacing:'0.1em', textTransform:'uppercase', color:tv.textDim, borderBottom:`1px solid ${tv.border}` },
-  td:        { padding:'9px 12px', borderBottom:`1px solid ${tv.textFaint}`, color:tv.text, fontFamily:"'JetBrains Mono', monospace", fontSize:12 },
+  td:        { padding:'9px 12px', borderBottom:`1px solid ${tv.textFaint}`, color:tv.text, fontFamily:"'Inter', sans-serif", fontSize:12 },
   tdName:    { color:tv.white, fontWeight:700 },
 
   /* status bar */
@@ -168,7 +168,7 @@ const StockChartModal = ({ stock, onClose, onBuy, onSell }) => {
             <div>
               <div style={{
                 fontSize:22, fontWeight:700, color:tv.white,
-                fontFamily:"'JetBrains Mono', monospace", letterSpacing:'-0.01em',
+                fontFamily:"'Inter', sans-serif", letterSpacing:'-0.01em',
               }}>
                 {stock.stockCode}
                 <span style={{fontSize:12, color:tv.textDim, fontWeight:400, marginLeft:8}}>BIST</span>
@@ -179,7 +179,7 @@ const StockChartModal = ({ stock, onClose, onBuy, onSell }) => {
             <div style={{display:'flex', flexDirection:'column', gap:2}}>
               <div style={{
                 fontSize:26, fontWeight:700, color:tv.white,
-                fontFamily:"'JetBrains Mono', monospace", lineHeight:1,
+                fontFamily:"'Inter', sans-serif", lineHeight:1,
               }}>
                 ₺{Number(stock.currentPrice||0).toFixed(2)}
               </div>
@@ -188,19 +188,19 @@ const StockChartModal = ({ stock, onClose, onBuy, onSell }) => {
                   fontSize:13, fontWeight:700, color,
                   background: isPos ? tv.greenBg : tv.redBg,
                   padding:'2px 8px', borderRadius:4,
-                  fontFamily:"'JetBrains Mono', monospace",
+                  fontFamily:"'Inter', sans-serif",
                 }}>
                   {isPos ? '+' : ''}{chgPct.toFixed(2)}%
                 </span>
                 {stock.change != null && (
-                  <span style={{fontSize:11, color, fontFamily:"'JetBrains Mono', monospace"}}>
+                  <span style={{fontSize:11, color, fontFamily:"'Inter', sans-serif"}}>
                     {isPos ? '+' : ''}₺{Number(stock.change).toFixed(2)}
                   </span>
                 )}
               </div>
             </div>
 
-            <div style={{fontSize:10, color:tv.textFaint, fontFamily:"'JetBrains Mono', monospace", lineHeight:1.6}}>
+            <div style={{fontSize:10, color:tv.textFaint, fontFamily:"'Inter', sans-serif", lineHeight:1.6}}>
               <div>Son Güncelleme</div>
               <div style={{color:tv.textDim}}>
                 {stock.lastUpdate
@@ -214,14 +214,14 @@ const StockChartModal = ({ stock, onClose, onBuy, onSell }) => {
             <button onClick={onBuy} style={{
               padding:'9px 20px', border:'none', borderRadius:6, cursor:'pointer',
               background:tv.green, color:'#fff', fontSize:13, fontWeight:700,
-              fontFamily:"'JetBrains Mono', monospace", letterSpacing:'0.05em',
+              fontFamily:"'Inter', sans-serif", letterSpacing:'0.05em',
             }}>
               ▲ ALIŞ
             </button>
             <button onClick={onSell} style={{
               padding:'9px 20px', border:'none', borderRadius:6, cursor:'pointer',
               background:tv.red, color:'#fff', fontSize:13, fontWeight:700,
-              fontFamily:"'JetBrains Mono', monospace", letterSpacing:'0.05em',
+              fontFamily:"'Inter', sans-serif", letterSpacing:'0.05em',
             }}>
               ▼ SATIŞ
             </button>
@@ -239,7 +239,7 @@ const StockChartModal = ({ stock, onClose, onBuy, onSell }) => {
         <div style={{ flex:1, minHeight:0, position:'relative', background:tv.surface,
                       display:'flex', alignItems:'center', justifyContent:'center' }}>
           {chartState === 'loading' && (
-            <div style={{color:tv.textDim, fontSize:13, fontFamily:"'JetBrains Mono', monospace"}}>
+            <div style={{color:tv.textDim, fontSize:13, fontFamily:"'Inter', sans-serif"}}>
               Grafik yükleniyor…
             </div>
           )}
@@ -277,7 +277,7 @@ const StockChartModal = ({ stock, onClose, onBuy, onSell }) => {
           display:'flex', justifyContent:'space-between', alignItems:'center',
           padding:'8px 20px', borderTop:`1px solid ${tv.border}`,
           background:tv.panel, flexShrink:0,
-          fontSize:10, color:tv.textFaint, fontFamily:"'JetBrains Mono', monospace",
+          fontSize:10, color:tv.textFaint, fontFamily:"'Inter', sans-serif",
         }}>
           <span>Kaynak: Investing.com · Yatırım tavsiyesi değildir</span>
           <span>ESC veya dışarı tıkla · kapat</span>
@@ -600,7 +600,7 @@ const TradePage = ({ role }) => {
   const tabStyle = (active) => ({
     padding:'9px 16px', border:'none', cursor:'pointer',
     fontSize:11, fontWeight:700, letterSpacing:'0.1em', textTransform:'uppercase',
-    fontFamily:"'JetBrains Mono', monospace", transition:'all 0.15s',
+    fontFamily:"'Inter', sans-serif", transition:'all 0.15s',
     background: active ? tv.accent : tv.panel,
     color: active ? tv.white : tv.textDim,
     borderBottom: active ? `2px solid ${tv.accent}` : `2px solid transparent`,
@@ -667,7 +667,7 @@ const TradePage = ({ role }) => {
                       cursor: loading ? 'not-allowed' : 'pointer',
                       letterSpacing:'0.06em', textTransform:'uppercase',
                       opacity: loading ? 0.7 : 1, transition:'all 0.15s',
-                      fontFamily:"'JetBrains Mono', monospace"
+                      fontFamily:"'Inter', sans-serif"
                     }}
                   >
                     {loading ? '⟳ Güncelleniyor...' : '⟳ BIST Güncelle'}
@@ -720,10 +720,10 @@ const TradePage = ({ role }) => {
                       <span style={{fontSize:10, fontWeight:700, color:tv.textDim, letterSpacing:'0.08em'}}>
                         {c.nameTr?.toUpperCase()}
                       </span>
-                      <span style={{fontSize:13, fontWeight:700, color:tv.white, fontFamily:"'JetBrains Mono', monospace"}}>
+                      <span style={{fontSize:13, fontWeight:700, color:tv.white, fontFamily:"'Inter', sans-serif"}}>
                         ${Number(c.currentPrice || 0).toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2})}
                       </span>
-                      <span style={{fontSize:10, color, fontFamily:"'JetBrains Mono', monospace"}}>
+                      <span style={{fontSize:10, color, fontFamily:"'Inter', sans-serif"}}>
                         {c.changePercent || '—'}
                       </span>
                     </div>
@@ -755,7 +755,7 @@ const TradePage = ({ role }) => {
                       style={{
                         padding:'9px 8px', border:'none', cursor:'pointer',
                         fontSize:11, fontWeight:700, letterSpacing:'0.1em', textTransform:'uppercase',
-                        fontFamily:"'JetBrains Mono', monospace", transition:'all 0.15s',
+                        fontFamily:"'Inter', sans-serif", transition:'all 0.15s',
                         background: activePanel === p ? tv.accent : tv.panel,
                         color: activePanel === p ? tv.white : tv.textDim,
                       }}
@@ -777,7 +777,7 @@ const TradePage = ({ role }) => {
                           style={{
                             padding:'11px 8px', border:'none', cursor:'pointer',
                             fontSize:12, fontWeight:700, letterSpacing:'0.1em',
-                            fontFamily:"'JetBrains Mono', monospace", transition:'all 0.15s'
+                            fontFamily:"'Inter', sans-serif", transition:'all 0.15s'
                           }}
                         >
                           {t === 'BUY' ? '▲ ALIŞ' : '▼ SATIŞ'}
@@ -810,12 +810,12 @@ const TradePage = ({ role }) => {
                                     padding:'4px 10px',
                                     borderRadius:4,
                                     border:`1px solid ${isSelected ? tv.accent : tv.borderHi}`,
-                                    background: isSelected ? `rgba(41,98,255,0.15)` : tv.panel,
+                                    background: isSelected ? `rgba(59, 130, 246,0.15)` : tv.panel,
                                     color: isSelected ? tv.accent : tv.text,
                                     fontSize:10,
                                     fontWeight:700,
                                     cursor:'pointer',
-                                    fontFamily:"'JetBrains Mono', monospace",
+                                    fontFamily:"'Inter', sans-serif",
                                     display:'flex',
                                     flexDirection:'column',
                                     alignItems:'center',
@@ -893,7 +893,7 @@ const TradePage = ({ role }) => {
                         <div style={G.priceBadge}>
                           <div>
                             <div style={{fontSize:10, color:tv.textDim, marginBottom:3, letterSpacing:'0.08em', textTransform:'uppercase'}}>İşlem Fiyatı</div>
-                            <div style={{fontSize:20, fontWeight:700, color:tv.white, fontFamily:"'JetBrains Mono', monospace"}}>
+                            <div style={{fontSize:20, fontWeight:700, color:tv.white, fontFamily:"'Inter', sans-serif"}}>
                               ₺{getPrice().toFixed(2)}
                             </div>
                           </div>
@@ -968,7 +968,7 @@ const TradePage = ({ role }) => {
                           width:'100%', padding:'13px', border:'none', borderRadius:6,
                           color:tv.white, fontSize:13, fontWeight:700, cursor:'pointer',
                           letterSpacing:'0.08em', textTransform:'uppercase',
-                          fontFamily:"'JetBrains Mono', monospace",
+                          fontFamily:"'Inter', sans-serif",
                           opacity: (!selectedHisse || !lot || !userInfo?.managedFundCode) ? 0.4 : 1,
                           transition:'all 0.15s',
                           animation: tradeSuccess ? 'successPulse 0.5s ease' : 'none'
@@ -992,7 +992,7 @@ const TradePage = ({ role }) => {
                           style={{
                             padding:'11px 8px', border:'none', cursor:'pointer',
                             fontSize:12, fontWeight:700, letterSpacing:'0.1em',
-                            fontFamily:"'JetBrains Mono', monospace", transition:'all 0.15s'
+                            fontFamily:"'Inter', sans-serif", transition:'all 0.15s'
                           }}
                         >
                           {t === 'BUY' ? '▲ ALIŞ' : '▼ SATIŞ'}
@@ -1033,7 +1033,7 @@ const TradePage = ({ role }) => {
                         <div style={G.priceBadge}>
                           <div>
                             <div style={{fontSize:10, color:tv.textDim, marginBottom:3, letterSpacing:'0.08em', textTransform:'uppercase'}}>İşlem Fiyatı</div>
-                            <div style={{fontSize:18, fontWeight:700, color:tv.white, fontFamily:"'JetBrains Mono', monospace"}}>
+                            <div style={{fontSize:18, fontWeight:700, color:tv.white, fontFamily:"'Inter', sans-serif"}}>
                               ${Number(selectedCommodity.currentPrice||0).toFixed(2)}
                             </div>
                             {usdtry > 0 && (
@@ -1108,7 +1108,7 @@ const TradePage = ({ role }) => {
                           width:'100%', padding:'13px', border:'none', borderRadius:6,
                           color:tv.white, fontSize:13, fontWeight:700, cursor:'pointer',
                           letterSpacing:'0.08em', textTransform:'uppercase',
-                          fontFamily:"'JetBrains Mono', monospace",
+                          fontFamily:"'Inter', sans-serif",
                           opacity: (!selectedCommodity || !cLot || !userInfo?.managedFundCode) ? 0.4 : 1,
                           transition:'all 0.15s',
                           animation: tradeCSuccess ? 'successPulse 0.5s ease' : 'none'
@@ -1277,7 +1277,7 @@ const TradePage = ({ role }) => {
                           key={h.id}
                           className='tv-row'
                           onClick={() => setChartStock(h)}
-                          style={{ background: isSelected ? `rgba(41,98,255,0.08)` : 'transparent', cursor:'pointer' }}
+                          style={{ background: isSelected ? `rgba(59, 130, 246,0.08)` : 'transparent', cursor:'pointer' }}
                         >
                           <td style={{...G.td, ...G.tdName}}>
                             <div style={{display:'flex', alignItems:'center', gap:6}}>
@@ -1301,7 +1301,7 @@ const TradePage = ({ role }) => {
                               borderRadius:3, fontSize:11, fontWeight:700,
                               background: pctBg(chgPct),
                               color: pctColor(chgPct),
-                              fontFamily:"'JetBrains Mono', monospace"
+                              fontFamily:"'Inter', sans-serif"
                             }}>
                               {isPos ? '+' : ''}{fmt(chgPct,2)}%
                             </span>
@@ -1313,7 +1313,7 @@ const TradePage = ({ role }) => {
                                 style={{
                                   padding:'3px 8px', background:tv.greenBg, color:tv.green,
                                   border:`1px solid ${tv.green}`, borderRadius:3, fontSize:10,
-                                  cursor:'pointer', fontFamily:"'JetBrains Mono', monospace", fontWeight:700
+                                  cursor:'pointer', fontFamily:"'Inter', sans-serif", fontWeight:700
                                 }}
                               >AL</button>
                               <button
@@ -1321,7 +1321,7 @@ const TradePage = ({ role }) => {
                                 style={{
                                   padding:'3px 8px', background:tv.redBg, color:tv.red,
                                   border:`1px solid ${tv.red}`, borderRadius:3, fontSize:10,
-                                  cursor:'pointer', fontFamily:"'JetBrains Mono', monospace", fontWeight:700
+                                  cursor:'pointer', fontFamily:"'Inter', sans-serif", fontWeight:700
                                 }}
                               >SAT</button>
                             </div>

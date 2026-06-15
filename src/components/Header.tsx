@@ -33,6 +33,7 @@ const Header = ({ showAuthButtons, user, onLoginClick, onRegisterClick }) => {
             </ul>
           </li>
           <li><Link to="/sss">S.S.S.</Link></li>
+          <li><Link to="/iletisim">İletişim</Link></li>
         </ul>
       </nav>
 

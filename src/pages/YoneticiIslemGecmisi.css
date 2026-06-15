@@ -1,4 +1,3 @@
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&display=swap');
 
 .search-container {
   margin-bottom: 16px;
@@ -14,19 +13,19 @@
 .search-box input {
   width: 100%;
   padding: 10px 12px 10px 38px;
-  background: #1c2030;
-  border: 1px solid #2a2e39;
+  background: #171d2c;
+  border: 1px solid #222a3a;
   border-radius: 6px;
-  color: #d1d4dc;
+  color: #cbd5e1;
   font-size: 12px;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Inter', sans-serif;
   transition: 0.15s;
 }
 
 .search-box input:focus {
   outline: none;
-  border-color: #2962ff;
-  box-shadow: 0 0 0 2px rgba(41, 98, 255, 0.2);
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
 }
 
 .search-icon {
@@ -34,7 +33,7 @@
   left: 12px;
   top: 50%;
   transform: translateY(-50%);
-  color: #787b86;
+  color: #94a3b8;
   font-size: 1.1rem;
 }
 
@@ -44,23 +43,23 @@
   border-radius: 3px;
   font-size: 11px;
   font-weight: 700;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Inter', sans-serif;
 }
 
 .islem-badge.alim {
   background: rgba(38, 166, 154, 0.12);
-  color: #26a69a;
+  color: #22c55e;
 }
 
 .islem-badge.satim {
   background: rgba(239, 83, 80, 0.12);
-  color: #ef5350;
+  color: #f87171;
 }
 
 .no-result {
   text-align: center;
   padding: 40px;
-  color: #434651;
+  color: #2a3346;
 }
 
 .price-stack {
@@ -71,7 +70,7 @@
 
 .old-price {
   font-size: 10px;
-  color: #787b86;
+  color: #94a3b8;
 }
 
 .new-price {
@@ -84,11 +83,11 @@
   border-radius: 3px;
   font-size: 11px;
   font-weight: 700;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Inter', sans-serif;
 }
 
-.badge-fund.TEK { background: rgba(41, 98, 255, 0.12); color: #2962ff; }
-.badge-fund.HSF { background: rgba(38, 166, 154, 0.12); color: #26a69a; }
+.badge-fund.TEK { background: rgba(59, 130, 246, 0.12); color: #3b82f6; }
+.badge-fund.HSF { background: rgba(38, 166, 154, 0.12); color: #22c55e; }
 
 @media (max-width: 768px) {
   .search-container {

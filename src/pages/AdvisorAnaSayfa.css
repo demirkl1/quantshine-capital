@@ -1,11 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&display=swap');
 
 .admin-wrapper {
   display: flex;
-  background-color: #0e1117;
+  background-color: #0b0e14;
   min-height: 100vh;
-  color: #d1d4dc;
-  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  color: #cbd5e1;
+  font-family: 'Inter', sans-serif;
 }
 
 .admin-main {
@@ -22,17 +21,17 @@
 }
 
 .stat-card {
-  background: #131722;
+  background: #111623;
   padding: 20px;
   border-radius: 8px;
-  border: 1px solid #2a2e39;
+  border: 1px solid #222a3a;
   transition: border-color 0.2s;
 }
 
-.stat-card:hover { border-color: #2962ff; }
+.stat-card:hover { border-color: #3b82f6; }
 
 .stat-card h3 {
-  color: #787b86;
+  color: #94a3b8;
   font-size: 11px;
   margin-bottom: 10px;
   text-transform: uppercase;
@@ -44,14 +43,14 @@
   color: #ffffff;
   font-size: 1.5rem;
   font-weight: 700;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Inter', sans-serif;
 }
 
 .chart-section {
-  background: #131722;
+  background: #111623;
   padding: 20px;
   border-radius: 8px;
-  border: 1px solid #2a2e39;
+  border: 1px solid #222a3a;
 }
 
 .chart-header {
@@ -68,7 +67,7 @@
 }
 
 .live-indicator {
-  color: #26a69a;
+  color: #22c55e;
   font-size: 11px;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -76,30 +75,30 @@
 
 .time-filter-group {
   display: flex;
-  background-color: #1c2030;
+  background-color: #171d2c;
   padding: 3px;
   border-radius: 6px;
   gap: 2px;
-  border: 1px solid #2a2e39;
+  border: 1px solid #222a3a;
 }
 
 .filter-btn {
   background: transparent;
   border: none;
-  color: #787b86;
+  color: #94a3b8;
   padding: 6px 12px;
   border-radius: 4px;
   font-size: 11px;
   font-weight: 700;
   cursor: pointer;
   transition: all 0.15s;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Inter', sans-serif;
 }
 
-.filter-btn:hover { color: #d1d4dc; }
+.filter-btn:hover { color: #cbd5e1; }
 
 .filter-btn.active {
-  background-color: #2962ff;
+  background-color: #3b82f6;
   color: #fff;
 }
 

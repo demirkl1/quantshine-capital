@@ -1,11 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&display=swap');
 
 /* Spinner */
 .fund-spinner {
   width: 36px;
   height: 36px;
-  border: 3px solid rgba(41, 98, 255, 0.2);
-  border-top-color: #2962ff;
+  border: 3px solid rgba(59, 130, 246, 0.2);
+  border-top-color: #3b82f6;
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }
@@ -26,28 +25,28 @@
   justify-content: center;
   align-items: left;
   padding: 10px 20px;
-  background-color: #131722;
-  color: #d1d4dc;
+  background-color: #111623;
+  color: #cbd5e1;
   font-size: 12px;
   font-weight: 700;
   text-decoration: none;
   border-radius: 6px;
-  border: 1px solid #2a2e39;
+  border: 1px solid #222a3a;
   transition: all 0.15s;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Inter', sans-serif;
 }
 
 .btn:hover {
-  background-color: #1c2030;
-  border-color: #2962ff;
+  background-color: #171d2c;
+  border-color: #3b82f6;
   color: #ffffff;
 }
 
 /* Genel govde konteyner */
 .fund-detail-container {
-  background: #0e1117;
-  color: #d1d4dc;
-  font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', monospace;
+  background: #0b0e14;
+  color: #cbd5e1;
+  font-family: 'Inter', sans-serif;
   padding: 24px 20px;
   display: flex;
   justify-content: center;
@@ -61,10 +60,10 @@
 
 /* Baslik karti */
 .fund-header {
-  background: #131722;
+  background: #111623;
   padding: 20px;
   border-radius: 8px;
-  border: 1px solid #2a2e39;
+  border: 1px solid #222a3a;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -81,19 +80,19 @@
   font-size: 1.3rem;
   font-weight: 700;
   color: #ffffff;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Inter', sans-serif;
 }
 
 .fund-code {
   font-weight: 700;
-  color: #2962ff;
+  color: #3b82f6;
   margin-left: 8px;
   font-size: 12px;
 }
 
 .fund-sub {
   margin-top: 6px;
-  color: #787b86;
+  color: #94a3b8;
   font-size: 12px;
 }
 
@@ -106,18 +105,18 @@
 }
 
 .stat-item {
-  background: #1c2030;
+  background: #171d2c;
   border-radius: 6px;
   padding: 12px 16px;
   min-width: 140px;
   text-align: left;
-  border: 1px solid #2a2e39;
+  border: 1px solid #222a3a;
 }
 
 .stat-label {
   display: block;
   font-size: 10px;
-  color: #787b86;
+  color: #94a3b8;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   font-weight: 700;
@@ -129,7 +128,7 @@
   margin-top: 6px;
   font-size: 14px;
   color: #ffffff;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Inter', sans-serif;
 }
 
 /* Performans hizli ozet */
@@ -143,18 +142,18 @@
 }
 
 .perf-pill {
-  background: #131722;
+  background: #111623;
   padding: 12px 16px;
   border-radius: 8px;
   min-width: 110px;
-  border: 1px solid #2a2e39;
+  border: 1px solid #222a3a;
   text-align: center;
 }
 
 .perf-label {
   display: block;
   font-size: 10px;
-  color: #787b86;
+  color: #94a3b8;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   font-weight: 700;
@@ -165,11 +164,11 @@
   font-weight: 700;
   margin-top: 6px;
   font-size: 14px;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Inter', sans-serif;
 }
 
-.perf-value.positive { color: #26a69a; }
-.perf-value.negative { color: #ef5350; }
+.perf-value.positive { color: #22c55e; }
+.perf-value.negative { color: #f87171; }
 
 /* Filtre butonlari */
 .filter-buttons {
@@ -182,33 +181,33 @@
 .filter-buttons .filter-btn {
   padding: 6px 12px;
   border-radius: 4px;
-  border: 1px solid #2a2e39;
-  background: #1c2030;
-  color: #787b86;
+  border: 1px solid #222a3a;
+  background: #171d2c;
+  color: #94a3b8;
   cursor: pointer;
   font-weight: 700;
   font-size: 11px;
   transition: all 0.15s;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Inter', sans-serif;
 }
 
 .filter-buttons .filter-btn:hover {
-  color: #d1d4dc;
+  color: #cbd5e1;
 }
 
 .filter-buttons .filter-btn.active {
-  background: #2962ff;
+  background: #3b82f6;
   color: #fff;
-  border-color: #2962ff;
+  border-color: #3b82f6;
 }
 
 /* Grafik ve pie kartlari */
 .chart-container,
 .pie-container {
-  background: #131722;
+  background: #111623;
   padding: 18px;
   border-radius: 8px;
-  border: 1px solid #2a2e39;
+  border: 1px solid #222a3a;
   margin-bottom: 20px;
 }
 
@@ -216,12 +215,12 @@
 .pie-container h3 {
   margin: 0 0 12px 0;
   font-size: 11px;
-  color: #d1d4dc;
+  color: #cbd5e1;
   text-align: left;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   font-weight: 700;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Inter', sans-serif;
 }
 
 /* Responsive ayarlar */

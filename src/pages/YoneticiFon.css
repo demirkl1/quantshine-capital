@@ -1,8 +1,7 @@
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600;700&display=swap');
 
 /* Fonlar Sayfası */
 .btn-transfer-action {
-  background-color: #2962ff;
+  background-color: #3b82f6;
   color: white;
   border: none;
   padding: 4px 12px;
@@ -10,7 +9,7 @@
   cursor: pointer;
   font-weight: 700;
   font-size: 11px;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Inter', sans-serif;
   transition: 0.15s;
 }
 
@@ -27,7 +26,7 @@
   cursor: pointer;
   font-weight: 700;
   font-size: 11px;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Inter', sans-serif;
   transition: 0.15s;
 }
 
@@ -38,7 +37,7 @@
 /* Modal Tab */
 .modal-tabs {
   display: flex;
-  border-bottom: 1px solid #2a2e39;
+  border-bottom: 1px solid #222a3a;
   margin-bottom: 16px;
 }
 
@@ -46,57 +45,57 @@
   flex: 1;
   background: transparent;
   border: none;
-  color: #787b86;
+  color: #94a3b8;
   padding: 10px;
   cursor: pointer;
   font-weight: 700;
   font-size: 11px;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Inter', sans-serif;
   transition: 0.15s;
   letter-spacing: 0.06em;
 }
 
 .modal-tab.active {
-  color: #2962ff;
-  border-bottom: 2px solid #2962ff;
+  color: #3b82f6;
+  border-bottom: 2px solid #3b82f6;
 }
 
 .fon-modal {
-  background: #131722;
+  background: #111623;
   width: 420px;
   padding: 20px;
   border-radius: 8px;
-  border: 1px solid #2a2e39;
+  border: 1px solid #222a3a;
   box-shadow: 0 20px 50px rgba(0,0,0,0.5);
 }
 
 .modal-body h3 {
   font-size: 12px;
   margin-bottom: 12px;
-  color: #d1d4dc;
+  color: #cbd5e1;
   font-weight: 700;
 }
 
 .btn-confirm {
-  background: #26a69a;
+  background: #22c55e;
   color: white;
   border: none;
   padding: 8px 14px;
   border-radius: 6px;
   cursor: pointer;
   font-weight: 700;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Inter', sans-serif;
   font-size: 11px;
 }
 
 .btn-close {
   background: transparent;
-  color: #787b86;
-  border: 1px solid #2a2e39;
+  color: #94a3b8;
+  border: 1px solid #222a3a;
   padding: 8px 14px;
   border-radius: 6px;
   cursor: pointer;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Inter', sans-serif;
   font-size: 11px;
 }
 
@@ -108,14 +107,14 @@
 }
 
 .btn-add-fund {
-  background-color: #2962ff;
+  background-color: #3b82f6;
   color: white;
   border: none;
   padding: 8px 16px;
   border-radius: 6px;
   font-weight: 700;
   cursor: pointer;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Inter', sans-serif;
   font-size: 11px;
   letter-spacing: 0.06em;
   transition: 0.15s;
@@ -128,19 +127,19 @@
 .modal-input {
   width: 100%;
   padding: 10px 12px;
-  background-color: #1c2030;
-  border: 1px solid #2a2e39;
+  background-color: #171d2c;
+  border: 1px solid #222a3a;
   border-radius: 6px;
-  color: #d1d4dc;
+  color: #cbd5e1;
   margin-top: 4px;
   font-size: 12px;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Inter', sans-serif;
 }
 
 .modal-input:focus {
   outline: none;
-  border-color: #2962ff;
-  box-shadow: 0 0 0 2px rgba(41, 98, 255, 0.2);
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
 }
 
 .form-group {
@@ -149,7 +148,7 @@
 
 .form-group label {
   display: block;
-  color: #787b86;
+  color: #94a3b8;
   font-size: 10px;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -199,14 +198,14 @@
 .badge-fon-code,
 .fon-code-badge {
   display: inline-block;
-  background-color: rgba(41, 98, 255, 0.12);
-  color: #2962ff;
+  background-color: rgba(59, 130, 246, 0.12);
+  color: #3b82f6;
   padding: 2px 8px;
   border-radius: 3px;
   font-size: 11px;
   font-weight: 700;
-  border: 1px solid rgba(41, 98, 255, 0.3);
-  font-family: 'JetBrains Mono', monospace;
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  font-family: 'Inter', sans-serif;
 }
 
 /* ── Fon Detay Modalı ─────────────────────────────────── */
@@ -222,20 +221,20 @@
 }
 
 .fon-detail-modal {
-  background: #131722;
+  background: #111623;
   width: 680px;
   max-width: 95vw;
   max-height: 88vh;
   overflow-y: auto;
   border-radius: 12px;
-  border: 1px solid #2a2e39;
+  border: 1px solid #222a3a;
   box-shadow: 0 24px 60px rgba(0,0,0,0.6);
   padding: 24px;
 }
 
 .fon-detail-modal::-webkit-scrollbar { width: 4px; }
 .fon-detail-modal::-webkit-scrollbar-track { background: transparent; }
-.fon-detail-modal::-webkit-scrollbar-thumb { background: #2a2e39; border-radius: 2px; }
+.fon-detail-modal::-webkit-scrollbar-thumb { background: #222a3a; border-radius: 2px; }
 
 .fon-detail-header {
   display: flex;
@@ -249,20 +248,20 @@
   font-weight: 700;
   color: #e2e8f0;
   margin: 6px 0 4px;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Inter', sans-serif;
 }
 
 .fon-detail-type {
   font-size: 11px;
-  color: #787b86;
+  color: #94a3b8;
   text-transform: uppercase;
   letter-spacing: 0.08em;
 }
 
 .fon-detail-close {
   background: transparent;
-  border: 1px solid #2a2e39;
-  color: #787b86;
+  border: 1px solid #222a3a;
+  color: #94a3b8;
   width: 32px;
   height: 32px;
   border-radius: 6px;
@@ -278,10 +277,10 @@
 
 .fon-detail-loading {
   text-align: center;
-  color: #787b86;
+  color: #94a3b8;
   padding: 40px 0;
   font-size: 13px;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Inter', sans-serif;
 }
 
 /* Stats grid */
@@ -293,8 +292,8 @@
 }
 
 .fon-stat-card {
-  background: #1c2030;
-  border: 1px solid #2a2e39;
+  background: #171d2c;
+  border: 1px solid #222a3a;
   border-radius: 8px;
   padding: 12px 14px;
   display: flex;
@@ -304,7 +303,7 @@
 
 .fon-stat-label {
   font-size: 10px;
-  color: #787b86;
+  color: #94a3b8;
   text-transform: uppercase;
   letter-spacing: 0.07em;
   font-weight: 700;
@@ -314,7 +313,7 @@
   font-size: 16px;
   font-weight: 700;
   color: #e2e8f0;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Inter', sans-serif;
 }
 
 .fon-stat-small {
@@ -324,7 +323,7 @@
 /* Section labels */
 .fon-section-label {
   font-size: 10px;
-  color: #787b86;
+  color: #94a3b8;
   text-transform: uppercase;
   letter-spacing: 0.08em;
   font-weight: 700;
@@ -356,7 +355,7 @@
 
 .fon-perf-label {
   font-size: 9px;
-  color: #787b86;
+  color: #94a3b8;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   font-weight: 700;
@@ -365,12 +364,12 @@
 .fon-perf-val {
   font-size: 12px;
   font-weight: 700;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Inter', sans-serif;
 }
 
 .fon-perf-pill.positive .fon-perf-val { color: #10b981; }
 .fon-perf-pill.negative .fon-perf-val { color: #ef4444; }
-.fon-perf-pill.neutral  .fon-perf-val { color: #787b86; }
+.fon-perf-pill.neutral  .fon-perf-val { color: #94a3b8; }
 
 /* Chart section */
 .fon-chart-section { margin-bottom: 20px; }
@@ -386,13 +385,13 @@
 
 .fon-period-btn {
   background: transparent;
-  border: 1px solid #2a2e39;
-  color: #787b86;
+  border: 1px solid #222a3a;
+  color: #94a3b8;
   padding: 4px 10px;
   border-radius: 4px;
   font-size: 10px;
   font-weight: 700;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Inter', sans-serif;
   cursor: pointer;
   transition: 0.15s;
   letter-spacing: 0.06em;
@@ -403,10 +402,10 @@
 
 .fon-no-chart {
   text-align: center;
-  color: #787b86;
+  color: #94a3b8;
   font-size: 12px;
   padding: 30px 0;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Inter', sans-serif;
 }
 
 /* Allocation bars */
@@ -422,14 +421,14 @@
 
 .fon-alloc-name {
   font-size: 11px;
-  color: #d1d4dc;
-  font-family: 'JetBrains Mono', monospace;
+  color: #cbd5e1;
+  font-family: 'Inter', sans-serif;
   white-space: nowrap;
 }
 
 .fon-alloc-bar-bg {
   height: 6px;
-  background: #1c2030;
+  background: #171d2c;
   border-radius: 3px;
   overflow: hidden;
 }
@@ -442,8 +441,8 @@
 
 .fon-alloc-pct {
   font-size: 11px;
-  color: #787b86;
-  font-family: 'JetBrains Mono', monospace;
+  color: #94a3b8;
+  font-family: 'Inter', sans-serif;
   text-align: right;
 }
 
@@ -451,7 +450,7 @@
 .fon-section {
   margin-bottom: 24px;
   padding-bottom: 20px;
-  border-bottom: 1px solid #1c2030;
+  border-bottom: 1px solid #171d2c;
 }
 .fon-section:last-child {
   border-bottom: none;
@@ -472,8 +471,8 @@
 }
 
 .fon-founding-item {
-  background: #1c2030;
-  border: 1px solid #2a2e39;
+  background: #171d2c;
+  border: 1px solid #222a3a;
   border-radius: 8px;
   padding: 10px 12px;
   display: flex;
@@ -483,23 +482,23 @@
 
 .fon-founding-key {
   font-size: 10px;
-  color: #787b86;
+  color: #94a3b8;
   text-transform: uppercase;
   letter-spacing: 0.07em;
   font-weight: 700;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Inter', sans-serif;
 }
 
 .fon-founding-val {
   font-size: 13px;
   font-weight: 700;
   color: #e2e8f0;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Inter', sans-serif;
 }
 
 .fon-description-box {
-  background: #1c2030;
-  border: 1px solid #2a2e39;
+  background: #171d2c;
+  border: 1px solid #222a3a;
   border-left: 3px solid #4f46e5;
   border-radius: 8px;
   padding: 12px 14px;
@@ -510,7 +509,7 @@
   color: #94a3b8;
   line-height: 1.7;
   margin: 0;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Inter', sans-serif;
 }
 
 /* ── Danışman Kartları ────────────────────────────────── */
@@ -524,8 +523,8 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  background: #1c2030;
-  border: 1px solid #2a2e39;
+  background: #171d2c;
+  border: 1px solid #222a3a;
   border-radius: 8px;
   padding: 12px 14px;
 }
@@ -542,20 +541,20 @@
   font-weight: 700;
   color: #fff;
   flex-shrink: 0;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Inter', sans-serif;
 }
 
 .fon-advisor-name {
   font-size: 13px;
   font-weight: 700;
   color: #e2e8f0;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Inter', sans-serif;
 }
 
 .fon-advisor-tc {
   font-size: 11px;
-  color: #787b86;
-  font-family: 'JetBrains Mono', monospace;
+  color: #94a3b8;
+  font-family: 'Inter', sans-serif;
   margin-top: 2px;
 }
 
@@ -565,7 +564,7 @@
   font-weight: 700;
   padding: 3px 8px;
   border-radius: 4px;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Inter', sans-serif;
   letter-spacing: 0.06em;
 }
 .fon-advisor-role.advisor {
@@ -580,12 +579,12 @@
 }
 
 .fon-empty-state {
-  color: #434651;
+  color: #2a3346;
   font-size: 12px;
   font-style: italic;
   text-align: center;
   padding: 16px 0;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Inter', sans-serif;
 }
 
 /* ── Pasta Grafiği + Legend ───────────────────────────── */
@@ -606,7 +605,7 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Inter', sans-serif;
 }
 
 .fon-alloc-legend-dot {
@@ -618,7 +617,7 @@
 
 .fon-alloc-legend-name {
   font-size: 11px;
-  color: #d1d4dc;
+  color: #cbd5e1;
   min-width: 90px;
   white-space: nowrap;
   overflow: hidden;
@@ -629,29 +628,29 @@
 .fon-securities-table {
   width: 100%;
   border-collapse: collapse;
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Inter', sans-serif;
   font-size: 11px;
 }
 
 .fon-securities-table th {
-  color: #787b86;
+  color: #94a3b8;
   font-size: 10px;
   font-weight: 700;
   letter-spacing: 0.07em;
   text-transform: uppercase;
   padding: 8px 10px;
-  border-bottom: 1px solid #2a2e39;
+  border-bottom: 1px solid #222a3a;
   text-align: left;
 }
 
 .fon-securities-table td {
   padding: 9px 10px;
-  border-bottom: 1px solid #1c2030;
+  border-bottom: 1px solid #171d2c;
   color: #94a3b8;
 }
 
 .fon-securities-table tr:hover td {
-  background: #1c2030;
+  background: #171d2c;
 }
 
 /* Responsive */

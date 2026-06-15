@@ -10,7 +10,7 @@ const SYMBOLS = [
 ];
 
 const btnStyle = (isActive) => ({
-    backgroundColor: isActive ? '#2962ff' : 'rgba(255,255,255,0.05)',
+    backgroundColor: isActive ? '#3b82f6' : 'rgba(255,255,255,0.05)',
     color:           isActive ? '#ffffff'  : '#94a3b8',
     border:          isActive ? 'none'     : '1px solid #334155',
     padding:         '7px 16px',
@@ -20,7 +20,7 @@ const btnStyle = (isActive) => ({
     fontWeight:      '600',
     transition:      'all 0.2s ease',
     whiteSpace:      'nowrap',
-    fontFamily:      "'JetBrains Mono', monospace",
+    fontFamily:      "'Inter', sans-serif",
     flexShrink:      0,
 });
 
@@ -30,7 +30,7 @@ const getChartHtml = (symbolId) => `<!DOCTYPE html>
   <meta charset="utf-8">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    html, body { height: 100%; background: #131722; overflow: hidden; }
+    html, body { height: 100%; background: #111623; overflow: hidden; }
     .tradingview-widget-container { height: 100%; width: 100%; }
     .tradingview-widget-container__widget { height: 100%; width: 100%; }
   </style>
@@ -74,7 +74,7 @@ const MarketChart = () => {
             width:           '100%',
             backgroundColor: '#0d1117',
             borderRadius:    '12px',
-            border:          '1px solid #2a2e39',
+            border:          '1px solid #222a3a',
             overflow:        'hidden',
         }}>
             {/* Sembol seçici */}
@@ -84,7 +84,7 @@ const MarketChart = () => {
                 gap:             '8px',
                 padding:         '14px 16px',
                 backgroundColor: '#161b22',
-                borderBottom:    '1px solid #2a2e39',
+                borderBottom:    '1px solid #222a3a',
             }}>
                 {SYMBOLS.map(sym => (
                     <button
@@ -118,10 +118,10 @@ const MarketChart = () => {
                 justifyContent:  'space-between',
                 padding:         '8px 16px',
                 backgroundColor: '#161b22',
-                borderTop:       '1px solid #2a2e39',
+                borderTop:       '1px solid #222a3a',
                 fontSize:        '10px',
-                color:           '#434651',
-                fontFamily:      "'JetBrains Mono', monospace",
+                color:           '#2a3346',
+                fontFamily:      "'Inter', sans-serif",
             }}>
                 <span>Kaynak: TradingView</span>
                 <span>Gecikmeli veri · Yatırım tavsiyesi değildir</span>

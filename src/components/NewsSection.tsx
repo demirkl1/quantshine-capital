@@ -51,14 +51,14 @@ const tabStyle = (active) => ({
     padding:         '8px 20px',
     borderRadius:    '8px',
     border:          active ? 'none' : '1px solid rgba(255,255,255,0.1)',
-    backgroundColor: active ? '#2962ff' : 'rgba(255,255,255,0.04)',
+    backgroundColor: active ? '#3b82f6' : 'rgba(255,255,255,0.04)',
     color:           active ? '#fff'    : '#94a3b8',
     fontSize:        '0.82rem',
     fontWeight:      active ? '700'     : '500',
     cursor:          'pointer',
     whiteSpace:      'nowrap',
     transition:      'all 0.2s ease',
-    fontFamily:      "'JetBrains Mono', monospace",
+    fontFamily:      "'Inter', sans-serif",
     letterSpacing:   '0.3px',
 });
 
@@ -100,7 +100,7 @@ const NewsSection = () => {
                         color:      '#f8fafc',
                         fontWeight: '700',
                         fontSize:   '1rem',
-                        fontFamily: "'JetBrains Mono', monospace",
+                        fontFamily: "'Inter', sans-serif",
                         letterSpacing: '0.5px',
                     }}>
                         CANLI HABERLERİ
@@ -108,7 +108,7 @@ const NewsSection = () => {
                     <span style={{
                         fontSize: '0.75rem',
                         color:    '#64748b',
-                        fontFamily: "'JetBrains Mono', monospace",
+                        fontFamily: "'Inter', sans-serif",
                     }}>
                         Powered by TradingView
                     </span>
@@ -156,7 +156,7 @@ const NewsSection = () => {
                 backgroundColor: 'rgba(22,27,34,0.9)',
                 fontSize:        '10px',
                 color:           '#475569',
-                fontFamily:      "'JetBrains Mono', monospace",
+                fontFamily:      "'Inter', sans-serif",
             }}>
                 <span>Haberler otomatik güncellenir · Kaynak: TradingView</span>
                 <span>Yatırım tavsiyesi değildir</span>

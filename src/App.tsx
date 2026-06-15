@@ -22,6 +22,7 @@ const FonDetail                 = lazy(() => import("./pages/FonDetails"));
 const IndividualInvestorPage    = lazy(() => import("./pages/InvidualInvestorPage"));
 const InstitutionalInvestorPage = lazy(() => import("./pages/InstitutionalInvestorPage"));
 const Questions                 = lazy(() => import("./pages/Questions"));
+const Iletisim                  = lazy(() => import("./pages/Iletisim"));
 
 // Yatırımcı (Investor) Sayfaları
 const Portfoyum           = lazy(() => import("./pages/Portfoyum"));
@@ -114,6 +115,7 @@ const AppContent: React.FC<AppContentProps> = ({
             <Route path="/portfoy-bireysel" element={<InstitutionalInvestorPage />} />
             <Route path="/portfoy-kurumsal" element={<IndividualInvestorPage />} />
             <Route path="/sss" element={<Questions />} />
+            <Route path="/iletisim" element={<Iletisim />} />
             <Route path="/fund/:code" element={<FonDetail />} />
 
             {/* Dinamik Yönlendirme */}

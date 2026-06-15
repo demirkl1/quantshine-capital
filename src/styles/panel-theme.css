@@ -1,0 +1,162 @@
+/* ════════════════════════════════════════════════════════════════════
+   Panel Premium Tema Katmanı
+   Giriş sonrası panelleri (admin / danışman / yatırımcı) ana sayfanın
+   glassmorphism + Poppins/Inter tasarım diline hizalar.
+   Tüm kurallar .admin-wrapper altında scope'lu — landing'e sızmaz.
+   ════════════════════════════════════════════════════════════════════ */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&display=swap');
+
+/* ── Genel zemin ── */
+.admin-wrapper {
+  background:
+    radial-gradient(900px 500px at 100% -10%, rgba(59, 130, 246, 0.10), transparent 60%),
+    radial-gradient(700px 400px at 0% 100%, rgba(30, 64, 175, 0.08), transparent 60%),
+    #0b0e14 !important;
+  font-family: 'Inter', sans-serif !important;
+}
+
+/* ── Sidebar ── */
+.admin-wrapper .admin-sidebar,
+.admin-sidebar {
+  background: rgba(13, 17, 26, 0.85) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-right: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+.sidebar-logo {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+.sidebar-logo h2 {
+  font-family: 'Poppins', sans-serif !important;
+  letter-spacing: -0.5px;
+}
+
+.sidebar-nav a,
+.logout-btn {
+  border-radius: 10px !important;
+  transition: all 0.2s ease !important;
+}
+
+.sidebar-nav a.active {
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.22), rgba(30, 64, 175, 0.10)) !important;
+  border-left: 3px solid #3b82f6 !important;
+  color: #fff !important;
+}
+
+.sidebar-nav a:hover {
+  transform: translateX(2px);
+}
+
+.sidebar-footer {
+  border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+/* ── Kartlar & bölümler: glassmorphism + yuvarlak + hover ── */
+.admin-wrapper .stat-card,
+.admin-wrapper .chart-section,
+.admin-wrapper .table-section {
+  background: rgba(17, 22, 35, 0.7) !important;
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid rgba(255, 255, 255, 0.10) !important;
+  border-radius: 18px !important;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.28);
+  transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease !important;
+}
+
+.admin-wrapper .stat-card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(59, 130, 246, 0.45) !important;
+  box-shadow: 0 20px 44px rgba(0, 0, 0, 0.38);
+}
+
+.admin-wrapper .chart-section:hover,
+.admin-wrapper .table-section:hover {
+  border-color: rgba(59, 130, 246, 0.30) !important;
+}
+
+.admin-wrapper .static-total-card {
+  border-top: 1px solid rgba(255, 255, 255, 0.10) !important;
+  position: relative;
+  overflow: hidden;
+}
+
+.admin-wrapper .static-total-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(400px 200px at 100% 0%, rgba(34, 197, 94, 0.12), transparent 70%);
+  pointer-events: none;
+}
+
+/* ── Başlıklar → Poppins ── */
+.admin-wrapper h1,
+.admin-wrapper h2,
+.admin-wrapper .page-header h1,
+.admin-wrapper .chart-header h2 {
+  font-family: 'Poppins', sans-serif !important;
+  letter-spacing: -0.5px;
+}
+
+.admin-wrapper .stat-value {
+  font-family: 'Poppins', sans-serif !important;
+}
+
+/* ── Kontroller & butonlar ── */
+.admin-wrapper .filter-btn,
+.admin-wrapper .karsilastirma-btn,
+.admin-wrapper .fon-dropdown-btn,
+.admin-wrapper .combobox,
+.admin-wrapper .fon-selector-container {
+  border-radius: 10px !important;
+}
+
+.admin-wrapper .time-filter-group {
+  border-radius: 12px !important;
+}
+
+.admin-wrapper .filter-btn.active {
+  background: linear-gradient(135deg, #1d4ed8, #3b82f6) !important;
+  box-shadow: 0 4px 14px rgba(59, 130, 246, 0.4);
+}
+
+.admin-wrapper .fon-dropdown-menu {
+  border-radius: 14px !important;
+  border: 1px solid rgba(255, 255, 255, 0.10) !important;
+  background: rgba(17, 22, 35, 0.95) !important;
+  backdrop-filter: blur(18px);
+}
+
+/* ── Tablolar ── */
+.admin-wrapper .fon-table th,
+.admin-wrapper .custom-table th,
+.admin-wrapper .istek-table th {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.10) !important;
+}
+
+.admin-wrapper .fon-table td,
+.admin-wrapper .custom-table td,
+.admin-wrapper .istek-table td {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
+}
+
+.admin-wrapper .fon-table tbody tr:hover,
+.admin-wrapper .custom-table tbody tr:hover {
+  background: rgba(59, 130, 246, 0.07) !important;
+}
+
+/* ── Inputlar (genel) ── */
+.admin-wrapper input,
+.admin-wrapper select,
+.admin-wrapper textarea {
+  border-radius: 10px !important;
+}
+
+.admin-wrapper input:focus,
+.admin-wrapper select:focus,
+.admin-wrapper textarea:focus {
+  outline: none;
+  border-color: #3b82f6 !important;
+}

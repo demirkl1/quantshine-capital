@@ -4,7 +4,7 @@
   padding: 120px 5% 80px;
   background-color: #0b0e14;
   min-height: 100vh;
-  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-family: 'Inter', 'Fira Code', monospace;
 }
 
 /* Sayfa başlığı */
@@ -36,7 +36,7 @@
   align-items: center;
   gap: 16px;
   padding: 80px 0;
-  color: #787b86;
+  color: #94a3b8;
   font-size: 0.9rem;
 }
 
@@ -44,8 +44,8 @@
 .fund-spinner {
   width: 36px;
   height: 36px;
-  border: 3px solid rgba(41, 98, 255, 0.2);
-  border-top-color: #2962ff;
+  border: 3px solid rgba(59, 130, 246, 0.2);
+  border-top-color: #3b82f6;
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }
@@ -64,7 +64,7 @@
   background: rgba(239, 83, 80, 0.08);
   border: 1px solid rgba(239, 83, 80, 0.3);
   border-radius: 12px;
-  color: #ef5350;
+  color: #f87171;
   font-size: 0.9rem;
   text-align: center;
 }
@@ -72,7 +72,7 @@
 .retry-btn {
   background: rgba(239, 83, 80, 0.15);
   border: 1px solid rgba(239, 83, 80, 0.4);
-  color: #ef5350;
+  color: #f87171;
   padding: 8px 20px;
   border-radius: 8px;
   cursor: pointer;
@@ -103,7 +103,7 @@
 
 /* Fiyat sütunu */
 .price-cell {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: 'Inter', sans-serif;
   color: #cbd5e1;
 }
 

@@ -1,10 +1,52 @@
-import React from "react";
-import MarketTicker from "../components/MarketTicker"; 
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import {
+  TrendingUp,
+  ShieldCheck,
+  Users,
+  Zap,
+  ArrowRight,
+} from "lucide-react";
+import MarketTicker from "../components/MarketTicker";
 import MarketChart from "../components/MarketChart";
-import NewsSection from '../components/NewsSection';
+import NewsSection from "../components/NewsSection";
+import FeaturedFunds from "../components/FeaturedFunds";
+import Reveal from "../components/Reveal";
+import CountUp from "../components/CountUp";
 import "./LandingPage.css";
 
+const FEATURES = [
+  {
+    icon: TrendingUp,
+    title: "Sürdürülebilir Getiri",
+    text: "Yıllık %18.5 ortalama performans ile varlıklarınızı güvenle büyütün.",
+  },
+  {
+    icon: ShieldCheck,
+    title: "Yüksek Güvenlik",
+    text: "Uçtan uca şifreleme ve global standartlarda varlık koruma altyapısı.",
+  },
+  {
+    icon: Users,
+    title: "Uzman Portföy",
+    text: "1250+ bireysel ve kurumsal yatırımcıya özel stratejik yönetim.",
+  },
+  {
+    icon: Zap,
+    title: "Anlık İşlem",
+    text: "Hızlı, şeffaf ve her cihazdan erişilebilir portföy takip arayüzü.",
+  },
+];
+
 const LandingPage = () => {
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 60);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
   return (
     <div className="landing-page-container">
       {/* 1. ÜST BANT */}
@@ -12,77 +54,156 @@ const LandingPage = () => {
         <MarketTicker />
       </div>
 
-      {/* 2. ANA ANİMASYON KATMANI */}
-      <div className="main-hero-bg">
-        <video autoPlay muted loop playsInline className="video-full-bg">
-          <source src="/quantshine_animation.mp4" type="video/mp4" />
-        </video>
-        <div className="video-overlay-pro"></div>
-      </div>
+      {/* 2. HERO — gradient + animasyon */}
+      <section className="hero-section">
+        <div className="hero-bg-layer">
+          <div className="hero-grid" />
+          <div className="hero-orb hero-orb--1" />
+          <div className="hero-orb hero-orb--2" />
+        </div>
 
-      {/* 3. İÇERİKLER */}
-      <main className="main-content-scroll">
-        <section className="hero-section">
-          <div className="hero-foreground">
+        <div className="hero-foreground">
+          <Reveal variant="up">
             <h1 className="hero-main-title">Geleceğin Finansına Hoş Geldiniz</h1>
-            <p className="hero-sub-text">QuantShine Capital ile varlıklarınızı akıllıca yönetin.</p>
-            
-          </div>
+          </Reveal>
+          <Reveal variant="up" delay={120}>
+            <p className="hero-sub-text">
+              QuantShine Capital ile varlıklarınızı akıllıca yönetin.
+            </p>
+          </Reveal>
+          <Reveal variant="up" delay={200} className="hero-cta-group">
+            <Link to="/portfoy-bireysel" className="cta-button">
+              Portföy Yönetimi <ArrowRight size={18} />
+            </Link>
+            <Link to="/fonlarimiz" className="cta-button cta-button--ghost">
+              Fonlarımızı İnceleyin
+            </Link>
+          </Reveal>
+        </div>
+
+        <div className={`hero-scroll-indicator ${scrolled ? "is-hidden" : ""}`}>
+          <span className="scroll-mouse" />
+        </div>
+      </section>
+
+      <main className="main-content-scroll">
+        {/* 3. İSTATİSTİK ŞERİDİ */}
+        <section className="stats-strip">
+          <Reveal variant="up" className="stat-card">
+            <div className="stat-value">
+              <CountUp end={18.5} decimals={1} suffix="%" />
+            </div>
+            <div className="stat-label">Ortalama Yıllık Getiri</div>
+          </Reveal>
+          <Reveal variant="up" delay={100} className="stat-card">
+            <div className="stat-value">
+              <CountUp end={1250} suffix="+" />
+            </div>
+            <div className="stat-label">Bireysel & Kurumsal Yatırımcı</div>
+          </Reveal>
+          <Reveal variant="up" delay={200} className="stat-card">
+            <div className="stat-value">
+              <CountUp end={2026} grouping={false} />
+            </div>
+            <div className="stat-label">Kuruluş Yılı</div>
+          </Reveal>
+          <Reveal variant="up" delay={300} className="stat-card">
+            <div className="stat-value">7/24</div>
+            <div className="stat-label">Piyasa Takibi</div>
+          </Reveal>
         </section>
 
-        {/* Grafik Paneli */}
+        {/* 4. GRAFİK PANELİ */}
         <section className="chart-split-section">
-          <div className="chart-container-premium">
+          <Reveal variant="zoom" className="chart-container-premium">
             <div className="chart-header-info">
               <div className="title-group">
                 <h3>Piyasa Analiz Paneli</h3>
-                <p className="chart-subtitle">Anlık portföy ve market verileri</p>
+                <p className="chart-subtitle">
+                  Anlık portföy ve market verileri
+                </p>
               </div>
               <div className="live-status">
-                <span className="pulse-dot"></span>
+                <span className="pulse-dot" />
                 <span className="live-tag">CANLI VERİ AKIŞI</span>
               </div>
             </div>
             <div className="actual-chart-wrapper">
               <MarketChart />
             </div>
+          </Reveal>
+        </section>
+
+        {/* 5. ÖNE ÇIKAN FONLAR */}
+        <FeaturedFunds />
+
+        {/* 6. NEDEN QUANTSHINE? — metin + görsel */}
+        <section className="why-section">
+          <div className="why-wrapper">
+            <Reveal variant="left" className="why-text">
+              <h2 className="section-title why-title">
+                Neden <span className="why-brand">QuantShine?</span>
+              </h2>
+              <p>
+                Güçlü analiz ekosistemi, çevik organizasyon yapısı ve uzman
+                kadrosuyla yatırımcılarına disiplinli ve sürdürülebilir portföy
+                yönetimi çözümleri sunar. QuantShine Capital'in farkını yaratan
+                veri odaklı yaklaşımı keşfedin.
+              </p>
+              <Link to="/hakkimizda" className="cta-button why-btn">
+                Devamını Oku <ArrowRight size={18} />
+              </Link>
+            </Reveal>
+            <Reveal variant="right" delay={120} className="why-visual">
+              <div className="why-glass">
+                <img src="/quantshine_capital.png" alt="QuantShine Capital" />
+              </div>
+            </Reveal>
+          </div>
+
+          <div className="social-proof-grid">
+            {FEATURES.map((f, i) => (
+              <Reveal key={f.title} variant="up" delay={i * 100} className="grid-item">
+                <div className="grid-icon-box">
+                  <f.icon size={26} strokeWidth={2} />
+                </div>
+                <h4>{f.title}</h4>
+                <p>{f.text}</p>
+              </Reveal>
+            ))}
           </div>
         </section>
 
-        {/* Özellik Grid Alanı */}
-        <section className="social-proof-grid">
-          <div className="grid-item">
-            <div className="grid-icon-box">📈</div>
-            <h4>Sürdürülebilir Getiri</h4>
-            <p>Yıllık %18.5 ortalama performans ile varlıklarınızı güvenle büyütün.</p>
-          </div>
-          <div className="grid-item">
-            <div className="grid-icon-box">🛡️</div>
-            <h4>Yüksek Güvenlik</h4>
-            <p>Uçtan uca şifreleme ve global standartlarda varlık koruma altyapısı.</p>
-          </div>
-          <div className="grid-item">
-            <div className="grid-icon-box">👥</div>
-            <h4>Uzman Portföy</h4>
-            <p>1250+ bireysel ve kurumsal yatırımcıya özel stratejik yönetim.</p>
-          </div>
-          <div className="grid-item">
-            <div className="grid-icon-box">⚡</div>
-            <h4>Anlık İşlem</h4>
-            <p>Hızlı, şeffaf ve her cihazdan erişilebilir portföy takip arayüzü.</p>
-          </div>
+        {/* 7. PORTFÖY BAŞLATMA PANELİ */}
+        <section className="dual-panel-section">
+          <Reveal variant="up" className="dual-panel dual-panel--dark dual-panel--full">
+            <h3>Nasıl Portföy Yönetimi Başlatırım?</h3>
+            <p>
+              Bireysel veya kurumsal yatırımcı olarak başvurunuzu oluşturun;
+              risk profiliniz analiz edilsin ve size özel portföy stratejiniz
+              kurulsun. Süreç hızlı ve şeffaftır. Uzman ekibimizle tanışmak için
+              bizimle iletişime geçin.
+            </p>
+            <div className="dual-panel-actions">
+              <Link to="/iletisim" className="cta-button">
+                İletişime Geç <ArrowRight size={18} />
+              </Link>
+            </div>
+          </Reveal>
         </section>
 
-        {/* Canlı Haber Akışı */}
+        {/* 8. CANLI HABER AKIŞI */}
         <section className="landing-blog-section">
-          <div className="blog-section-header">
+          <Reveal variant="up" className="blog-section-header">
             <h2 className="section-title">Piyasa Haberleri & Analizler</h2>
-            <p className="section-subtitle">Hisse senetleri, emtia, döviz ve kripto piyasalarından anlık haber akışı.</p>
-          </div>
-
-          <div className="news-component-wrapper">
+            <p className="section-subtitle">
+              Hisse senetleri, emtia, döviz ve kripto piyasalarından anlık haber
+              akışı.
+            </p>
+          </Reveal>
+          <Reveal variant="up" className="news-component-wrapper">
             <NewsSection />
-          </div>
+          </Reveal>
         </section>
       </main>
     </div>

@@ -138,7 +138,7 @@ return (
               </p>
               {parseFloat(stats.fonKarZararTl) !== 0 && (
                 <div style={{ marginTop: 8, display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap' }}>
-                  <span style={{ fontSize: 12, fontWeight: 700, color: parseFloat(stats.fonKarZararTl) >= 0 ? '#26a69a' : '#ef5350' }}>
+                  <span style={{ fontSize: 12, fontWeight: 700, color: parseFloat(stats.fonKarZararTl) >= 0 ? '#22c55e' : '#f87171' }}>
                     K/Z&nbsp;{parseFloat(stats.fonKarZararTl) >= 0 ? '+' : ''}₺{Number(stats.fonKarZararTl || 0).toLocaleString('tr-TR', { minimumFractionDigits: 2 })}
                   </span>
                   <span className={parseFloat(stats.fonKarZararYuzde) >= 0 ? "text-profit" : "text-loss"}>
