@@ -1,47 +1,59 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="tr">
   <head>
     <meta charset="utf-8" />
     <link rel="icon" href="%PUBLIC_URL%/quantshine_capital.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#0f172a" />
-    <meta name="description" content="QuantShine Capital — Profesyonel portföy yönetimi ve yatırım danışmanlığı platformu." />
+    <meta name="theme-color" content="#0b0e14" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://quant-shine.com/" />
 
-    <!-- Open Graph (Google, sosyal medya önizlemesi) -->
-    <meta property="og:title" content="Quant&Shine Capital Portföy Yönetimi" />
-    <meta property="og:description" content="Profesyonel portföy yönetimi ve yatırım danışmanlığı platformu." />
-    <meta property="og:image" content="%PUBLIC_URL%/quantshine_capital.png" />
+    <title>Quant&Shine Capital | Profesyonel Portföy Yönetimi</title>
+    <meta name="description" content="QuantShine Capital — veri, disiplin ve risk kontrolü temelinde bağımsız portföy yönetimi. Bireysel ve kurumsal yatırımcılara profesyonel varlık yönetimi." />
+    <meta name="keywords" content="portföy yönetimi, yatırım fonu, varlık yönetimi, bireysel portföy, kurumsal portföy, QuantShine Capital" />
+
+    <!-- Open Graph -->
+    <meta property="og:site_name" content="QuantShine Capital" />
+    <meta property="og:title" content="Quant&Shine Capital | Profesyonel Portföy Yönetimi" />
+    <meta property="og:description" content="Veri, disiplin ve risk kontrolü temelinde bağımsız portföy yönetimi. Bireysel ve kurumsal yatırımcılara profesyonel varlık yönetimi." />
+    <meta property="og:image" content="https://quant-shine.com/quantshine_capital.png" />
+    <meta property="og:url" content="https://quant-shine.com/" />
     <meta property="og:type" content="website" />
+    <meta property="og:locale" content="tr_TR" />
+    <meta property="og:locale:alternate" content="en_US" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Quant&Shine Capital | Profesyonel Portföy Yönetimi" />
+    <meta name="twitter:description" content="Veri, disiplin ve risk kontrolü temelinde bağımsız portföy yönetimi." />
+    <meta name="twitter:image" content="https://quant-shine.com/quantshine_capital.png" />
 
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/quantshine_capital.png" />
-    <!--
-      manifest.json provides metadata used when your web app is installed on a
-      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
-    -->
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-    <!--
-      Notice the use of %PUBLIC_URL% in the tags above.
-      It will be replaced with the URL of the `public` folder during the build.
-      Only files inside the `public` folder can be referenced from the HTML.
 
-      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
-      work correctly both with client-side routing and a non-root public URL.
-      Learn how to configure a non-root public URL by running `npm run build`.
-    -->
-    <title>Quant&Shine Capital Portföy Yönetimi</title>
+    <!-- Yapısal veri (Organization) -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "FinancialService",
+        "name": "QuantShine Capital",
+        "url": "https://quant-shine.com",
+        "logo": "https://quant-shine.com/quantshine_capital.png",
+        "description": "Veri, disiplin ve risk kontrolü temelinde bağımsız portföy yönetimi.",
+        "address": {
+          "@type": "PostalAddress",
+          "streetAddress": "Büyükdere Cad. No:1, Levent",
+          "addressLocality": "İstanbul",
+          "addressCountry": "TR"
+        },
+        "email": "manager@quantshinecapital.com",
+        "telephone": "+90 123 456 78 90",
+        "sameAs": ["https://instagram.com/quantshinecapital"]
+      }
+    </script>
   </head>
   <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <noscript>Bu uygulamayı çalıştırmak için JavaScript'i etkinleştirmeniz gerekir.</noscript>
     <div id="root"></div>
-    <!--
-      This HTML file is a template.
-      If you open it directly in the browser, you will see an empty page.
-
-      You can add webfonts, meta tags, or analytics to this file.
-      The build step will place the bundled scripts into the <body> tag.
-
-      To begin the development, run `npm start` or `yarn start`.
-      To create a production bundle, use `npm run build` or `yarn build`.
-    -->
   </body>
 </html>

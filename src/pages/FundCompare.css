@@ -1,0 +1,101 @@
+/* src/pages/FundCompare.css — Fon Karşılaştırma (koyu tema) */
+.cmp-page {
+  background-color: #0b0e14;
+  color: #fff;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+/* Hero */
+.cmp-hero { position: relative; text-align: center; padding: 100px 20px 50px; overflow: hidden; }
+.cmp-hero-bg {
+  position: absolute; inset: 0; z-index: 0;
+  background:
+    radial-gradient(900px 400px at 50% -10%, rgba(30, 64, 175, 0.32), transparent 60%),
+    radial-gradient(700px 400px at 85% 30%, rgba(59, 130, 246, 0.12), transparent 55%);
+}
+.cmp-hero-inner { position: relative; z-index: 1; max-width: 720px; margin: 0 auto; }
+.cmp-title {
+  font-family: 'Poppins', sans-serif;
+  font-size: clamp(2.1rem, 4.6vw, 3rem);
+  font-weight: 800; letter-spacing: -0.5px; margin: 0 0 16px;
+  background: linear-gradient(180deg, #fff 35%, #93b4f0 120%);
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+}
+.cmp-underline { width: 80px; height: 4px; background: #3b82f6; margin: 0 auto 22px; border-radius: 2px; box-shadow: 0 0 12px rgba(59,130,246,0.5); }
+.cmp-subtitle { color: #cbd5e1; font-size: 1.1rem; line-height: 1.6; margin: 0; }
+
+.cmp-main { max-width: 1100px; margin: 0 auto; padding: 20px 6% 100px; }
+.cmp-loading { text-align: center; color: #94a3b8; padding: 60px; }
+
+.cmp-card {
+  background: rgba(17, 22, 35, 0.7);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 24px;
+  padding: 32px;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
+}
+
+/* Seçici */
+.cmp-picker {
+  display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+  margin-bottom: 28px;
+}
+.cmp-select {
+  flex: 1; min-width: 240px; max-width: 420px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 12px;
+  padding: 13px 16px;
+  color: #fff; font-size: 0.95rem; cursor: pointer; font-family: inherit;
+}
+.cmp-select:focus { outline: none; border-color: #3b82f6; }
+.cmp-select option { background: #0d1320; color: #fff; }
+.cmp-select:disabled { opacity: 0.5; cursor: not-allowed; }
+.cmp-hint { display: inline-flex; align-items: center; gap: 6px; color: #64748b; font-size: 0.85rem; }
+
+.cmp-empty { text-align: center; color: #94a3b8; padding: 50px 20px; }
+
+/* Tablo */
+.cmp-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.cmp-table { width: 100%; border-collapse: collapse; min-width: 480px; }
+.cmp-table th, .cmp-table td {
+  padding: 16px 18px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.07);
+}
+.cmp-corner { width: 150px; }
+.cmp-col-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 6px; }
+.cmp-code {
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 6px 12px;
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: #fff; font-weight: 800; font-size: 0.85rem; border-radius: 8px;
+}
+.cmp-remove {
+  background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
+  color: #94a3b8; width: 26px; height: 26px; border-radius: 7px;
+  display: inline-flex; align-items: center; justify-content: center; cursor: pointer;
+  transition: all 0.2s ease;
+}
+.cmp-remove:hover { color: #f87171; border-color: rgba(248,113,113,0.4); }
+.cmp-name { color: #cbd5e1; font-size: 0.82rem; font-weight: 500; line-height: 1.3; }
+.cmp-row-label { color: #94a3b8; font-size: 0.88rem; font-weight: 600; }
+.cmp-table td { color: #fff; font-weight: 600; }
+.cmp-pos { color: #4ade80; font-weight: 800; }
+.cmp-neg { color: #f87171; font-weight: 800; }
+
+.cmp-risk { display: inline-flex; align-items: center; gap: 8px; }
+.cmp-risk-bar { width: 50px; height: 7px; border-radius: 4px; background: rgba(255,255,255,0.12); overflow: hidden; }
+.cmp-risk-fill { display: block; height: 100%; border-radius: 4px; background: linear-gradient(90deg, #22c55e, #4ade80); }
+
+.cmp-review {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15);
+  color: #fff; padding: 9px 16px; border-radius: 10px; font-weight: 600;
+  font-size: 0.85rem; cursor: pointer; transition: all 0.25s ease;
+}
+.cmp-review:hover { background: linear-gradient(135deg, #2563eb, #3b82f6); border-color: transparent; }
+
+@media (max-width: 768px) {
+  .cmp-card { padding: 22px 16px; }
+}

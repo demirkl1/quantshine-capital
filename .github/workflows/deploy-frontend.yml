@@ -1,18 +1,19 @@
 # =============================================================================
-# QuantShine Capital - Frontend CI/CD
+# QuantShine Capital - Frontend CI/CD (Docker + EC2)
 # Tetikleyici: main branch'e push
-# Akış: Build React → S3'e yükle → CloudFront cache temizle
+# Akış: Docker image build (amd64) → Docker Hub push → EC2'de pull + restart
+#
+# Mevcut üretim mimarisi (tek EC2 + docker-compose) ile uyumludur.
+# (S3 + CloudFront modeline geçilirse bu workflow güncellenmelidir — bkz.
+#  deploy/AWS-SCALING.md)
 #
 # GitHub Secrets (Repo → Settings → Secrets and variables → Actions):
-#   AWS_ACCESS_KEY_ID           : AWS IAM kullanıcı access key
-#   AWS_SECRET_ACCESS_KEY       : AWS IAM kullanıcı secret key
-#   AWS_REGION                  : Örn: eu-central-1
-#   S3_BUCKET_NAME              : Örn: quantshine-frontend-prod
-#   CLOUDFRONT_DISTRIBUTION_ID  : CloudFront distribution ID
-#   REACT_APP_API_BASE_URL      : Örn: https://api.yourdomain.com/api
-#   REACT_APP_KEYCLOAK_URL      : Örn: https://auth.yourdomain.com
-#   REACT_APP_KEYCLOAK_REALM    : quantshine
-#   REACT_APP_KEYCLOAK_CLIENT_ID: quantshine-backend
+#   DOCKERHUB_USERNAME : Docker Hub kullanıcı adı (örn: ddemirkl1)
+#   DOCKERHUB_TOKEN    : Docker Hub access token
+#   EC2_HOST           : EC2 public IP / domain (örn: 13.50.143.135)
+#   EC2_USER           : SSH kullanıcı adı (örn: ubuntu)
+#   EC2_SSH_KEY        : EC2 özel anahtar içeriği (-----BEGIN ... PRIVATE KEY-----)
+#   DOMAIN             : (opsiyonel) örn: quant-shine.com (yoksa default kullanılır)
 # =============================================================================
 
 name: Deploy Frontend
@@ -24,62 +25,66 @@ on:
       - 'src/**'
       - 'public/**'
       - 'package*.json'
+      - 'Dockerfile'
+      - 'nginx.conf'
+      - 'deploy/**'
       - '.github/workflows/deploy-frontend.yml'
+  workflow_dispatch:
+
+env:
+  IMAGE: ${{ secrets.DOCKERHUB_USERNAME }}/quantshine-frontend:latest
+  DOMAIN: ${{ secrets.DOMAIN || 'quant-shine.com' }}
 
 jobs:
   build-and-deploy:
-    name: Build & Deploy to S3
+    name: Build, Push & Deploy
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
         with:
-          node-version: '20'
-          cache: 'npm'
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Build
-        env:
-          CI: false
-          REACT_APP_API_BASE_URL: ${{ secrets.REACT_APP_API_BASE_URL }}
-          REACT_APP_KEYCLOAK_URL: ${{ secrets.REACT_APP_KEYCLOAK_URL }}
-          REACT_APP_KEYCLOAK_REALM: ${{ secrets.REACT_APP_KEYCLOAK_REALM }}
-          REACT_APP_KEYCLOAK_CLIENT_ID: ${{ secrets.REACT_APP_KEYCLOAK_CLIENT_ID }}
-        run: npm run build
-
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v4
+      - name: Build & push image
+        uses: docker/build-push-action@v6
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_REGION }}
+          context: .
+          platforms: linux/amd64
+          push: true
+          tags: ${{ env.IMAGE }}
+          build-args: |
+            REACT_APP_API_BASE_URL=/api
+            REACT_APP_KEYCLOAK_URL=https://${{ env.DOMAIN }}/auth
+            REACT_APP_KEYCLOAK_REALM=quantshine
+            REACT_APP_KEYCLOAK_CLIENT_ID=quantshine-backend
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
 
-      - name: Sync to S3
-        run: |
-          # HTML dosyalarını cache'siz yükle (her zaman güncel kalsın)
-          aws s3 sync build/ s3://${{ secrets.S3_BUCKET_NAME }} \
-            --delete \
-            --exclude "*.js" \
-            --exclude "*.css" \
-            --cache-control "no-cache, no-store, must-revalidate"
+      - name: Deploy on EC2 (pull + restart)
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            set -e
+            cd /opt/quantshine/quantshine-capital
+            sudo git fetch origin main && sudo git reset --hard origin/main
+            sudo cp deploy/docker-compose.prod.yml /opt/quantshine/
+            sudo cp -r deploy/nginx /opt/quantshine/
+            cd /opt/quantshine
+            sudo docker compose -f docker-compose.prod.yml pull frontend
+            sudo docker compose -f docker-compose.prod.yml up -d frontend
+            sudo docker compose -f docker-compose.prod.yml restart nginx
+            echo "✅ Frontend deployed"
 
-          # JS/CSS dosyalarını uzun süreli cache ile yükle (hash'li dosyalar değişmez)
-          aws s3 sync build/ s3://${{ secrets.S3_BUCKET_NAME }} \
-            --delete \
-            --exclude "*.html" \
-            --cache-control "public, max-age=31536000, immutable"
-
-      - name: Invalidate CloudFront cache
-        run: |
-          aws cloudfront create-invalidation \
-            --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} \
-            --paths "/*"
-
-      - name: Deploy summary
-        run: echo "✅ Frontend başarıyla deploy edildi!"
+      - name: Summary
+        run: echo "✅ Frontend image pushed ($IMAGE) and deployed to EC2."

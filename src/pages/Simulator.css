@@ -1,0 +1,155 @@
+/* src/pages/Simulator.css — Getiri Simülatörü (koyu tema) */
+.sim-page {
+  background-color: #0b0e14;
+  color: #fff;
+  min-height: 100vh;
+  overflow: hidden;
+}
+.sim-page .cta-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: linear-gradient(135deg, #1d4ed8, #3b82f6);
+  color: #fff;
+  padding: 15px 34px;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 1rem;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  box-shadow: 0 10px 30px rgba(37, 99, 235, 0.35);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.sim-page .cta-button:hover { transform: translateY(-3px); box-shadow: 0 16px 40px rgba(37, 99, 235, 0.5); }
+
+/* Hero */
+.sim-hero { position: relative; text-align: center; padding: 100px 20px 50px; overflow: hidden; }
+.sim-hero-bg {
+  position: absolute; inset: 0; z-index: 0;
+  background:
+    radial-gradient(900px 400px at 50% -10%, rgba(30, 64, 175, 0.32), transparent 60%),
+    radial-gradient(700px 400px at 85% 30%, rgba(59, 130, 246, 0.12), transparent 55%);
+}
+.sim-hero-inner { position: relative; z-index: 1; max-width: 720px; margin: 0 auto; }
+.sim-title {
+  font-family: 'Poppins', sans-serif;
+  font-size: clamp(2.1rem, 4.6vw, 3rem);
+  font-weight: 800; letter-spacing: -0.5px; margin: 0 0 16px;
+  background: linear-gradient(180deg, #fff 35%, #93b4f0 120%);
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+}
+.sim-underline { width: 80px; height: 4px; background: #3b82f6; margin: 0 auto 22px; border-radius: 2px; box-shadow: 0 0 12px rgba(59,130,246,0.5); }
+.sim-subtitle { color: #cbd5e1; font-size: 1.1rem; line-height: 1.6; margin: 0; }
+
+.sim-main { max-width: 1200px; margin: 0 auto; padding: 20px 6% 100px; }
+
+/* Kart */
+.sim-card {
+  background: rgba(17, 22, 35, 0.7);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 24px;
+  padding: 40px;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
+}
+.sim-grid {
+  display: grid;
+  grid-template-columns: 360px 1fr;
+  gap: 40px;
+}
+
+/* Kontroller */
+.sim-controls { display: flex; flex-direction: column; gap: 26px; }
+.sim-field-head {
+  display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;
+}
+.sim-field-head label { color: #cbd5e1; font-size: 0.92rem; font-weight: 600; }
+.sim-field-value {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 800; font-size: 1.05rem; color: #60a5fa;
+}
+.sim-field input[type="range"] {
+  -webkit-appearance: none; appearance: none;
+  width: 100%; height: 6px; border-radius: 4px; outline: none; cursor: pointer;
+}
+.sim-field input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none; appearance: none;
+  width: 20px; height: 20px; border-radius: 50%;
+  background: #fff; border: 3px solid #3b82f6; cursor: pointer;
+  box-shadow: 0 2px 8px rgba(59,130,246,0.5);
+  transition: transform 0.15s ease;
+}
+.sim-field input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.15); }
+.sim-field input[type="range"]::-moz-range-thumb {
+  width: 18px; height: 18px; border-radius: 50%;
+  background: #fff; border: 3px solid #3b82f6; cursor: pointer;
+}
+
+/* Sonuç */
+.sim-result { display: flex; flex-direction: column; gap: 22px; min-width: 0; }
+.sim-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.sim-stat {
+  display: flex; align-items: center; gap: 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px; padding: 16px 18px;
+}
+.sim-stat--accent {
+  grid-column: 1 / -1;
+  background: radial-gradient(400px 160px at 100% 0%, rgba(59,130,246,0.18), transparent 70%), rgba(255,255,255,0.03);
+  border-color: rgba(59, 130, 246, 0.3);
+}
+.sim-stat-icon {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 40px; height: 40px; border-radius: 11px; flex-shrink: 0;
+  background: linear-gradient(135deg, rgba(59,130,246,0.2), rgba(30,64,175,0.12));
+  border: 1px solid rgba(59,130,246,0.25); color: #60a5fa;
+}
+.sim-stat-icon.gain { color: #4ade80; background: rgba(34,197,94,0.12); border-color: rgba(34,197,94,0.25); }
+.sim-stat-label { color: #94a3b8; font-size: 0.82rem; margin-bottom: 4px; }
+.sim-stat-value {
+  font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 1.5rem; color: #fff;
+  line-height: 1.1;
+}
+.sim-stat-value.sm { font-size: 1.1rem; }
+.gain-text { color: #4ade80; }
+
+.sim-chart { width: 100%; }
+
+/* Tooltip */
+.sim-tooltip {
+  background: rgba(13, 19, 32, 0.96);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 12px; padding: 12px 14px; font-size: 0.85rem;
+}
+.sim-tooltip-year { color: #94a3b8; font-weight: 700; margin-bottom: 8px; }
+.sim-tooltip-row { color: #cbd5e1; display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
+.sim-tooltip-row .dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; }
+.sim-tooltip-row .dot.value { background: #3b82f6; }
+.sim-tooltip-row .dot.invested { background: #94a3b8; }
+
+.sim-disclaimer {
+  color: #64748b; font-size: 0.82rem; line-height: 1.5; margin: 28px 0 0; text-align: center;
+}
+
+/* CTA */
+.sim-cta {
+  margin-top: 30px; text-align: center; border-radius: 24px; padding: 50px 40px;
+  background:
+    radial-gradient(700px 300px at 50% 0%, rgba(59,130,246,0.2), transparent 60%),
+    linear-gradient(135deg, #111a2e, #0d1320);
+  border: 1px solid rgba(59,130,246,0.2);
+}
+.sim-cta h2 { font-family: 'Poppins', sans-serif; font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 800; margin: 0 0 24px; }
+
+@media (max-width: 920px) {
+  .sim-grid { grid-template-columns: 1fr; gap: 30px; }
+}
+@media (max-width: 768px) {
+  .sim-card { padding: 26px 20px; }
+  .sim-cta { padding: 40px 24px; }
+}
+@media (max-width: 480px) {
+  .sim-stats { grid-template-columns: 1fr; }
+}

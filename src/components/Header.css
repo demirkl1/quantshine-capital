@@ -146,10 +146,12 @@
 }
 
 /* 3. AUTH BUTONLARI (Sağ) */
-.auth-section { 
-  flex: 1; 
-  display: flex; 
-  justify-content: flex-end; 
+.auth-section {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 14px;
 }
 
 .auth-buttons-group { 

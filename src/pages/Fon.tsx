@@ -1,163 +1,241 @@
-// @ts-nocheck
-import React, { useEffect, useState, useCallback } from "react";
+import { useEffect, useState, useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import { Search, Star, ArrowRight } from "lucide-react";
 import api from "../api";
+import Reveal from "../components/Reveal";
+import ScrollToTop from "../components/ScrollToTop";
+import Seo from "../components/Seo";
 import "./Fon.css";
 
-/* Performans sütun tanımları */
-const PERF_COLS = [
-  { key: "day",   label: "Gün"     },
-  { key: "month", label: "Ay"      },
-  { key: "q3",    label: "3 Ay"    },
-  { key: "q6",    label: "6 Ay"    },
-  { key: "ytd",   label: "Yılbaşı" },
-  { key: "year",  label: "1 Yıl"   },
-];
+interface Fund {
+  code: string;
+  name: string;
+  type?: string;
+  riskLevel?: number;
+  price?: number | string;
+  month?: number | string | null;
+  ytd?: number | string | null;
+  year?: number | string | null;
+}
 
-/* Yalnızca büyük harf + rakam, 2-10 karakter */
 const CODE_REGEX = /^[A-Z0-9]{2,10}$/;
 
-const fmtPrice = (v) => {
-  const n = parseFloat(v);
+const fmtPrice = (v: Fund["price"]) => {
+  const n = parseFloat(String(v));
   return isNaN(n) ? "—" : n.toFixed(4);
 };
 
-/* null/undefined → boş göster; değer varsa formatla */
-const fmtPerf = (v) => {
-  if (v == null) return "";
-  const n = parseFloat(v);
-  if (isNaN(n)) return "";
-  return `${n >= 0 ? "+" : ""}${n.toFixed(2)}%`;
+const fmtPerf = (v: number | string | null | undefined) => {
+  if (v == null) return "—";
+  const n = parseFloat(String(v));
+  if (isNaN(n)) return "—";
+  return `%${n >= 0 ? "+" : ""}${n.toFixed(2)}`;
 };
 
-const perfClass = (v) => {
+const perfClass = (v: number | string | null | undefined) => {
   if (v == null) return "";
-  const n = parseFloat(v);
+  const n = parseFloat(String(v));
   if (isNaN(n)) return "";
-  return n >= 0 ? "positive" : "negative";
+  return n >= 0 ? "fc-positive" : "fc-negative";
 };
 
-/* ══════════════════════════════════════════════════════════════ */
-export default function FundTable() {
+export default function FundCatalog() {
   const navigate = useNavigate();
-  const [funds,   setFunds]   = useState([]);
+  const { t } = useTranslation();
+  const [funds, setFunds] = useState<Fund[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error,   setError]   = useState(null);
+  const [error, setError] = useState<string | null>(null);
+  const [query, setQuery] = useState("");
+  const [typeFilter, setTypeFilter] = useState("ALL");
 
-  const fetchFunds = useCallback(async (signal) => {
+  const fetchFunds = useCallback(async (signal?: AbortSignal) => {
     setLoading(true);
     setError(null);
     try {
       const { data } = await api.get("/funds", { signal });
-
-      if (!Array.isArray(data)) throw new Error("Geçersiz API yanıtı");
+      if (!Array.isArray(data)) throw new Error("invalid");
       setFunds(data);
-    } catch (err) {
-      /* İptal edilen istek hata gösterme */
-      if (err.name === "CanceledError" || err.name === "AbortError") return;
-      setError("Fon verileri yüklenemedi. Lütfen daha sonra tekrar deneyin.");
+    } catch (err: any) {
+      if (err?.name === "CanceledError" || err?.name === "AbortError") return;
+      setError(t("funds.error"));
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [t]);
 
   useEffect(() => {
     const controller = new AbortController();
     fetchFunds(controller.signal);
-    return () => controller.abort(); /* Unmount → isteği iptal et */
+    return () => controller.abort();
   }, [fetchFunds]);
 
-  /* Güvenli navigasyon: URL injection'ı engelle */
-  const handleRowClick = (code) => {
-    if (CODE_REGEX.test(code)) {
-      navigate(`/fund/${encodeURIComponent(code)}`);
-    }
+  const types = useMemo(() => {
+    const set = new Set<string>();
+    funds.forEach((f) => f.type && set.add(f.type));
+    return Array.from(set);
+  }, [funds]);
+
+  const filtered = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    return funds.filter((f) => {
+      const matchesType = typeFilter === "ALL" || f.type === typeFilter;
+      const matchesQuery =
+        !q ||
+        f.name?.toLowerCase().includes(q) ||
+        f.code?.toLowerCase().includes(q);
+      return matchesType && matchesQuery;
+    });
+  }, [funds, query, typeFilter]);
+
+  const goToFund = (code: string) => {
+    if (CODE_REGEX.test(code)) navigate(`/fund/${encodeURIComponent(code)}`);
   };
 
   return (
-    <div className="fund-container">
-      <div className="fund-page-header">
-        <h1>Yatırım Fonları</h1>
-        <p className="fund-page-sub">
-          QuantShine Capital tarafından yönetilen fonlara tıklayarak detaylı analiz ve performans verilerine ulaşabilirsiniz.
-        </p>
+    <div className="funds-page">
+      <Seo title={t("funds.pageTitle")} description={t("funds.pageSubtitle")} path="/fonlarimiz" />
+      {/* Hero */}
+      <section className="funds-hero">
+        <div className="funds-hero-bg" />
+        <Reveal variant="up" className="funds-hero-inner">
+          <h1 className="funds-title">{t("funds.pageTitle")}</h1>
+          <div className="funds-underline" />
+          <p className="funds-subtitle">{t("funds.pageSubtitle")}</p>
+        </Reveal>
+      </section>
+
+      <div className="funds-main">
+        {/* Kontroller */}
+        {!loading && !error && funds.length > 0 && (
+          <div className="funds-controls">
+            <div className="funds-search">
+              <Search size={18} />
+              <input
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder={t("funds.search")}
+              />
+            </div>
+            <div className="funds-filters">
+              <button
+                className={`funds-chip ${typeFilter === "ALL" ? "active" : ""}`}
+                onClick={() => setTypeFilter("ALL")}
+              >
+                {t("funds.filterAll")}
+              </button>
+              {types.map((ty) => (
+                <button
+                  key={ty}
+                  className={`funds-chip ${typeFilter === ty ? "active" : ""}`}
+                  onClick={() => setTypeFilter(ty)}
+                >
+                  {ty}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Yükleniyor */}
+        {loading && (
+          <div className="funds-state">
+            <div className="funds-spinner" />
+            <p>{t("funds.loading")}</p>
+          </div>
+        )}
+
+        {/* Hata */}
+        {error && (
+          <div className="funds-state">
+            <p className="funds-error">⚠ {error}</p>
+            <button className="funds-retry" onClick={() => fetchFunds()}>
+              {t("funds.retry")}
+            </button>
+          </div>
+        )}
+
+        {/* Kartlar */}
+        {!loading && !error && (
+          filtered.length === 0 ? (
+            <p className="funds-empty">{t("funds.empty")}</p>
+          ) : (
+            <div className="funds-grid">
+              {filtered.map((fund, i) => (
+                <Reveal
+                  key={fund.code}
+                  variant="up"
+                  delay={(i % 3) * 90}
+                  className="fc-card"
+                  as="div"
+                >
+                  <div className="fc-top">
+                    <span className="fc-code">{fund.code}</span>
+                    <span className="fc-type">
+                      {fund.type || "Fon"} <Star size={13} fill="currentColor" />
+                    </span>
+                  </div>
+
+                  <h3 className="fc-name">{fund.name}</h3>
+
+                  <div className="fc-price-row">
+                    <span className="fc-price-label">{t("funds.price")} (₺)</span>
+                    <span className="fc-price">{fmtPrice(fund.price)}</span>
+                  </div>
+
+                  <div className="fc-divider" />
+
+                  <div className="fc-metrics">
+                    <div className="fc-metric">
+                      <span className="fc-metric-label">{t("funds.lastMonth")}</span>
+                      <span className={`fc-metric-value ${perfClass(fund.month)}`}>
+                        {fmtPerf(fund.month)}
+                      </span>
+                    </div>
+                    <div className="fc-metric">
+                      <span className="fc-metric-label">{t("funds.ytd")}</span>
+                      <span className={`fc-metric-value ${perfClass(fund.ytd)}`}>
+                        {fmtPerf(fund.ytd)}
+                      </span>
+                    </div>
+                    <div className="fc-metric">
+                      <span className="fc-metric-label">{t("funds.year")}</span>
+                      <span className={`fc-metric-value ${perfClass(fund.year)}`}>
+                        {fmtPerf(fund.year)}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="fc-risk-row">
+                    <span className="fc-metric-label">{t("funds.risk")}</span>
+                    <span className="fc-risk">
+                      <span className="fc-risk-bar">
+                        <span
+                          className="fc-risk-fill"
+                          style={{ width: `${((fund.riskLevel || 1) / 7) * 100}%` }}
+                        />
+                      </span>
+                      {fund.riskLevel ?? "—"}
+                    </span>
+                  </div>
+
+                  <button className="fc-review" onClick={() => goToFund(fund.code)}>
+                    {t("funds.review")} <ArrowRight size={16} />
+                  </button>
+                </Reveal>
+              ))}
+            </div>
+          )
+        )}
+
+        {!loading && !error && filtered.length > 0 && (
+          <p className="funds-timestamp">
+            {t("funds.lastUpdate")}: {new Date().toLocaleString()}
+          </p>
+        )}
       </div>
 
-      {/* Yükleniyor */}
-      {loading && (
-        <div className="fund-loading">
-          <div className="fund-spinner" />
-          <p>Fon verileri yükleniyor...</p>
-        </div>
-      )}
-
-      {/* Hata */}
-      {error && (
-        <div className="fund-error">
-          <span>⚠ {error}</span>
-          <button className="retry-btn" onClick={() => fetchFunds()}>
-            Tekrar Dene
-          </button>
-        </div>
-      )}
-
-      {/* Tablo */}
-      {!loading && !error && (
-        <>
-          {funds.length === 0 ? (
-            <p className="fund-empty">Henüz fon bulunmamaktadır.</p>
-          ) : (
-            <div className="table-wrapper">
-              <table className="fund-table">
-                <thead>
-                  <tr>
-                    <th>Kod</th>
-                    <th className="col-name">Fon Ünvanı</th>
-                    <th>Tür</th>
-                    <th>Risk</th>
-                    <th>Fiyat (₺)</th>
-                    {PERF_COLS.map((c) => (
-                      <th key={c.key}>{c.label}</th>
-                    ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {funds.map((fund) => (
-                    <tr
-                      key={fund.code}
-                      onClick={() => handleRowClick(fund.code)}
-                      title={`${fund.name} detaylarını görüntüle`}
-                    >
-                      <td className="fund-code">{fund.code}</td>
-                      <td className="col-name">{fund.name}</td>
-                      <td>{fund.type}</td>
-                      <td>
-                        <span
-                          className={`risk-badge ${
-                            fund.riskLevel >= 5 ? "risk-high" : "risk-mid"
-                          }`}
-                        >
-                          {fund.riskLevel}
-                        </span>
-                      </td>
-                      <td className="price-cell">{fmtPrice(fund.price)}</td>
-                      {PERF_COLS.map((c) => (
-                        <td key={c.key} className={perfClass(fund[c.key])}>
-                          {fmtPerf(fund[c.key])}
-                        </td>
-                      ))}
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
-
-          <p className="fund-timestamp">
-            Son güncelleme: {new Date().toLocaleString("tr-TR")}
-          </p>
-        </>
-      )}
+      <ScrollToTop />
     </div>
   );
 }

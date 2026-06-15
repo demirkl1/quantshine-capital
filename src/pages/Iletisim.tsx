@@ -1,37 +1,40 @@
 import React, { useState } from "react";
 import toast from "react-hot-toast";
+import { useTranslation } from "react-i18next";
 import { MapPin, Phone, Mail, Clock, Send } from "lucide-react";
 import Reveal from "../components/Reveal";
 import ScrollToTop from "../components/ScrollToTop";
+import Seo from "../components/Seo";
 import "./Iletisim.css";
 
-const INFO = [
-  {
-    icon: MapPin,
-    title: "Adres",
-    lines: ["Büyükdere Cad. No:1, Levent", "34330 Beşiktaş / İstanbul"],
-  },
-  {
-    icon: Phone,
-    title: "Telefon",
-    lines: ["+90 123 456 78 90"],
-    href: "tel:+901234567890",
-  },
-  {
-    icon: Mail,
-    title: "E-posta",
-    lines: ["manager@quantshinecapital.com"],
-    href: "mailto:manager@quantshinecapital.com",
-  },
-  {
-    icon: Clock,
-    title: "Çalışma Saatleri",
-    lines: ["Pazartesi – Cuma", "09:00 – 18:00"],
-  },
-];
-
 const Iletisim: React.FC = () => {
+  const { t } = useTranslation();
   const [form, setForm] = useState({ name: "", email: "", phone: "", message: "" });
+
+  const INFO = [
+    {
+      icon: MapPin,
+      title: t("contact.addressTitle"),
+      lines: [t("contact.addressLine1"), t("contact.addressLine2")],
+    },
+    {
+      icon: Phone,
+      title: t("contact.phoneTitle"),
+      lines: ["+90 123 456 78 90"],
+      href: "tel:+901234567890",
+    },
+    {
+      icon: Mail,
+      title: t("contact.emailTitle"),
+      lines: ["manager@quantshinecapital.com"],
+      href: "mailto:manager@quantshinecapital.com",
+    },
+    {
+      icon: Clock,
+      title: t("contact.hoursTitle"),
+      lines: [t("contact.hoursLine1"), t("contact.hoursLine2")],
+    },
+  ];
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -42,23 +45,22 @@ const Iletisim: React.FC = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.name || !form.email || !form.message) {
-      toast.error("Lütfen zorunlu alanları doldurun.");
+      toast.error(t("contact.errorMsg"));
       return;
     }
-    toast.success("Mesajınız alındı. En kısa sürede size dönüş yapacağız.");
+    toast.success(t("contact.successMsg"));
     setForm({ name: "", email: "", phone: "", message: "" });
   };
 
   return (
     <div className="contact-container">
+      <Seo title={t("contact.title")} description={t("contact.subtitle")} path="/iletisim" />
       {/* Başlık */}
       <div className="contact-title-section">
         <Reveal variant="up">
-          <h1 className="contact-title">İLETİŞİM</h1>
+          <h1 className="contact-title">{t("contact.title")}</h1>
           <div className="contact-underline" />
-          <p className="contact-subtitle">
-            Sorularınız ve portföy yönetimi başvurularınız için bize ulaşın.
-          </p>
+          <p className="contact-subtitle">{t("contact.subtitle")}</p>
         </Reveal>
       </div>
 
@@ -96,24 +98,21 @@ const Iletisim: React.FC = () => {
         {/* Form + harita */}
         <div className="contact-body">
           <Reveal variant="left" className="contact-form-wrap">
-            <h2>Bize Mesaj Gönderin</h2>
-            <p className="contact-form-sub">
-              Formu doldurun, uzman ekibimiz en kısa sürede sizinle iletişime
-              geçsin.
-            </p>
+            <h2>{t("contact.formTitle")}</h2>
+            <p className="contact-form-sub">{t("contact.formSub")}</p>
             <form onSubmit={handleSubmit} className="contact-form">
               <div className="contact-field-row">
                 <div className="contact-field">
-                  <label>Ad Soyad *</label>
+                  <label>{t("contact.name")} *</label>
                   <input
                     name="name"
                     value={form.name}
                     onChange={handleChange}
-                    placeholder="Adınız Soyadınız"
+                    placeholder={t("contact.namePlaceholder")}
                   />
                 </div>
                 <div className="contact-field">
-                  <label>Telefon</label>
+                  <label>{t("contact.phone")}</label>
                   <input
                     name="phone"
                     value={form.phone}
@@ -123,7 +122,7 @@ const Iletisim: React.FC = () => {
                 </div>
               </div>
               <div className="contact-field">
-                <label>E-posta *</label>
+                <label>{t("contact.emailLabel")} *</label>
                 <input
                   name="email"
                   type="email"
@@ -133,17 +132,17 @@ const Iletisim: React.FC = () => {
                 />
               </div>
               <div className="contact-field">
-                <label>Mesajınız *</label>
+                <label>{t("contact.message")} *</label>
                 <textarea
                   name="message"
                   value={form.message}
                   onChange={handleChange}
                   rows={5}
-                  placeholder="Mesajınızı yazın..."
+                  placeholder={t("contact.messagePlaceholder")}
                 />
               </div>
               <button type="submit" className="contact-submit">
-                Gönder <Send size={18} />
+                {t("contact.send")} <Send size={18} />
               </button>
             </form>
           </Reveal>

@@ -1,0 +1,205 @@
+/* Paylaşılan portföy tanıtım sayfası (Bireysel/Kurumsal) */
+.pf-page {
+  background-color: #0b0e14;
+  color: #fff;
+  overflow: hidden;
+}
+
+.pf-page .cta-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: linear-gradient(135deg, #1d4ed8, #3b82f6);
+  color: #fff;
+  padding: 15px 34px;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 1rem;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  box-shadow: 0 10px 30px rgba(37, 99, 235, 0.35);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.pf-page .cta-button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 16px 40px rgba(37, 99, 235, 0.5);
+}
+
+.pf-section-title {
+  font-family: 'Poppins', sans-serif;
+  font-size: clamp(1.7rem, 3.2vw, 2.3rem);
+  font-weight: 800;
+  letter-spacing: -0.6px;
+  margin: 0 0 22px;
+}
+
+/* Hero */
+.pf-hero {
+  position: relative;
+  text-align: center;
+  padding: 110px 20px 60px;
+  overflow: hidden;
+}
+.pf-hero-bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(900px 400px at 50% -10%, rgba(30, 64, 175, 0.32), transparent 60%),
+    radial-gradient(700px 400px at 85% 30%, rgba(59, 130, 246, 0.12), transparent 55%);
+  z-index: 0;
+}
+.pf-hero-inner { position: relative; z-index: 1; max-width: 760px; margin: 0 auto; }
+.pf-badge {
+  display: inline-block;
+  padding: 7px 18px;
+  border-radius: 50px;
+  background: rgba(59, 130, 246, 0.1);
+  border: 1px solid rgba(59, 130, 246, 0.25);
+  color: #93b4f0;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  margin-bottom: 22px;
+}
+.pf-title {
+  font-family: 'Poppins', sans-serif;
+  font-size: clamp(2.2rem, 5vw, 3.2rem);
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  margin: 0 0 16px;
+  background: linear-gradient(180deg, #fff 35%, #93b4f0 120%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+.pf-underline {
+  width: 80px; height: 4px; background: #3b82f6;
+  margin: 0 auto 22px; border-radius: 2px;
+  box-shadow: 0 0 12px rgba(59, 130, 246, 0.5);
+}
+.pf-subtitle { color: #cbd5e1; font-size: 1.12rem; line-height: 1.6; margin: 0; }
+
+/* Lead */
+.pf-lead {
+  display: flex;
+  align-items: center;
+  gap: 70px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 60px 8% 80px;
+}
+.pf-lead-media { flex: 1; display: flex; justify-content: center; }
+.pf-glass {
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(59, 130, 246, 0.2);
+  border-radius: 32px;
+  padding: 50px;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.55);
+  max-width: 420px;
+  width: 100%;
+}
+.pf-glass img {
+  width: 100%; max-width: 300px; height: auto; display: block; margin: 0 auto;
+  filter: drop-shadow(0 0 20px rgba(59, 130, 246, 0.15));
+}
+.pf-lead-text { flex: 1.25; }
+.pf-lead-p { color: #e2e8f0 !important; font-size: 1.1rem !important; }
+.pf-lead-text p {
+  color: #cbd5e1;
+  font-size: 1.02rem;
+  line-height: 1.8;
+  margin: 0 0 18px;
+}
+.pf-tags { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 26px; }
+.pf-tag {
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  background: rgba(59, 130, 246, 0.08);
+  color: #60a5fa;
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+}
+
+/* Benefits */
+.pf-benefits {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 8% 90px;
+  text-align: center;
+}
+.pf-benefits-head { margin-bottom: 46px; }
+.pf-benefits-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 24px;
+}
+.pf-benefit-card {
+  background: rgba(17, 22, 35, 0.7);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  padding: 34px 28px;
+  text-align: left;
+  transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+.pf-benefit-card:hover {
+  transform: translateY(-8px);
+  border-color: rgba(59, 130, 246, 0.4);
+  box-shadow: 0 24px 50px rgba(0, 0, 0, 0.4);
+}
+.pf-benefit-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px; height: 56px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(30, 64, 175, 0.12));
+  border: 1px solid rgba(59, 130, 246, 0.25);
+  color: #60a5fa;
+  margin-bottom: 20px;
+}
+.pf-benefit-card h4 {
+  font-family: 'Poppins', sans-serif;
+  font-size: 1.18rem;
+  font-weight: 700;
+  margin: 0 0 10px;
+}
+.pf-benefit-card p { color: #cbd5e1; font-size: 0.98rem; line-height: 1.6; margin: 0; }
+
+/* CTA */
+.pf-cta-section { padding: 0 8% 110px; }
+.pf-cta {
+  position: relative;
+  text-align: center;
+  border-radius: 28px;
+  padding: 70px 40px;
+  overflow: hidden;
+  max-width: 1200px;
+  margin: 0 auto;
+  background:
+    radial-gradient(800px 400px at 50% 0%, rgba(59, 130, 246, 0.25), transparent 60%),
+    linear-gradient(135deg, #111a2e, #0d1320);
+  border: 1px solid rgba(59, 130, 246, 0.2);
+}
+.pf-cta h2 {
+  font-family: 'Poppins', sans-serif;
+  font-size: clamp(1.7rem, 3.2vw, 2.3rem);
+  font-weight: 800;
+  letter-spacing: -0.6px;
+  margin: 0 0 16px;
+}
+.pf-cta p { color: #cbd5e1; font-size: 1.1rem; margin: 0 auto 32px; max-width: 520px; }
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .pf-lead { flex-direction: column; gap: 40px; text-align: center; }
+  .pf-tags { justify-content: center; }
+}
+@media (max-width: 768px) {
+  .pf-lead, .pf-benefits, .pf-cta-section { padding-left: 5%; padding-right: 5%; }
+  .pf-cta { padding: 48px 24px; }
+}

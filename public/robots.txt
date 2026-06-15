@@ -1,0 +1,13 @@
+# QuantShine Capital
+User-agent: *
+Allow: /
+
+# Panel / kimlik doğrulama gerektiren alanlar dizinlenmesin
+Disallow: /admin-anasayfa
+Disallow: /yatirimci-anasayfa
+Disallow: /danisman-anasayfa
+Disallow: /islem-sayfasi
+Disallow: /profil
+Disallow: /raporlama
+
+Sitemap: https://quant-shine.com/sitemap.xml

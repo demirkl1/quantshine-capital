@@ -1,241 +1,124 @@
+/* src/pages/FonDetails.css — fon detay (premium koyu tema) */
+.fd-page {
+  position: relative;
+  background-color: #0b0e14;
+  color: #fff;
+  min-height: 100vh;
+  overflow: hidden;
+}
+.fd-hero-bg {
+  position: absolute;
+  top: 0; left: 0; right: 0; height: 360px;
+  background: radial-gradient(900px 360px at 50% -20%, rgba(30, 64, 175, 0.3), transparent 65%);
+  z-index: 0;
+}
+.fd-inner {
+  position: relative;
+  z-index: 1;
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 40px 6% 100px;
+}
 
-/* Spinner */
-.fund-spinner {
-  width: 36px;
-  height: 36px;
-  border: 3px solid rgba(59, 130, 246, 0.2);
+.fd-spinner {
+  width: 42px; height: 42px;
+  border: 3px solid rgba(255, 255, 255, 0.12);
   border-top-color: #3b82f6;
   border-radius: 50%;
-  animation: spin 0.8s linear infinite;
+  animation: fdSpin 0.8s linear infinite;
 }
+@keyframes fdSpin { to { transform: rotate(360deg); } }
 
-@keyframes spin {
-  to { transform: rotate(360deg); }
+.fd-error { color: #f87171; text-align: center; padding: 60px 0; font-size: 1.05rem; }
+.fd-empty { text-align: center; color: #94a3b8; padding: 40px 0; font-size: 0.9rem; }
+
+/* Geri */
+.fd-back {
+  display: inline-flex; align-items: center; gap: 8px;
+  color: #94a3b8; text-decoration: none; font-weight: 600; font-size: 0.92rem;
+  margin-bottom: 24px; transition: color 0.2s ease;
 }
+.fd-back:hover { color: #60a5fa; }
 
-.auth-buttons-section {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 20px;
+/* Başlık kartı */
+.fd-header {
+  background: rgba(17, 22, 35, 0.7);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 22px;
+  padding: 32px;
+  margin-bottom: 22px;
 }
-
-.btn {
-  display: inline-flex;
-  justify-content: center;
-  align-items: left;
-  padding: 10px 20px;
-  background-color: #111623;
-  color: #cbd5e1;
-  font-size: 12px;
-  font-weight: 700;
-  text-decoration: none;
-  border-radius: 6px;
-  border: 1px solid #222a3a;
-  transition: all 0.15s;
-  font-family: 'Inter', sans-serif;
+.fd-title-row { display: flex; align-items: flex-start; gap: 18px; margin-bottom: 26px; }
+.fd-code {
+  flex-shrink: 0;
+  display: inline-flex; align-items: center; justify-content: center;
+  min-width: 60px; padding: 12px 16px;
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: #fff; font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 1.1rem;
+  border-radius: 12px; letter-spacing: 0.5px;
 }
-
-.btn:hover {
-  background-color: #171d2c;
-  border-color: #3b82f6;
-  color: #ffffff;
+.fd-title {
+  font-family: 'Poppins', sans-serif;
+  font-size: clamp(1.4rem, 3vw, 1.9rem);
+  font-weight: 800; line-height: 1.25; margin: 0 0 12px;
 }
-
-/* Genel govde konteyner */
-.fund-detail-container {
-  background: #0b0e14;
-  color: #cbd5e1;
-  font-family: 'Inter', sans-serif;
-  padding: 24px 20px;
-  display: flex;
-  justify-content: center;
+.fd-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+.fd-tag {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #cbd5e1; padding: 5px 12px; border-radius: 8px; font-size: 0.8rem; font-weight: 600;
 }
+.fd-tag--accent { background: rgba(34, 197, 94, 0.1); border-color: rgba(34, 197, 94, 0.3); color: #4ade80; }
 
-/* Ic icerik merkezli kutu */
-.fund-detail-inner {
-  width: 100%;
-  max-width: 1200px;
+.fd-stats {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08); padding-top: 24px;
 }
+.fd-stat { display: flex; flex-direction: column; gap: 6px; }
+.fd-stat-label { color: #94a3b8; font-size: 0.82rem; }
+.fd-stat-value { font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 1.25rem; color: #fff; }
+.fd-risk { display: inline-flex; align-items: center; gap: 10px; }
+.fd-risk-bar { width: 56px; height: 7px; border-radius: 4px; background: rgba(255,255,255,0.12); overflow: hidden; }
+.fd-risk-fill { display: block; height: 100%; border-radius: 4px; background: linear-gradient(90deg, #22c55e, #f59e0b); }
 
-/* Baslik karti */
-.fund-header {
-  background: #111623;
-  padding: 20px;
-  border-radius: 8px;
-  border: 1px solid #222a3a;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 20px;
+/* Performans */
+.fd-perf {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 12px; margin-bottom: 22px;
 }
-
-/* Sol: isim ve aciklama */
-.fund-title-section {
-  flex: 1 1 480px;
+.fd-perf-pill {
+  background: rgba(17, 22, 35, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 14px; padding: 16px 14px; text-align: center;
 }
+.fd-perf-label { display: block; color: #94a3b8; font-size: 0.78rem; margin-bottom: 6px; }
+.fd-perf-value { font-family: 'Poppins', sans-serif; font-weight: 800; font-size: 1.05rem; }
+.fd-perf-value.positive { color: #4ade80; }
+.fd-perf-value.negative { color: #f87171; }
 
-.fund-title {
-  margin: 0;
-  font-size: 1.3rem;
-  font-weight: 700;
-  color: #ffffff;
-  font-family: 'Inter', sans-serif;
+/* Kart (grafik / pasta) */
+.fd-card {
+  background: rgba(17, 22, 35, 0.7);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 22px;
+  padding: 28px;
+  margin-bottom: 22px;
 }
-
-.fund-code {
-  font-weight: 700;
-  color: #3b82f6;
-  margin-left: 8px;
-  font-size: 12px;
+.fd-card-head {
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px; margin-bottom: 22px;
 }
-
-.fund-sub {
-  margin-top: 6px;
-  color: #94a3b8;
-  font-size: 12px;
+.fd-card-head h3 { font-family: 'Poppins', sans-serif; font-size: 1.2rem; font-weight: 700; margin: 0; }
+.fd-periods { display: flex; flex-wrap: wrap; gap: 6px; background: rgba(255,255,255,0.04); padding: 4px; border-radius: 10px; }
+.fd-period-btn {
+  background: transparent; border: none; color: #94a3b8;
+  padding: 7px 14px; border-radius: 8px; font-size: 0.85rem; font-weight: 700; cursor: pointer;
+  transition: all 0.2s ease; font-family: inherit;
 }
+.fd-period-btn:hover { color: #fff; }
+.fd-period-btn.active { background: linear-gradient(135deg, #1d4ed8, #3b82f6); color: #fff; }
 
-/* Sag: temel istatistikler */
-.fund-stats {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-  flex-wrap: wrap;
-}
-
-.stat-item {
-  background: #171d2c;
-  border-radius: 6px;
-  padding: 12px 16px;
-  min-width: 140px;
-  text-align: left;
-  border: 1px solid #222a3a;
-}
-
-.stat-label {
-  display: block;
-  font-size: 10px;
-  color: #94a3b8;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  font-weight: 700;
-}
-
-.stat-value {
-  display: block;
-  font-weight: 700;
-  margin-top: 6px;
-  font-size: 14px;
-  color: #ffffff;
-  font-family: 'Inter', sans-serif;
-}
-
-/* Performans hizli ozet */
-.performance-summary {
-  margin-top: 16px;
-  margin-bottom: 20px;
-  display: flex;
-  gap: 12px;
-  flex-wrap: wrap;
-  align-items: center;
-}
-
-.perf-pill {
-  background: #111623;
-  padding: 12px 16px;
-  border-radius: 8px;
-  min-width: 110px;
-  border: 1px solid #222a3a;
-  text-align: center;
-}
-
-.perf-label {
-  display: block;
-  font-size: 10px;
-  color: #94a3b8;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  font-weight: 700;
-}
-
-.perf-value {
-  display: block;
-  font-weight: 700;
-  margin-top: 6px;
-  font-size: 14px;
-  font-family: 'Inter', sans-serif;
-}
-
-.perf-value.positive { color: #22c55e; }
-.perf-value.negative { color: #f87171; }
-
-/* Filtre butonlari */
-.filter-buttons {
-  margin: 16px 0;
-  display: flex;
-  gap: 6px;
-  flex-wrap: wrap;
-}
-
-.filter-buttons .filter-btn {
-  padding: 6px 12px;
-  border-radius: 4px;
-  border: 1px solid #222a3a;
-  background: #171d2c;
-  color: #94a3b8;
-  cursor: pointer;
-  font-weight: 700;
-  font-size: 11px;
-  transition: all 0.15s;
-  font-family: 'Inter', sans-serif;
-}
-
-.filter-buttons .filter-btn:hover {
-  color: #cbd5e1;
-}
-
-.filter-buttons .filter-btn.active {
-  background: #3b82f6;
-  color: #fff;
-  border-color: #3b82f6;
-}
-
-/* Grafik ve pie kartlari */
-.chart-container,
-.pie-container {
-  background: #111623;
-  padding: 18px;
-  border-radius: 8px;
-  border: 1px solid #222a3a;
-  margin-bottom: 20px;
-}
-
-.chart-container .chart-title,
-.pie-container h3 {
-  margin: 0 0 12px 0;
-  font-size: 11px;
-  color: #cbd5e1;
-  text-align: left;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  font-weight: 700;
-  font-family: 'Inter', sans-serif;
-}
-
-/* Responsive ayarlar */
-@media (max-width: 980px) {
-  .fund-header {
-    flex-direction: column;
-    align-items: stretch;
-  }
-  .fund-stats { justify-content: flex-start; }
-  .stat-item { min-width: 130px; }
-}
-
-@media (max-width: 640px) {
-  .fund-title { font-size: 1.1rem; }
-  .stat-item { min-width: 110px; padding: 10px 12px; }
-  .perf-pill { min-width: 90px; padding: 10px; }
-  .filter-buttons .filter-btn { padding: 6px 10px; }
+@media (max-width: 768px) {
+  .fd-header, .fd-card { padding: 22px 18px; }
+  .fd-title-row { gap: 14px; }
 }

@@ -1,0 +1,399 @@
+{
+  "nav": {
+    "about": "About Us",
+    "funds": "Our Funds",
+    "portfolio": "Portfolio Management",
+    "individual": "Individual Investors",
+    "corporate": "Corporate Investors",
+    "faq": "FAQ",
+    "tools": "Tools",
+    "simulator": "Return Simulator",
+    "compare": "Fund Comparison",
+    "suitability": "Suitability Test",
+    "team": "Team",
+    "contact": "Contact",
+    "login": "Log In",
+    "register": "Sign Up",
+    "goToPanel": "Go to Panel"
+  },
+  "hero": {
+    "title": "Welcome to the Future of Finance",
+    "subtitle": "Manage your assets intelligently with QuantShine Capital.",
+    "ctaPortfolio": "Portfolio Management",
+    "ctaFunds": "Explore Our Funds"
+  },
+  "stats": {
+    "return": "Average Annual Return",
+    "investors": "Individual & Corporate Investors",
+    "founded": "Founded",
+    "monitoring": "Market Monitoring"
+  },
+  "chart": {
+    "title": "Market Analysis Panel",
+    "subtitle": "Real-time portfolio and market data",
+    "live": "LIVE DATA FEED"
+  },
+  "featured": {
+    "title": "Featured Funds",
+    "all": "All Funds",
+    "lastMonth": "1-Month Fund Return",
+    "risk": "Risk Level",
+    "review": "View"
+  },
+  "why": {
+    "titlePrefix": "Why ",
+    "brand": "QuantShine?",
+    "body": "With a powerful analytics ecosystem, an agile organization, and an expert team, we deliver disciplined and sustainable portfolio management solutions. Discover the data-driven approach that sets QuantShine Capital apart.",
+    "readMore": "Read More",
+    "feature1Title": "Sustainable Returns",
+    "feature1Text": "Grow your assets confidently with an 18.5% average annual performance.",
+    "feature2Title": "High Security",
+    "feature2Text": "End-to-end encryption and asset protection at global standards.",
+    "feature3Title": "Expert Portfolio",
+    "feature3Text": "Tailored strategic management for 1250+ individual and corporate investors.",
+    "feature4Title": "Instant Execution",
+    "feature4Text": "Fast, transparent portfolio tracking accessible from any device."
+  },
+  "startPanel": {
+    "title": "How Do I Start Portfolio Management?",
+    "body": "Apply as an individual or corporate investor; let your risk profile be analyzed and a tailored portfolio strategy be built. The process is fast and transparent. Get in touch to meet our expert team.",
+    "cta": "Get in Touch"
+  },
+  "news": {
+    "title": "Market News & Analysis",
+    "subtitle": "Real-time news from equities, commodities, forex, and crypto markets."
+  },
+  "footer": {
+    "desc": "Independent portfolio management built on data, discipline, and risk control. We protect your capital while generating long-term value.",
+    "corporate": "Company",
+    "toolsTitle": "Tools",
+    "legalTitle": "Legal",
+    "contactTitle": "Contact",
+    "followUs": "Follow Us",
+    "email": "Email",
+    "phone": "Phone",
+    "rights": "© 2026 Quant&Shine Capital. All Rights Reserved.",
+    "riskNote": "Past performance of investment funds does not guarantee future returns. Content on this site does not constitute investment advice."
+  },
+  "legal": {
+    "lastUpdated": "Last updated",
+    "reviewNote": "This text is a sample template and should be reviewed by your legal counsel before publication.",
+    "kvkk": {
+      "title": "Privacy Notice (KVKK)",
+      "body": [
+        "As Quant&Shine Capital, we process your personal data as a data controller under Turkey's Personal Data Protection Law No. 6698 (\"KVKK\"). This notice informs you about the purposes for which your personal data is processed and your rights.",
+        "Your personal data is processed for purposes such as providing portfolio management services, fulfilling legal obligations, managing customer relations, and meeting statutory retention requirements.",
+        "Your data is retained for the periods required by applicable legislation, protected by administrative and technical measures, and shared only with authorized persons and institutions to the extent permitted by law.",
+        "Under Article 11 of the KVKK, you have the right to access your data, request its correction or deletion, object to its processing, and learn the third parties to whom it has been transferred. You may submit your requests through our contact channels."
+      ]
+    },
+    "disclaimer": {
+      "title": "Legal Disclaimer",
+      "body": [
+        "The information on this website is for general informational purposes only and does not constitute a buy/sell recommendation, investment advisory, or a recommendation of any financial product.",
+        "Investment advisory services are provided under a contract signed between brokerage firms, portfolio management companies, and the client, in accordance with each person's risk and return preferences. Decisions made based on the views herein may not produce the expected results.",
+        "Past performance of investment funds and capital market instruments is not indicative of future performance. The value of invested instruments may rise or fall; all or part of the principal may be lost.",
+        "Quant&Shine Capital cannot be held liable for any direct or indirect damages arising from the use of the information on this site."
+      ]
+    },
+    "cookies": {
+      "title": "Cookie Policy",
+      "body": [
+        "Our website uses cookies to improve user experience, analyze site traffic, and remember your preferences.",
+        "Essential cookies are required for the core functions of the site. Analytics and preference cookies are optional and can be managed through your browser settings.",
+        "You can block or delete cookies by changing your browser settings; however, some parts of the site may not function properly in that case.",
+        "For detailed information about your cookie preferences and the processing of your personal data, please review our Privacy Notice (KVKK)."
+      ]
+    }
+  },
+  "contact": {
+    "title": "CONTACT",
+    "subtitle": "Reach out for your questions and portfolio management applications.",
+    "addressTitle": "Address",
+    "addressLine1": "Büyükdere Cad. No:1, Levent",
+    "addressLine2": "34330 Beşiktaş / İstanbul",
+    "phoneTitle": "Phone",
+    "emailTitle": "Email",
+    "hoursTitle": "Working Hours",
+    "hoursLine1": "Monday – Friday",
+    "hoursLine2": "09:00 – 18:00",
+    "formTitle": "Send Us a Message",
+    "formSub": "Fill out the form and our expert team will get back to you shortly.",
+    "name": "Full Name",
+    "namePlaceholder": "Your Full Name",
+    "phone": "Phone",
+    "emailLabel": "Email",
+    "message": "Your Message",
+    "messagePlaceholder": "Write your message...",
+    "send": "Send",
+    "successMsg": "Your message has been received. We'll get back to you soon.",
+    "errorMsg": "Please fill in the required fields."
+  },
+  "faq": {
+    "title": "Frequently Asked Questions",
+    "subtitle": "Answers to everything you may wonder about QuantShine Capital.",
+    "searchPlaceholder": "Search questions...",
+    "empty": "No questions match your search.",
+    "ctaTitle": "Have a question?",
+    "ctaText": "Our expert team is ready to help with anything you couldn't find an answer to.",
+    "ctaBtn": "Contact Us",
+    "items": [
+      {
+        "q": "Do I send my money to Quant&Shine Capital's account?",
+        "a": "No. Funds are sent to accounts opened in the client's name at the custodian banks Quant&Shine Capital works with (Türkiye İş Bankası or Akbank), and the financial assets are held in the client's name by the custodian bank."
+      },
+      {
+        "q": "Can Quant&Shine Capital transfer my money or investments to third parties?",
+        "a": "No. Client assets are held in custody accounts opened in the clients' own names, separately from Quant&Shine Capital's assets."
+      },
+      {
+        "q": "Can Quant&Shine Capital invest freely through the account opened in the client's name?",
+        "a": "No. Quant&Shine Capital can only transact in line with the investment strategies specified in the fund's charter."
+      },
+      {
+        "q": "What is a mutual fund?",
+        "a": "Mutual funds are financial instruments where the money of multiple investors is pooled together and managed by a professional fund manager."
+      },
+      {
+        "q": "Which assets can mutual funds invest in?",
+        "a": "Mutual funds can invest in various financial assets such as equities, bonds, bills, gold, and foreign currency. The eligible assets are specified in the fund's charter."
+      },
+      {
+        "q": "What are the advantages of mutual funds?",
+        "a": "They offer many advantages such as professional management, risk diversification, low costs, liquidity, and transparency."
+      },
+      {
+        "q": "How are mutual funds taxed?",
+        "a": "The taxation of mutual funds may vary depending on the fund type and current tax laws. We recommend consulting a financial advisor for up-to-date information."
+      }
+    ]
+  },
+  "team": {
+    "title": "Our Team",
+    "subtitle": "A data- and discipline-driven team of experienced investment professionals.",
+    "note": "Names and titles are placeholders; they will be updated with real team details.",
+    "ctaTitle": "Meet our team",
+    "ctaText": "Let's build the right strategy for your investment goals together.",
+    "ctaBtn": "Get in Touch",
+    "members": [
+      { "name": "Ahmet Yılmaz", "role": "Founder & CEO", "bio": "20+ years in portfolio management; expert in corporate and individual asset management." },
+      { "name": "Elif Demir", "role": "Chief Investment Officer (CIO)", "bio": "Macro strategy and asset allocation; deep experience in global markets." },
+      { "name": "Mert Kaya", "role": "Head of Risk", "bio": "Portfolio protection through quantitative risk models and derivative strategies." },
+      { "name": "Zeynep Şahin", "role": "Portfolio Manager", "bio": "Active management across equities and fixed income instruments." },
+      { "name": "Can Aydın", "role": "Head of Research", "bio": "Sector analysis, company valuation, and algorithmic research." },
+      { "name": "Selin Arslan", "role": "Head of Client Relations", "bio": "Investor experience and long-term relationship management." }
+    ]
+  },
+  "suitability": {
+    "title": "Suitability Test",
+    "subtitle": "Discover your investor risk profile with a few questions and see the asset allocation that suits you.",
+    "start": "Start the Test",
+    "intro": "6 short questions · about 2 minutes",
+    "step": "Question {{current}} / {{total}}",
+    "back": "Back",
+    "next": "Next",
+    "seeResult": "See Result",
+    "restart": "Restart Test",
+    "resultTitle": "Your Risk Profile",
+    "allocTitle": "Suggested Asset Allocation",
+    "allocStocks": "Equities",
+    "allocBonds": "Fixed Income",
+    "allocCash": "Cash / Money Market",
+    "allocAlt": "Alternatives / Commodities",
+    "ctaText": "This profile is for guidance only. Talk to our expert team for a tailored portfolio.",
+    "ctaBtn": "Talk to an Expert",
+    "disclaimer": "This test is for informational purposes and does not constitute investment advice. The official suitability assessment is conducted during the contract process.",
+    "questions": [
+      {
+        "q": "What is your primary goal for investing?",
+        "options": ["To protect my capital", "Balanced growth and steady income", "To grow my capital over the long term", "Maximum return (I accept high risk)"]
+      },
+      {
+        "q": "What is your planned investment horizon?",
+        "options": ["Less than 1 year", "1 - 3 years", "3 - 5 years", "More than 5 years"]
+      },
+      {
+        "q": "What would you do if your portfolio dropped 20% in a year?",
+        "options": ["Sell everything", "Sell part of it", "Wait and make no changes", "See an opportunity and buy more"]
+      },
+      {
+        "q": "How would you describe your investment experience?",
+        "options": ["No experience", "Basic (deposits, funds)", "Intermediate (stocks, bonds)", "Advanced (derivatives, options)"]
+      },
+      {
+        "q": "How much of your income can you allocate to investing?",
+        "options": ["Less than 10%", "10 - 25%", "25 - 50%", "More than 50%"]
+      },
+      {
+        "q": "Which is your most important priority?",
+        "options": ["Capital protection", "Low volatility", "High return potential", "Highest return (volatility is fine)"]
+      }
+    ],
+    "profiles": {
+      "conservative": {
+        "name": "Conservative",
+        "desc": "Your priority is to protect your capital. You prefer low volatility and value safety over returns. Your portfolio consists mainly of fixed income and cash instruments."
+      },
+      "balanced": {
+        "name": "Balanced",
+        "desc": "You seek a balance between risk and return. You accept moderate volatility and aim for steady growth. A diversified portfolio suits you well."
+      },
+      "growth": {
+        "name": "Growth",
+        "desc": "You prioritize long-term capital growth. You have a high tolerance for volatility and are comfortable with an equity-weighted portfolio."
+      },
+      "aggressive": {
+        "name": "Aggressive",
+        "desc": "You aim for maximum return and accept high risk. Short-term volatility doesn't bother you; your portfolio is largely equities and alternative assets."
+      }
+    }
+  },
+  "simulator": {
+    "title": "Return Simulator",
+    "subtitle": "See how your investment could grow over time. Adjust the amount, horizon, and expected return.",
+    "initial": "Initial Amount",
+    "monthly": "Monthly Contribution",
+    "years": "Horizon (Years)",
+    "return": "Expected Annual Return",
+    "yearsUnit": "yr",
+    "finalValue": "Projected Portfolio Value",
+    "totalInvested": "Total Invested",
+    "totalGain": "Total Gain",
+    "projectedValue": "Portfolio Value",
+    "invested": "Invested Principal",
+    "yearAxis": "Year",
+    "disclaimer": "This calculation is an illustrative estimate only; past performance does not guarantee future returns. Not investment advice.",
+    "ctaTitle": "Let's reach your goal together",
+    "ctaBtn": "Get in Touch"
+  },
+  "compare": {
+    "title": "Fund Comparison",
+    "subtitle": "Compare funds side by side; see their performance and risk at a glance.",
+    "pick": "Select funds to compare",
+    "add": "Add Fund",
+    "max": "You can compare up to 3 funds.",
+    "clear": "Clear",
+    "empty": "Add at least one fund to start comparing.",
+    "metricPrice": "Price (₺)",
+    "metricMonth": "1 Month",
+    "metricYtd": "Year to Date",
+    "metricYear": "1 Year",
+    "metricRisk": "Risk Level",
+    "metricType": "Fund Type",
+    "review": "View",
+    "loading": "Loading funds...",
+    "selectPlaceholder": "Select a fund..."
+  },
+  "portfolio": {
+    "ctaTitle": "Let's build your tailored portfolio strategy",
+    "ctaText": "Together we'll design an investment model suited to your risk profile and goals.",
+    "ctaBtn": "Get in Touch",
+    "benefitsTitle": "What We Offer",
+    "individual": {
+      "badge": "Individual Portfolio Management",
+      "title": "INDIVIDUAL INVESTORS",
+      "subtitle": "Disciplined portfolio management tailored for qualified individual investors.",
+      "leadTitle": "Manage Your Financial Future",
+      "lead": "Our Individual Portfolio Management service is offered to qualified investors with a certain portfolio size under a signed framework agreement. Your risk profile, financial goals, and return expectations are analyzed in detail.",
+      "body1": "We make investment decisions based on macroeconomic analysis, market data, algorithmic models, and risk management parameters. We offer access to a broad asset universe including equities, fixed income, funds, derivatives, gold, and commodities.",
+      "body2": "Portfolios are diversified to suit your risk tolerance; profit-taking, stop-loss, and risk-reduction processes are run systematically. The goal is to preserve capital and generate long-term value through volatile market conditions.",
+      "b1t": "Personalized Strategy",
+      "b1x": "Tailored asset allocation after suitability testing and portfolio assessment.",
+      "b2t": "Broad Asset Universe",
+      "b2x": "Balanced diversification across equities, bonds, funds, derivatives, gold, and commodities.",
+      "b3t": "Disciplined Risk Control",
+      "b3x": "Active risk balancing with options and derivative strategies.",
+      "b4t": "Capital Protection",
+      "b4x": "Our priority is to protect your capital, then deliver sustainable returns.",
+      "tag1": "Risk Management",
+      "tag2": "Asset Protection",
+      "tag3": "Strategic Planning"
+    },
+    "corporate": {
+      "badge": "Corporate Portfolio Management",
+      "title": "CORPORATE INVESTORS",
+      "subtitle": "Boutique portfolio management tailored to your institution's financial structure.",
+      "leadTitle": "Strategic Partnerships and Solutions",
+      "lead": "Our Corporate Portfolio Management service targets family businesses, private and public companies, pension funds, insurance firms, and institutions with net cash positions. We structure investment models around each institution's specific needs.",
+      "body1": "When building portfolio strategies, cash flow projections, balance sheet structure, liability maturity, and risk/return expectations are analyzed in detail. Dynamic asset allocation models are actively updated according to market conditions.",
+      "body2": "Our investment universe spans local and global equities, public and private debt instruments, Eurobonds, funds, commodities, derivatives, and alternative strategies. During downturns, our hedging and balancing strategies protect portfolios effectively.",
+      "b1t": "Institution-Specific Model",
+      "b1x": "An investment model structured to liquidity needs and risk appetite.",
+      "b2t": "Boutique Service",
+      "b2x": "Effective communication and fast decision-making flexibility.",
+      "b3t": "Active Asset Allocation",
+      "b3x": "A portfolio dynamically updated to market conditions.",
+      "b4t": "Corporate Risk Management",
+      "b4x": "Capital protection through hedging and balancing strategies.",
+      "tag1": "Risk Management",
+      "tag2": "Asset Protection",
+      "tag3": "Strategic Planning"
+    }
+  },
+  "fundDetail": {
+    "back": "Back to Funds",
+    "price": "Fund Price",
+    "totalValue": "Total Value",
+    "inception": "Inception Date",
+    "risk": "Risk Level",
+    "tefas": "Traded on TEFAS",
+    "chartTitle": "Fund Return Chart",
+    "allocationTitle": "Asset Allocation",
+    "noChart": "No chart data found for this period.",
+    "notFound": "Fund not found.",
+    "invalidCode": "Invalid fund code.",
+    "loading": "Loading fund data...",
+    "loadError": "Failed to load fund data. Please try again later.",
+    "perf": { "day": "1 Day", "month": "1 Month", "q3": "3 Months", "q6": "6 Months", "ytd": "YTD", "year": "1 Year" },
+    "periods": { "1A": "1M", "3A": "3M", "6A": "6M", "1Y": "1Y", "3Y": "3Y", "5Y": "5Y" }
+  },
+  "funds": {
+    "pageTitle": "Investment Funds",
+    "pageSubtitle": "Explore the funds managed by QuantShine Capital; access detailed analysis and performance data.",
+    "search": "Search fund name or code...",
+    "filterAll": "All",
+    "loading": "Loading fund data...",
+    "error": "Failed to load fund data. Please try again later.",
+    "retry": "Try Again",
+    "empty": "No funds match your search.",
+    "price": "Price",
+    "lastMonth": "1 Month",
+    "ytd": "YTD",
+    "year": "1 Year",
+    "risk": "Risk",
+    "review": "View",
+    "lastUpdate": "Last updated",
+    "count_one": "{{count}} fund",
+    "count_other": "{{count}} funds"
+  },
+  "about": {
+    "title": "ABOUT US",
+    "subtitle": "Independent portfolio management built on data, discipline, and risk control.",
+    "badge": "Since 2026",
+    "whoTitle": "Who We Are",
+    "whoP1": "Quant&Shine Capital is an independent portfolio management firm built on the foundations of data, discipline, and risk control. Our priority is to protect our investors' capital first, then generate controlled and sustainable returns.",
+    "whoP2": "All our investment decisions are made in line with measurable risk parameters, macroeconomic analysis, and systematic strategies. Our risk-balancing approach using algorithmic models and derivatives lets us position portfolios dynamically against changing market conditions.",
+    "whoP3": "By evaluating local and global financial dynamics together, we provide professional, transparent, and disciplined portfolio management to both corporate and individual investors. For us, success means generating long-term value under controlled risk rather than short-term gains.",
+    "statReturn": "Average Annual Return",
+    "statInvestors": "Investors",
+    "statAum": "Assets Under Management",
+    "statFounded": "Founded",
+    "missionTitle": "Our Mission",
+    "missionText": "To protect our investors' capital first and generate long-term, sustainable value within a controlled risk framework.",
+    "visionTitle": "Our Vision",
+    "visionText": "To become the leading independent portfolio management firm in Turkey and the region through our data-driven, technology-powered approach.",
+    "valuesTitle": "Our Values",
+    "valuesSubtitle": "The principles behind every decision we make.",
+    "value1Title": "Trust",
+    "value1Text": "We build long-term, trust-based relationships with our investors.",
+    "value2Title": "Transparency",
+    "value2Text": "We adopt an open, measurable, and accountable approach in every process.",
+    "value3Title": "Innovation",
+    "value3Text": "We stay ahead with algorithmic models and technology-powered analysis.",
+    "value4Title": "Risk Management",
+    "value4Text": "We apply disciplined, systematic risk control with capital protection as the priority.",
+    "ctaTitle": "Let's work together",
+    "ctaText": "Meet our expert team to build your tailored portfolio strategy.",
+    "ctaBtn": "Get in Touch"
+  }
+}

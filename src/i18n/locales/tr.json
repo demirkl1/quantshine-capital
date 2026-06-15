@@ -1,0 +1,399 @@
+{
+  "nav": {
+    "about": "Hakkımızda",
+    "funds": "Fonlarımız",
+    "portfolio": "Portföy Yönetimi",
+    "individual": "Bireysel Yatırımcılar",
+    "corporate": "Kurumsal Yatırımcılar",
+    "faq": "S.S.S.",
+    "tools": "Araçlar",
+    "simulator": "Getiri Simülatörü",
+    "compare": "Fon Karşılaştırma",
+    "suitability": "Yerindelik Testi",
+    "team": "Ekip",
+    "contact": "İletişim",
+    "login": "Giriş Yap",
+    "register": "Üye Ol",
+    "goToPanel": "Panele Git"
+  },
+  "hero": {
+    "title": "Geleceğin Finansına Hoş Geldiniz",
+    "subtitle": "QuantShine Capital ile varlıklarınızı akıllıca yönetin.",
+    "ctaPortfolio": "Portföy Yönetimi",
+    "ctaFunds": "Fonlarımızı İnceleyin"
+  },
+  "stats": {
+    "return": "Ortalama Yıllık Getiri",
+    "investors": "Bireysel & Kurumsal Yatırımcı",
+    "founded": "Kuruluş Yılı",
+    "monitoring": "Piyasa Takibi"
+  },
+  "chart": {
+    "title": "Piyasa Analiz Paneli",
+    "subtitle": "Anlık portföy ve market verileri",
+    "live": "CANLI VERİ AKIŞI"
+  },
+  "featured": {
+    "title": "Öne Çıkan Fonlar",
+    "all": "Tüm Fonlar",
+    "lastMonth": "Son 1 Ay Fon Getirisi",
+    "risk": "Risk Değeri",
+    "review": "İncele"
+  },
+  "why": {
+    "titlePrefix": "Neden ",
+    "brand": "QuantShine?",
+    "body": "Güçlü analiz ekosistemi, çevik organizasyon yapısı ve uzman kadrosuyla yatırımcılarına disiplinli ve sürdürülebilir portföy yönetimi çözümleri sunar. QuantShine Capital'in farkını yaratan veri odaklı yaklaşımı keşfedin.",
+    "readMore": "Devamını Oku",
+    "feature1Title": "Sürdürülebilir Getiri",
+    "feature1Text": "Yıllık %18.5 ortalama performans ile varlıklarınızı güvenle büyütün.",
+    "feature2Title": "Yüksek Güvenlik",
+    "feature2Text": "Uçtan uca şifreleme ve global standartlarda varlık koruma altyapısı.",
+    "feature3Title": "Uzman Portföy",
+    "feature3Text": "1250+ bireysel ve kurumsal yatırımcıya özel stratejik yönetim.",
+    "feature4Title": "Anlık İşlem",
+    "feature4Text": "Hızlı, şeffaf ve her cihazdan erişilebilir portföy takip arayüzü."
+  },
+  "startPanel": {
+    "title": "Nasıl Portföy Yönetimi Başlatırım?",
+    "body": "Bireysel veya kurumsal yatırımcı olarak başvurunuzu oluşturun; risk profiliniz analiz edilsin ve size özel portföy stratejiniz kurulsun. Süreç hızlı ve şeffaftır. Uzman ekibimizle tanışmak için bizimle iletişime geçin.",
+    "cta": "İletişime Geç"
+  },
+  "news": {
+    "title": "Piyasa Haberleri & Analizler",
+    "subtitle": "Hisse senetleri, emtia, döviz ve kripto piyasalarından anlık haber akışı."
+  },
+  "footer": {
+    "desc": "Veri, disiplin ve risk kontrolü temelinde bağımsız portföy yönetimi. Sermayenizi koruyarak uzun vadeli değer üretiyoruz.",
+    "corporate": "Kurumsal",
+    "toolsTitle": "Araçlar",
+    "legalTitle": "Yasal",
+    "contactTitle": "İletişim",
+    "followUs": "Bizi Takip Edin",
+    "email": "E-posta",
+    "phone": "Telefon",
+    "rights": "© 2026 Quant&Shine Capital. Tüm Hakları Saklıdır.",
+    "riskNote": "Yatırım fonlarının geçmiş performansı gelecekteki getiriyi garanti etmez. Bu sitedeki içerikler yatırım tavsiyesi niteliği taşımaz."
+  },
+  "legal": {
+    "lastUpdated": "Son güncelleme",
+    "reviewNote": "Bu metin örnek bir şablondur ve yayına alınmadan önce hukuk danışmanınız tarafından gözden geçirilmelidir.",
+    "kvkk": {
+      "title": "KVKK Aydınlatma Metni",
+      "body": [
+        "Quant&Shine Capital olarak, 6698 sayılı Kişisel Verilerin Korunması Kanunu (\"KVKK\") kapsamında veri sorumlusu sıfatıyla kişisel verilerinizi işliyoruz. Bu metin, kişisel verilerinizin hangi amaçlarla işlendiği ve haklarınız hakkında sizi bilgilendirmek amacıyla hazırlanmıştır.",
+        "Kişisel verileriniz; portföy yönetim hizmetlerinin sunulması, yasal yükümlülüklerin yerine getirilmesi, müşteri ilişkilerinin yürütülmesi ve mevzuattan doğan saklama yükümlülükleri amacıyla işlenmektedir.",
+        "Verileriniz, ilgili mevzuatın öngördüğü süreler boyunca, idari ve teknik tedbirlerle korunarak saklanır ve yalnızca yetkili kişi, kurum ve kuruluşlarla mevzuatın izin verdiği ölçüde paylaşılır.",
+        "KVKK'nın 11. maddesi uyarınca; verilerinize erişme, düzeltilmesini veya silinmesini isteme, işlenmesine itiraz etme ve aktarıldığı üçüncü kişileri öğrenme haklarına sahipsiniz. Taleplerinizi iletişim kanallarımız üzerinden bize iletebilirsiniz."
+      ]
+    },
+    "disclaimer": {
+      "title": "Yasal Uyarı",
+      "body": [
+        "Bu internet sitesinde yer alan bilgiler yalnızca genel bilgilendirme amacı taşımakta olup; alım-satım önerisi, yatırım danışmanlığı veya herhangi bir finansal ürünün tavsiyesi niteliğinde değildir.",
+        "Yatırım danışmanlığı hizmeti; aracı kurumlar, portföy yönetim şirketleri ve müşteri arasında imzalanacak sözleşme çerçevesinde, kişilerin risk ve getiri tercihlerine uygun olarak sunulur. Burada yer alan görüşlere dayanılarak alınacak kararlar beklenen sonuçları vermeyebilir.",
+        "Yatırım fonlarının ve sermaye piyasası araçlarının geçmiş dönem performansları, gelecek dönem performansları için gösterge niteliği taşımaz. Yatırım yapılan araçların değeri artabileceği gibi azalabilir; anaparanın tamamı veya bir kısmı kaybedilebilir.",
+        "Quant&Shine Capital, bu sitede yer alan bilgilerin kullanımından doğabilecek doğrudan veya dolaylı zararlardan sorumlu tutulamaz."
+      ]
+    },
+    "cookies": {
+      "title": "Çerez Politikası",
+      "body": [
+        "İnternet sitemizde, kullanıcı deneyimini geliştirmek, site trafiğini analiz etmek ve tercihlerinizi hatırlamak amacıyla çerezler (cookies) kullanılmaktadır.",
+        "Zorunlu çerezler sitenin temel işlevleri için gereklidir. Analitik ve tercih çerezleri ise isteğe bağlıdır ve tarayıcı ayarlarınızdan yönetilebilir.",
+        "Tarayıcınızın ayarlarını değiştirerek çerezleri engelleyebilir veya silebilirsiniz; ancak bu durumda sitenin bazı bölümleri düzgün çalışmayabilir.",
+        "Çerez tercihleriniz ve kişisel verilerinizin işlenmesi hakkında ayrıntılı bilgi için KVKK Aydınlatma Metni'ni inceleyebilirsiniz."
+      ]
+    }
+  },
+  "contact": {
+    "title": "İLETİŞİM",
+    "subtitle": "Sorularınız ve portföy yönetimi başvurularınız için bize ulaşın.",
+    "addressTitle": "Adres",
+    "addressLine1": "Büyükdere Cad. No:1, Levent",
+    "addressLine2": "34330 Beşiktaş / İstanbul",
+    "phoneTitle": "Telefon",
+    "emailTitle": "E-posta",
+    "hoursTitle": "Çalışma Saatleri",
+    "hoursLine1": "Pazartesi – Cuma",
+    "hoursLine2": "09:00 – 18:00",
+    "formTitle": "Bize Mesaj Gönderin",
+    "formSub": "Formu doldurun, uzman ekibimiz en kısa sürede sizinle iletişime geçsin.",
+    "name": "Ad Soyad",
+    "namePlaceholder": "Adınız Soyadınız",
+    "phone": "Telefon",
+    "emailLabel": "E-posta",
+    "message": "Mesajınız",
+    "messagePlaceholder": "Mesajınızı yazın...",
+    "send": "Gönder",
+    "successMsg": "Mesajınız alındı. En kısa sürede size dönüş yapacağız.",
+    "errorMsg": "Lütfen zorunlu alanları doldurun."
+  },
+  "faq": {
+    "title": "Sıkça Sorulan Sorular",
+    "subtitle": "QuantShine Capital hakkında merak ettiğiniz tüm soruların yanıtları.",
+    "searchPlaceholder": "Soru ara...",
+    "empty": "Aramanızla eşleşen soru bulunamadı.",
+    "ctaTitle": "Sorunuz mu var?",
+    "ctaText": "Yanıtını bulamadığınız her şey için uzman ekibimiz yardımcı olmaya hazır.",
+    "ctaBtn": "Bize Ulaşın",
+    "items": [
+      {
+        "q": "Paramı Quant&Shine Capital A.Ş'nin hesabına mı gönderiyorum?",
+        "a": "Hayır. Quant&Shine Capital A.Ş.'nin anlaşmalı olduğu Türkiye İş Bankası A.Ş. veya Akbank takas saklama bankalarına müşteri adına açılan hesaplara gönderilir ve yatırım yapılan finansal varlıklar müşteri adına takas saklama bankası tarafından saklanır."
+      },
+      {
+        "q": "Quant&Shine Capital A.Ş. paramı veya yatırımlarımı üçüncü şahıslara transfer edebilir mi?",
+        "a": "Hayır. Müşteri varlıkları, müşterilerin kendi adlarına açılan saklama hesaplarında, Quant&Shine Capital A.Ş.'nin varlıklarından ayrı bir şekilde saklanır."
+      },
+      {
+        "q": "Quant&Shine Capital A.Ş. müşteri adına açılan hesap üzerinden istediği şekilde yatırım yapabilir mi?",
+        "a": "Hayır. Quant&Shine Capital A.Ş. ancak yatırım fonu tüzüğünde belirtilen yatırım stratejileri doğrultusunda işlem yapabilir."
+      },
+      {
+        "q": "Yatırım fonu nedir?",
+        "a": "Yatırım fonları, birden çok yatırımcının paralarının bir araya getirilerek profesyonel bir fon yöneticisi tarafından yönetildiği finansal enstrümanlardır."
+      },
+      {
+        "q": "Yatırım fonları hangi varlıklara yatırım yapabilir?",
+        "a": "Yatırım fonları hisse senetleri, tahvil, bono, altın, döviz gibi çeşitli finansal varlıklara yatırım yapabilir. Yatırım yapılacak varlıklar fonun tüzüğünde belirtilir."
+      },
+      {
+        "q": "Yatırım fonlarının avantajları nelerdir?",
+        "a": "Profesyonel yönetim, riskin dağıtılması, düşük maliyetler, likidite ve şeffaflık gibi birçok avantaj sunar."
+      },
+      {
+        "q": "Yatırım fonları nasıl vergilendirilir?",
+        "a": "Yatırım fonlarının vergilendirilmesi, fonun türüne ve mevcut vergi kanunlarına göre değişiklik gösterebilir. Güncel bilgi için bir mali müşavire danışmanız önerilir."
+      }
+    ]
+  },
+  "team": {
+    "title": "Ekibimiz",
+    "subtitle": "Deneyimli yatırım profesyonellerinden oluşan, veri ve disiplin odaklı bir ekip.",
+    "note": "İsim ve ünvanlar örnektir; gerçek ekip bilgileriyle güncellenecektir.",
+    "ctaTitle": "Ekibimizle tanışın",
+    "ctaText": "Yatırım hedefleriniz için doğru stratejiyi birlikte kuralım.",
+    "ctaBtn": "İletişime Geç",
+    "members": [
+      { "name": "Ahmet Yılmaz", "role": "Kurucu & CEO", "bio": "20+ yıl portföy yönetimi deneyimi; kurumsal ve bireysel varlık yönetiminde uzman." },
+      { "name": "Elif Demir", "role": "Baş Yatırım Yöneticisi (CIO)", "bio": "Makro strateji ve varlık dağılımı; global piyasalarda derin tecrübe." },
+      { "name": "Mert Kaya", "role": "Risk Yönetimi Direktörü", "bio": "Kantitatif risk modelleri ve türev stratejilerle portföy koruması." },
+      { "name": "Zeynep Şahin", "role": "Portföy Yöneticisi", "bio": "Hisse ve sabit getirili enstrümanlarda aktif yönetim." },
+      { "name": "Can Aydın", "role": "Araştırma Direktörü", "bio": "Sektör analizi, şirket değerleme ve algoritmik araştırma." },
+      { "name": "Selin Arslan", "role": "Müşteri İlişkileri Direktörü", "bio": "Yatırımcı deneyimi ve uzun vadeli ilişki yönetimi." }
+    ]
+  },
+  "suitability": {
+    "title": "Yerindelik Testi",
+    "subtitle": "Birkaç soruyla yatırımcı risk profilinizi keşfedin ve size uygun varlık dağılımını görün.",
+    "start": "Teste Başla",
+    "intro": "6 kısa soru · yaklaşık 2 dakika",
+    "step": "Soru {{current}} / {{total}}",
+    "back": "Geri",
+    "next": "İleri",
+    "seeResult": "Sonucu Gör",
+    "restart": "Testi Yenile",
+    "resultTitle": "Risk Profiliniz",
+    "allocTitle": "Önerilen Varlık Dağılımı",
+    "allocStocks": "Hisse Senedi",
+    "allocBonds": "Sabit Getirili",
+    "allocCash": "Nakit / Para Piyasası",
+    "allocAlt": "Alternatif / Emtia",
+    "ctaText": "Bu profil yalnızca yol göstericidir. Size özel bir portföy için uzman ekibimizle görüşün.",
+    "ctaBtn": "Uzmanla Görüş",
+    "disclaimer": "Bu test bilgilendirme amaçlıdır ve yatırım tavsiyesi niteliği taşımaz. Resmi yerindelik değerlendirmesi sözleşme sürecinde yapılır.",
+    "questions": [
+      {
+        "q": "Yatırım yapmaktaki temel amacınız nedir?",
+        "options": ["Sermayemi korumak", "Dengeli büyüme ve düzenli gelir", "Uzun vadede sermayemi büyütmek", "Maksimum getiri (yüksek riski kabul ederim)"]
+      },
+      {
+        "q": "Planladığınız yatırım vadesi ne kadar?",
+        "options": ["1 yıldan az", "1 - 3 yıl", "3 - 5 yıl", "5 yıldan fazla"]
+      },
+      {
+        "q": "Portföyünüz bir yılda %20 değer kaybetseydi ne yapardınız?",
+        "options": ["Tümünü satardım", "Bir kısmını satardım", "Bekler, değişiklik yapmazdım", "Fırsat görür, daha fazla alırdım"]
+      },
+      {
+        "q": "Yatırım deneyiminizi nasıl tanımlarsınız?",
+        "options": ["Deneyimim yok", "Temel (mevduat, fon)", "Orta (hisse, tahvil)", "İleri (türev, opsiyon)"]
+      },
+      {
+        "q": "Gelirinizin ne kadarını yatırıma ayırabilirsiniz?",
+        "options": ["%10'dan az", "%10 - 25", "%25 - 50", "%50'den fazla"]
+      },
+      {
+        "q": "Sizin için en önemli öncelik hangisi?",
+        "options": ["Anaparanın korunması", "Düşük dalgalanma", "Yüksek getiri potansiyeli", "En yüksek getiri (dalgalanma sorun değil)"]
+      }
+    ],
+    "profiles": {
+      "conservative": {
+        "name": "Korumacı",
+        "desc": "Önceliğiniz sermayenizi korumak. Düşük dalgalanmayı tercih eder, getiriden çok güvenliğe önem verirsiniz. Portföyünüz ağırlıklı olarak sabit getirili ve nakit araçlardan oluşur."
+      },
+      "balanced": {
+        "name": "Dengeli",
+        "desc": "Risk ve getiri arasında denge ararsınız. Orta düzeyde dalgalanmayı kabul eder, istikrarlı büyümeyi hedeflersiniz. Çeşitlendirilmiş bir portföy size uygundur."
+      },
+      "growth": {
+        "name": "Büyüme",
+        "desc": "Uzun vadede sermaye büyümesini önceliklendirirsiniz. Dalgalanmaya toleransınız yüksektir ve hisse ağırlıklı bir portföyle rahat edersiniz."
+      },
+      "aggressive": {
+        "name": "Agresif",
+        "desc": "Maksimum getiriyi hedefler, yüksek riski kabul edersiniz. Kısa vadeli dalgalanmalar sizi rahatsız etmez; portföyünüz büyük ölçüde hisse ve alternatif varlıklardan oluşur."
+      }
+    }
+  },
+  "simulator": {
+    "title": "Getiri Simülatörü",
+    "subtitle": "Yatırımınızın zaman içinde nasıl büyüyebileceğini görün. Tutarı, vadeyi ve beklenen getiriyi ayarlayın.",
+    "initial": "Başlangıç Tutarı",
+    "monthly": "Aylık Katkı",
+    "years": "Vade (Yıl)",
+    "return": "Beklenen Yıllık Getiri",
+    "yearsUnit": "yıl",
+    "finalValue": "Tahmini Portföy Değeri",
+    "totalInvested": "Toplam Yatırılan",
+    "totalGain": "Toplam Kazanç",
+    "projectedValue": "Portföy Değeri",
+    "invested": "Yatırılan Anapara",
+    "yearAxis": "Yıl",
+    "disclaimer": "Bu hesaplama yalnızca tahmini bir gösterimdir; geçmiş performans gelecekteki getiriyi garanti etmez. Yatırım tavsiyesi değildir.",
+    "ctaTitle": "Hedefinize birlikte ulaşalım",
+    "ctaBtn": "İletişime Geç"
+  },
+  "compare": {
+    "title": "Fon Karşılaştırma",
+    "subtitle": "Fonları yan yana karşılaştırın; performans ve risklerini tek bakışta görün.",
+    "pick": "Karşılaştırmak için fon seçin",
+    "add": "Fon Ekle",
+    "max": "En fazla 3 fon karşılaştırabilirsiniz.",
+    "clear": "Temizle",
+    "empty": "Karşılaştırmaya başlamak için en az bir fon ekleyin.",
+    "metricPrice": "Fiyat (₺)",
+    "metricMonth": "Son 1 Ay",
+    "metricYtd": "Yılbaşından Bugüne",
+    "metricYear": "1 Yıl",
+    "metricRisk": "Risk Değeri",
+    "metricType": "Fon Türü",
+    "review": "İncele",
+    "loading": "Fonlar yükleniyor...",
+    "selectPlaceholder": "Fon seçin..."
+  },
+  "portfolio": {
+    "ctaTitle": "Size özel portföy stratejinizi kuralım",
+    "ctaText": "Risk profilinize ve hedeflerinize uygun yatırım modelini birlikte oluşturalım.",
+    "ctaBtn": "İletişime Geç",
+    "benefitsTitle": "Sunduklarımız",
+    "individual": {
+      "badge": "Bireysel Portföy Yönetimi",
+      "title": "BİREYSEL YATIRIMCILAR",
+      "subtitle": "Nitelikli bireysel yatırımcılara özel, disiplinli portföy yönetimi.",
+      "leadTitle": "Finansal Geleceğinizi Yönetin",
+      "lead": "Bireysel Portföy Yönetimi hizmetimiz, imzalanan çerçeve sözleşme kapsamında belirli bir portföy büyüklüğüne sahip nitelikli yatırımcılara sunulur. Risk profiliniz, finansal hedefleriniz ve getiri beklentileriniz detaylı analiz edilir.",
+      "body1": "Yatırım kararlarımızı makroekonomik analizler, piyasa verileri, algoritmik modeller ve risk yönetimi parametreleri doğrultusunda alıyoruz. Hisse senetleri, sabit getirili menkul kıymetler, yatırım fonları, türev araçlar, altın ve emtia dahil geniş bir varlık yelpazesinde yatırım imkânı sunuyoruz.",
+      "body2": "Portföyler risk toleransınıza uygun şekilde çeşitlendirilir; kâr realizasyonu, zarar kesme ve risk azaltma süreçleri sistematik olarak yürütülür. Amaç, dalgalı piyasa koşullarında sermayeyi koruyarak uzun vadeli değer üretmektir.",
+      "b1t": "Kişiye Özel Strateji",
+      "b1x": "Yerindelik testi ve portföy değerlendirmesi sonrası size özel varlık dağılımı.",
+      "b2t": "Geniş Varlık Evreni",
+      "b2x": "Hisse, tahvil, fon, türev, altın ve emtiada dengeli çeşitlendirme.",
+      "b3t": "Disiplinli Risk Kontrolü",
+      "b3x": "Opsiyon ve türev stratejilerle aktif risk dengeleme.",
+      "b4t": "Sermaye Koruma",
+      "b4x": "Önceliğimiz sermayenizi korumak, ardından sürdürülebilir getiri.",
+      "tag1": "Risk Yönetimi",
+      "tag2": "Varlık Koruma",
+      "tag3": "Stratejik Planlama"
+    },
+    "corporate": {
+      "badge": "Kurumsal Portföy Yönetimi",
+      "title": "KURUMSAL YATIRIMCILAR",
+      "subtitle": "Kurumların finansal yapısına özel, butik portföy yönetimi.",
+      "leadTitle": "Stratejik Ortaklıklar ve Çözümler",
+      "lead": "Kurumsal Portföy Yönetimi hizmetimiz; aile şirketleri, özel ve kamu şirketleri, emeklilik fonları, sigorta şirketleri ve net nakit pozisyonu bulunan kurumlara yöneliktir. Yatırım modellerini kuruma özgü ihtiyaçlar doğrultusunda yapılandırıyoruz.",
+      "body1": "Portföy stratejileri oluşturulurken nakit akış projeksiyonları, bilanço yapısı, yükümlülük vadesi ve risk/getiri beklentileri detaylı analiz edilir. Dinamik varlık dağılımı modelleri piyasa koşullarına göre aktif güncellenir.",
+      "body2": "Yatırım evrenimiz; yerel ve küresel hisse senetleri, kamu ve özel sektör borçlanma araçları, Eurobond, yatırım fonları, emtia, türev araçlar ve alternatif stratejileri kapsar. Kriz dönemlerinde hedge ve dengeleme stratejilerimizle portföyler etkin korunur.",
+      "b1t": "Kuruma Özel Model",
+      "b1x": "Likidite ihtiyacı ve risk algısına göre yapılandırılmış yatırım modeli.",
+      "b2t": "Butik Hizmet",
+      "b2x": "Etkin iletişim ve hızlı karar alma esnekliği.",
+      "b3t": "Aktif Varlık Dağılımı",
+      "b3x": "Piyasa koşullarına göre dinamik olarak güncellenen portföy.",
+      "b4t": "Kurumsal Risk Yönetimi",
+      "b4x": "Hedge ve dengeleme stratejileriyle sermaye koruması.",
+      "tag1": "Risk Yönetimi",
+      "tag2": "Varlık Koruma",
+      "tag3": "Stratejik Planlama"
+    }
+  },
+  "fundDetail": {
+    "back": "Fonlara Dön",
+    "price": "Fon Fiyatı",
+    "totalValue": "Toplam Değer",
+    "inception": "Kuruluş Tarihi",
+    "risk": "Risk Derecesi",
+    "tefas": "TEFAS'ta işlem görür",
+    "chartTitle": "Fon Getiri Grafiği",
+    "allocationTitle": "Varlık Dağılımı",
+    "noChart": "Bu dönem için grafik verisi bulunamadı.",
+    "notFound": "Fon bulunamadı.",
+    "invalidCode": "Geçersiz fon kodu.",
+    "loading": "Fon bilgileri yükleniyor...",
+    "loadError": "Fon bilgileri yüklenemedi. Lütfen daha sonra tekrar deneyin.",
+    "perf": { "day": "1 Gün", "month": "1 Ay", "q3": "3 Ay", "q6": "6 Ay", "ytd": "Yılbaşı", "year": "1 Yıl" },
+    "periods": { "1A": "1 Ay", "3A": "3 Ay", "6A": "6 Ay", "1Y": "1 Yıl", "3Y": "3 Yıl", "5Y": "5 Yıl" }
+  },
+  "funds": {
+    "pageTitle": "Yatırım Fonları",
+    "pageSubtitle": "QuantShine Capital tarafından yönetilen fonları inceleyin; detaylı analiz ve performans verilerine ulaşın.",
+    "search": "Fon adı veya kodu ara...",
+    "filterAll": "Tümü",
+    "loading": "Fon verileri yükleniyor...",
+    "error": "Fon verileri yüklenemedi. Lütfen daha sonra tekrar deneyin.",
+    "retry": "Tekrar Dene",
+    "empty": "Aramanızla eşleşen fon bulunamadı.",
+    "price": "Fiyat",
+    "lastMonth": "Son 1 Ay",
+    "ytd": "Yılbaşı",
+    "year": "1 Yıl",
+    "risk": "Risk",
+    "review": "İncele",
+    "lastUpdate": "Son güncelleme",
+    "count_one": "{{count}} fon",
+    "count_other": "{{count}} fon"
+  },
+  "about": {
+    "title": "HAKKIMIZDA",
+    "subtitle": "Veri, disiplin ve risk kontrolü üzerine kurulu bağımsız portföy yönetimi.",
+    "badge": "2026'dan beri",
+    "whoTitle": "Biz Kimiz?",
+    "whoP1": "Quant&Shine Capital, yatırım yönetimini veri, disiplin ve risk kontrolü temelleri üzerine inşa eden bağımsız bir portföy yönetim yapısıdır. Önceliğimiz yatırımcılarımızın sermayesini korumak; ardından kontrollü ve sürdürülebilir getiri üretmektir.",
+    "whoP2": "Tüm yatırım kararlarımız ölçülebilir risk parametreleri, makroekonomik analizler ve sistematik stratejiler doğrultusunda alınır. Algoritmik modeller ve türev araçlarla risk dengeleme yaklaşımımız, portföyleri değişen piyasa koşullarına karşı dinamik konumlandırmamızı sağlar.",
+    "whoP3": "Yerel ve küresel finansal dinamikleri birlikte değerlendirerek hem kurumsal hem bireysel yatırımcılara profesyonel, şeffaf ve disiplinli portföy yönetim hizmeti sunuyoruz. Bizim için başarı; kısa vadeli kazançtan ziyade, kontrollü risk altında uzun vadeli değer üretmektir.",
+    "statReturn": "Ortalama Yıllık Getiri",
+    "statInvestors": "Yatırımcı",
+    "statAum": "Yönetilen Varlık",
+    "statFounded": "Kuruluş",
+    "missionTitle": "Misyonumuz",
+    "missionText": "Yatırımcılarımızın sermayesini öncelikle koruyarak, kontrollü risk çerçevesinde uzun vadeli ve sürdürülebilir değer üretmek.",
+    "visionTitle": "Vizyonumuz",
+    "visionText": "Veri odaklı ve teknoloji destekli yaklaşımımızla Türkiye'nin ve bölgenin önde gelen bağımsız portföy yönetim kurumu olmak.",
+    "valuesTitle": "Değerlerimiz",
+    "valuesSubtitle": "Her kararımızın arkasındaki ilkeler.",
+    "value1Title": "Güven",
+    "value1Text": "Yatırımcılarımızla uzun vadeli, güven temelli ilişkiler kurarız.",
+    "value2Title": "Şeffaflık",
+    "value2Text": "Tüm süreçlerde açık, ölçülebilir ve hesap verebilir bir yaklaşım benimseriz.",
+    "value3Title": "İnovasyon",
+    "value3Text": "Algoritmik modeller ve teknoloji destekli analizle bir adım önde oluruz.",
+    "value4Title": "Risk Yönetimi",
+    "value4Text": "Sermaye koruma önceliğiyle disiplinli ve sistematik risk kontrolü uygularız.",
+    "ctaTitle": "Birlikte çalışalım",
+    "ctaText": "Size özel portföy stratejinizi oluşturmak için uzman ekibimizle tanışın.",
+    "ctaBtn": "İletişime Geç"
+  }
+}

@@ -1,0 +1,132 @@
+/* src/pages/Suitability.css — Yerindelik Testi (koyu tema) */
+.su-page { background-color: #0b0e14; color: #fff; min-height: 100vh; overflow: hidden; }
+.su-page .cta-button {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: linear-gradient(135deg, #1d4ed8, #3b82f6);
+  color: #fff; padding: 14px 30px; border-radius: 12px;
+  font-weight: 700; font-size: 1rem; border: none; cursor: pointer; text-decoration: none;
+  box-shadow: 0 10px 30px rgba(37, 99, 235, 0.35);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+.su-page .cta-button:hover { transform: translateY(-3px); box-shadow: 0 16px 40px rgba(37, 99, 235, 0.5); }
+.su-page .cta-button:disabled { opacity: 0.4; cursor: not-allowed; transform: none; box-shadow: none; }
+
+/* Hero */
+.su-hero { position: relative; text-align: center; padding: 100px 20px 40px; overflow: hidden; }
+.su-hero-bg {
+  position: absolute; inset: 0; z-index: 0;
+  background:
+    radial-gradient(900px 400px at 50% -10%, rgba(30, 64, 175, 0.32), transparent 60%),
+    radial-gradient(700px 400px at 85% 30%, rgba(59, 130, 246, 0.12), transparent 55%);
+}
+.su-hero-inner { position: relative; z-index: 1; max-width: 720px; margin: 0 auto; }
+.su-title {
+  font-family: 'Poppins', sans-serif; font-size: clamp(2.1rem, 4.6vw, 3rem);
+  font-weight: 800; letter-spacing: -0.5px; margin: 0 0 16px;
+  background: linear-gradient(180deg, #fff 35%, #93b4f0 120%);
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+}
+.su-underline { width: 80px; height: 4px; background: #3b82f6; margin: 0 auto 22px; border-radius: 2px; box-shadow: 0 0 12px rgba(59,130,246,0.5); }
+.su-subtitle { color: #cbd5e1; font-size: 1.1rem; line-height: 1.6; margin: 0; }
+
+.su-main { max-width: 760px; margin: 0 auto; padding: 20px 6% 100px; }
+.su-card {
+  background: rgba(17, 22, 35, 0.7);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 24px;
+  padding: 44px;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
+}
+
+/* Intro */
+.su-intro { text-align: center; padding: 30px 10px; }
+.su-intro-icon {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 80px; height: 80px; border-radius: 20px; margin-bottom: 22px;
+  background: linear-gradient(135deg, rgba(59,130,246,0.2), rgba(30,64,175,0.12));
+  border: 1px solid rgba(59,130,246,0.25); color: #60a5fa;
+}
+.su-intro-text { color: #94a3b8; font-size: 1rem; margin: 0 0 28px; }
+
+/* Quiz */
+.su-progress-head { display: flex; justify-content: space-between; color: #94a3b8; font-size: 0.88rem; font-weight: 600; margin-bottom: 10px; }
+.su-progress { height: 6px; border-radius: 4px; background: rgba(255,255,255,0.08); overflow: hidden; margin-bottom: 32px; }
+.su-progress span { display: block; height: 100%; border-radius: 4px; background: linear-gradient(90deg, #1d4ed8, #3b82f6); transition: width 0.4s cubic-bezier(0.16,1,0.3,1); }
+
+.su-question {
+  font-family: 'Poppins', sans-serif; font-size: 1.4rem; font-weight: 700;
+  line-height: 1.4; margin: 0 0 26px;
+}
+.su-options { display: flex; flex-direction: column; gap: 12px; margin-bottom: 32px; }
+.su-option {
+  display: flex; align-items: center; gap: 14px; text-align: left;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 14px; padding: 16px 20px;
+  color: #e2e8f0; font-size: 1rem; cursor: pointer; font-family: inherit;
+  transition: all 0.2s ease;
+}
+.su-option:hover { border-color: rgba(59,130,246,0.4); background: rgba(59,130,246,0.06); }
+.su-option.selected { border-color: #3b82f6; background: rgba(59,130,246,0.12); color: #fff; }
+.su-option-check {
+  flex-shrink: 0; width: 24px; height: 24px; border-radius: 7px;
+  border: 2px solid rgba(255,255,255,0.2);
+  display: inline-flex; align-items: center; justify-content: center;
+  color: #fff; transition: all 0.2s ease;
+}
+.su-option.selected .su-option-check { background: linear-gradient(135deg, #1d4ed8, #3b82f6); border-color: transparent; }
+
+.su-nav { display: flex; align-items: center; justify-content: space-between; gap: 14px; }
+.su-back {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: transparent; border: 1px solid rgba(255,255,255,0.15);
+  color: #cbd5e1; padding: 13px 22px; border-radius: 12px; font-weight: 600; cursor: pointer;
+  transition: all 0.2s ease;
+}
+.su-back:hover:not(:disabled) { border-color: rgba(255,255,255,0.4); color: #fff; }
+.su-back:disabled { opacity: 0.35; cursor: not-allowed; }
+
+/* Result */
+.su-result { text-align: center; }
+.su-result-badge {
+  display: inline-block; padding: 6px 16px; border-radius: 50px;
+  background: rgba(59,130,246,0.1); border: 1px solid rgba(59,130,246,0.25);
+  color: #93b4f0; font-size: 0.8rem; font-weight: 700; letter-spacing: 0.5px; margin-bottom: 18px;
+}
+.su-profile-name {
+  font-family: 'Poppins', sans-serif; font-size: clamp(2rem, 4vw, 2.8rem); font-weight: 800;
+  margin: 0 0 16px;
+  background: linear-gradient(135deg, #fff, #60a5fa);
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+}
+.su-profile-desc { color: #cbd5e1; font-size: 1.05rem; line-height: 1.7; margin: 0 auto 36px; max-width: 560px; }
+
+.su-alloc { text-align: left; margin-bottom: 32px; }
+.su-alloc h3 { font-family: 'Poppins', sans-serif; font-size: 1.1rem; font-weight: 700; margin: 0 0 16px; text-align: center; }
+.su-alloc-stack { display: flex; height: 18px; border-radius: 10px; overflow: hidden; margin-bottom: 20px; gap: 2px; background: rgba(255,255,255,0.05); }
+.su-alloc-seg { height: 100%; transition: width 0.6s cubic-bezier(0.16,1,0.3,1); }
+.su-alloc-legend { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+.su-legend-item { display: flex; align-items: center; gap: 8px; }
+.su-legend-dot { width: 12px; height: 12px; border-radius: 4px; flex-shrink: 0; }
+.su-legend-label { color: #cbd5e1; font-size: 0.92rem; flex: 1; }
+.su-legend-value { color: #fff; font-weight: 800; font-family: 'Poppins', sans-serif; }
+
+.su-cta-text { color: #94a3b8; font-size: 0.98rem; margin: 0 0 22px; }
+.su-result-actions { display: flex; align-items: center; justify-content: center; gap: 16px; flex-wrap: wrap; }
+.su-restart {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: transparent; border: 1px solid rgba(255,255,255,0.15);
+  color: #cbd5e1; padding: 13px 22px; border-radius: 12px; font-weight: 600; cursor: pointer;
+  transition: all 0.2s ease;
+}
+.su-restart:hover { border-color: rgba(255,255,255,0.4); color: #fff; }
+.su-disclaimer { color: #64748b; font-size: 0.8rem; line-height: 1.5; margin: 30px 0 0; }
+
+@media (max-width: 768px) {
+  .su-card { padding: 26px 20px; }
+  .su-question { font-size: 1.2rem; }
+  .su-alloc-legend { grid-template-columns: 1fr; }
+  .su-nav { flex-direction: column-reverse; }
+  .su-nav .cta-button, .su-back { width: 100%; justify-content: center; }
+}

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import {
   TrendingUp,
   ShieldCheck,
@@ -13,33 +14,19 @@ import NewsSection from "../components/NewsSection";
 import FeaturedFunds from "../components/FeaturedFunds";
 import Reveal from "../components/Reveal";
 import CountUp from "../components/CountUp";
+import Seo from "../components/Seo";
 import "./LandingPage.css";
 
-const FEATURES = [
-  {
-    icon: TrendingUp,
-    title: "Sürdürülebilir Getiri",
-    text: "Yıllık %18.5 ortalama performans ile varlıklarınızı güvenle büyütün.",
-  },
-  {
-    icon: ShieldCheck,
-    title: "Yüksek Güvenlik",
-    text: "Uçtan uca şifreleme ve global standartlarda varlık koruma altyapısı.",
-  },
-  {
-    icon: Users,
-    title: "Uzman Portföy",
-    text: "1250+ bireysel ve kurumsal yatırımcıya özel stratejik yönetim.",
-  },
-  {
-    icon: Zap,
-    title: "Anlık İşlem",
-    text: "Hızlı, şeffaf ve her cihazdan erişilebilir portföy takip arayüzü.",
-  },
-];
-
 const LandingPage = () => {
+  const { t } = useTranslation();
   const [scrolled, setScrolled] = useState(false);
+
+  const FEATURES = [
+    { icon: TrendingUp, title: t("why.feature1Title"), text: t("why.feature1Text") },
+    { icon: ShieldCheck, title: t("why.feature2Title"), text: t("why.feature2Text") },
+    { icon: Users, title: t("why.feature3Title"), text: t("why.feature3Text") },
+    { icon: Zap, title: t("why.feature4Title"), text: t("why.feature4Text") },
+  ];
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 60);
@@ -49,6 +36,7 @@ const LandingPage = () => {
 
   return (
     <div className="landing-page-container">
+      <Seo title="" description={t("hero.subtitle")} path="/" />
       {/* 1. ÜST BANT */}
       <div className="ticker-fixed-wrapper">
         <MarketTicker />
@@ -64,19 +52,17 @@ const LandingPage = () => {
 
         <div className="hero-foreground">
           <Reveal variant="up">
-            <h1 className="hero-main-title">Geleceğin Finansına Hoş Geldiniz</h1>
+            <h1 className="hero-main-title">{t("hero.title")}</h1>
           </Reveal>
           <Reveal variant="up" delay={120}>
-            <p className="hero-sub-text">
-              QuantShine Capital ile varlıklarınızı akıllıca yönetin.
-            </p>
+            <p className="hero-sub-text">{t("hero.subtitle")}</p>
           </Reveal>
           <Reveal variant="up" delay={200} className="hero-cta-group">
             <Link to="/portfoy-bireysel" className="cta-button">
-              Portföy Yönetimi <ArrowRight size={18} />
+              {t("hero.ctaPortfolio")} <ArrowRight size={18} />
             </Link>
             <Link to="/fonlarimiz" className="cta-button cta-button--ghost">
-              Fonlarımızı İnceleyin
+              {t("hero.ctaFunds")}
             </Link>
           </Reveal>
         </div>
@@ -93,23 +79,23 @@ const LandingPage = () => {
             <div className="stat-value">
               <CountUp end={18.5} decimals={1} suffix="%" />
             </div>
-            <div className="stat-label">Ortalama Yıllık Getiri</div>
+            <div className="stat-label">{t("stats.return")}</div>
           </Reveal>
           <Reveal variant="up" delay={100} className="stat-card">
             <div className="stat-value">
               <CountUp end={1250} suffix="+" />
             </div>
-            <div className="stat-label">Bireysel & Kurumsal Yatırımcı</div>
+            <div className="stat-label">{t("stats.investors")}</div>
           </Reveal>
           <Reveal variant="up" delay={200} className="stat-card">
             <div className="stat-value">
               <CountUp end={2026} grouping={false} />
             </div>
-            <div className="stat-label">Kuruluş Yılı</div>
+            <div className="stat-label">{t("stats.founded")}</div>
           </Reveal>
           <Reveal variant="up" delay={300} className="stat-card">
             <div className="stat-value">7/24</div>
-            <div className="stat-label">Piyasa Takibi</div>
+            <div className="stat-label">{t("stats.monitoring")}</div>
           </Reveal>
         </section>
 
@@ -118,14 +104,12 @@ const LandingPage = () => {
           <Reveal variant="zoom" className="chart-container-premium">
             <div className="chart-header-info">
               <div className="title-group">
-                <h3>Piyasa Analiz Paneli</h3>
-                <p className="chart-subtitle">
-                  Anlık portföy ve market verileri
-                </p>
+                <h3>{t("chart.title")}</h3>
+                <p className="chart-subtitle">{t("chart.subtitle")}</p>
               </div>
               <div className="live-status">
                 <span className="pulse-dot" />
-                <span className="live-tag">CANLI VERİ AKIŞI</span>
+                <span className="live-tag">{t("chart.live")}</span>
               </div>
             </div>
             <div className="actual-chart-wrapper">
@@ -142,16 +126,12 @@ const LandingPage = () => {
           <div className="why-wrapper">
             <Reveal variant="left" className="why-text">
               <h2 className="section-title why-title">
-                Neden <span className="why-brand">QuantShine?</span>
+                {t("why.titlePrefix")}
+                <span className="why-brand">{t("why.brand")}</span>
               </h2>
-              <p>
-                Güçlü analiz ekosistemi, çevik organizasyon yapısı ve uzman
-                kadrosuyla yatırımcılarına disiplinli ve sürdürülebilir portföy
-                yönetimi çözümleri sunar. QuantShine Capital'in farkını yaratan
-                veri odaklı yaklaşımı keşfedin.
-              </p>
+              <p>{t("why.body")}</p>
               <Link to="/hakkimizda" className="cta-button why-btn">
-                Devamını Oku <ArrowRight size={18} />
+                {t("why.readMore")} <ArrowRight size={18} />
               </Link>
             </Reveal>
             <Reveal variant="right" delay={120} className="why-visual">
@@ -177,16 +157,11 @@ const LandingPage = () => {
         {/* 7. PORTFÖY BAŞLATMA PANELİ */}
         <section className="dual-panel-section">
           <Reveal variant="up" className="dual-panel dual-panel--dark dual-panel--full">
-            <h3>Nasıl Portföy Yönetimi Başlatırım?</h3>
-            <p>
-              Bireysel veya kurumsal yatırımcı olarak başvurunuzu oluşturun;
-              risk profiliniz analiz edilsin ve size özel portföy stratejiniz
-              kurulsun. Süreç hızlı ve şeffaftır. Uzman ekibimizle tanışmak için
-              bizimle iletişime geçin.
-            </p>
+            <h3>{t("startPanel.title")}</h3>
+            <p>{t("startPanel.body")}</p>
             <div className="dual-panel-actions">
               <Link to="/iletisim" className="cta-button">
-                İletişime Geç <ArrowRight size={18} />
+                {t("startPanel.cta")} <ArrowRight size={18} />
               </Link>
             </div>
           </Reveal>
@@ -195,11 +170,8 @@ const LandingPage = () => {
         {/* 8. CANLI HABER AKIŞI */}
         <section className="landing-blog-section">
           <Reveal variant="up" className="blog-section-header">
-            <h2 className="section-title">Piyasa Haberleri & Analizler</h2>
-            <p className="section-subtitle">
-              Hisse senetleri, emtia, döviz ve kripto piyasalarından anlık haber
-              akışı.
-            </p>
+            <h2 className="section-title">{t("news.title")}</h2>
+            <p className="section-subtitle">{t("news.subtitle")}</p>
           </Reveal>
           <Reveal variant="up" className="news-component-wrapper">
             <NewsSection />

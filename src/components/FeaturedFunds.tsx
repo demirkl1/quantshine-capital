@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { Star, ArrowRight } from "lucide-react";
 import api from "../api";
 import Reveal from "./Reveal";
@@ -38,6 +39,7 @@ const perfClass = (v: Fund["month"]) => {
 
 const FeaturedFunds: React.FC = () => {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [funds, setFunds] = useState<Fund[]>([]);
 
   useEffect(() => {
@@ -66,9 +68,9 @@ const FeaturedFunds: React.FC = () => {
   return (
     <section className="featured-funds-section">
       <Reveal variant="up" className="ff-header">
-        <h2 className="section-title">Öne Çıkan Fonlar</h2>
+        <h2 className="section-title">{t("featured.title")}</h2>
         <button className="ff-all-btn" onClick={() => navigate("/fonlarimiz")}>
-          Tüm Fonlar
+          {t("featured.all")}
         </button>
       </Reveal>
 
@@ -87,14 +89,14 @@ const FeaturedFunds: React.FC = () => {
             <div className="ff-divider" />
 
             <div className="ff-row">
-              <span className="ff-row-label">Son 1 Ay Fon Getirisi</span>
+              <span className="ff-row-label">{t("featured.lastMonth")}</span>
               <span className={`ff-row-value ${perfClass(fund.month)}`}>
                 {fmtPerf(fund.month)}
               </span>
             </div>
 
             <div className="ff-row">
-              <span className="ff-row-label">Risk Değeri</span>
+              <span className="ff-row-label">{t("featured.risk")}</span>
               <span className="ff-risk">
                 <span className="ff-risk-bar">
                   <span
@@ -107,7 +109,7 @@ const FeaturedFunds: React.FC = () => {
             </div>
 
             <button className="ff-incele" onClick={() => goToFund(fund.code)}>
-              İncele <ArrowRight size={16} />
+              {t("featured.review")} <ArrowRight size={16} />
             </button>
           </Reveal>
         ))}

@@ -1,5 +1,6 @@
 import React, { useState, useCallback, Suspense, lazy } from "react";
 import { BrowserRouter as Router, Routes, Route, useLocation, Navigate } from "react-router-dom";
+import { HelmetProvider } from "react-helmet-async";
 import { Toaster } from "react-hot-toast";
 
 // ── Statik Bileşenler (lazy yüklenmez — her sayfada görünür) ──────────
@@ -23,6 +24,11 @@ const IndividualInvestorPage    = lazy(() => import("./pages/InvidualInvestorPag
 const InstitutionalInvestorPage = lazy(() => import("./pages/InstitutionalInvestorPage"));
 const Questions                 = lazy(() => import("./pages/Questions"));
 const Iletisim                  = lazy(() => import("./pages/Iletisim"));
+const Simulator                 = lazy(() => import("./pages/Simulator"));
+const FundCompare               = lazy(() => import("./pages/FundCompare"));
+const Suitability               = lazy(() => import("./pages/Suitability"));
+const LegalPage                 = lazy(() => import("./pages/LegalPage"));
+const Team                      = lazy(() => import("./pages/Team"));
 
 // Yatırımcı (Investor) Sayfaları
 const Portfoyum           = lazy(() => import("./pages/Portfoyum"));
@@ -116,6 +122,13 @@ const AppContent: React.FC<AppContentProps> = ({
             <Route path="/portfoy-kurumsal" element={<IndividualInvestorPage />} />
             <Route path="/sss" element={<Questions />} />
             <Route path="/iletisim" element={<Iletisim />} />
+            <Route path="/simulasyon" element={<Simulator />} />
+            <Route path="/fon-karsilastir" element={<FundCompare />} />
+            <Route path="/yerindelik-testi" element={<Suitability />} />
+            <Route path="/kvkk" element={<LegalPage docKey="kvkk" />} />
+            <Route path="/yasal-uyari" element={<LegalPage docKey="disclaimer" />} />
+            <Route path="/cerez-politikasi" element={<LegalPage docKey="cookies" />} />
+            <Route path="/ekip" element={<Team />} />
             <Route path="/fund/:code" element={<FonDetail />} />
 
             {/* Dinamik Yönlendirme */}
@@ -172,7 +185,7 @@ function App() {
   const handleSplashFinish = useCallback(() => setShowSplash(false), []);
 
   return (
-    <>
+    <HelmetProvider>
       {showSplash && <SplashScreen onFinish={handleSplashFinish} />}
 
       {!showSplash && (
@@ -197,7 +210,7 @@ function App() {
           </AuthProvider>
         </Router>
       )}
-    </>
+    </HelmetProvider>
   );
 }
 

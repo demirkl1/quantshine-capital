@@ -1,72 +1,98 @@
-import React, { useState } from 'react';
-import './Questions.css';
+import React, { useState, useMemo } from "react";
+import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import { Search, Plus, ArrowRight } from "lucide-react";
+import Reveal from "../components/Reveal";
 import ScrollToTop from "../components/ScrollToTop";
+import Seo from "../components/Seo";
+import "./Questions.css";
 
-const FaqPage = () => {
-  const [openIndex, setOpenIndex] = useState(null);
+interface FaqItem {
+  q: string;
+  a: string;
+}
 
-  const toggleAccordion = (index) => {
-    setOpenIndex(openIndex === index ? null : index);
-  };
+const FaqPage: React.FC = () => {
+  const { t } = useTranslation();
+  const [openIndex, setOpenIndex] = useState<number | null>(0);
+  const [query, setQuery] = useState("");
 
-  const faqData = [
-    {
-      question: "Paramı Quant&Shine Capital A.Ş'nin hesabına mı gönderiyorum?",
-      answer: "Hayır. Quant&Shine Capital A.Ş.'nin anlaşmalı olduğu Türkiye İş Bankası A.Ş. veya Akbank takas saklama bankalarına müşteri adına açılan müşteri hesaplarına gönderilir ve yatırım yapılan finansal varlıklar müşteri adına takas saklama bankası tarafından saklanır."
-    },
-    {
-      question: "Quant&Shine Capital A.Ş. paramı veya yatırımlarımı üçüncü şahıslara transfer edebilir mi?",
-      answer: "Hayır. Müşteri varlıkları, müşterilerin kendi adlarına açılan saklama hesaplarında, Quant&Shine Capital A.Ş.'nin varlıklarından ayrı bir şekilde saklanır."
-    },
-    {
-      question: "Quant&Shine Capital A.Ş. müşteri adına açılan hesap üzerinden istediği şekilde yatırım yapabilir mi?",
-      answer: "Hayır. Quant&Shine Capital A.Ş. ancak yatırım fonu tüzüğünde belirtilen yatırım stratejileri doğrultusunda işlem yapabilir."
-    },
-    {
-      question: "Yatırım fonu nedir?",
-      answer: "Yatırım fonları, birden çok yatırımcının paralarının bir araya getirilerek profesyonel bir fon yöneticisi tarafından yönetildiği finansal enstrümanlardır."
-    },
-    {
-      question: "Yatırım fonları hangi varlıklara yatırım yapabilir?",
-      answer: "Yatırım fonları, hisse senetleri, tahvil, bono, altın, döviz gibi çeşitli finansal varlıklara yatırım yapabilir. Yatırım yapılacak varlıklar fonun tüzüğünde belirtilir."
-    },
-    {
-      question: "Yatırım fonlarının avantajları nelerdir?",
-      answer: "Profesyonel yönetim, riskin dağıtılması, düşük maliyetler, likidite ve şeffaflık gibi birçok avantaj sunar."
-    },
-    {
-      question: "Yatırım fonları nasıl vergilendirilir?",
-      answer: "Yatırım fonlarının vergilendirilmesi, fonun türüne ve mevcut vergi kanunlarına göre değişiklik gösterebilir. Güncel bilgi için bir mali müşavire danışmanız önerilir."
-    }
-  ];
+  const items = (t("faq.items", { returnObjects: true }) as FaqItem[]) || [];
+
+  const filtered = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return items;
+    return items.filter(
+      (it) => it.q.toLowerCase().includes(q) || it.a.toLowerCase().includes(q)
+    );
+  }, [items, query]);
 
   return (
-    <div className="faq-page-container">
-      <main className="faq-hero">
-        <div className="faq-header-content">
-          <h1 className="faq-main-title">Sıkça Sorulan Sorular</h1>
-          <p className="faq-subtitle">QuantShine Capital hakkında merak ettiğiniz tüm soruların yanıtları.</p>
-        </div>
+    <div className="faq-page">
+      <Seo title={t("faq.title")} description={t("faq.subtitle")} path="/sss" />
+      {/* Hero */}
+      <section className="faq-hero">
+        <div className="faq-hero-bg" />
+        <Reveal variant="up" className="faq-hero-inner">
+          <h1 className="faq-title">{t("faq.title")}</h1>
+          <div className="faq-underline" />
+          <p className="faq-subtitle">{t("faq.subtitle")}</p>
+          <div className="faq-search">
+            <Search size={18} />
+            <input
+              value={query}
+              onChange={(e) => {
+                setQuery(e.target.value);
+                setOpenIndex(null);
+              }}
+              placeholder={t("faq.searchPlaceholder")}
+            />
+          </div>
+        </Reveal>
+      </section>
 
-        <div className="accordion-wrapper">
-          {faqData.map((item, index) => (
-            <div key={index} className={`faq-item ${openIndex === index ? 'active' : ''}`}>
-              <button
-                className="faq-question-btn"
-                onClick={() => toggleAccordion(index)}
+      {/* Akordeon */}
+      <section className="faq-main">
+        {filtered.length === 0 ? (
+          <p className="faq-empty">{t("faq.empty")}</p>
+        ) : (
+          <div className="faq-list">
+            {filtered.map((item, index) => (
+              <Reveal
+                key={item.q}
+                variant="up"
+                delay={(index % 6) * 60}
+                className={`faq-item ${openIndex === index ? "active" : ""}`}
               >
-                <span className="faq-question-text">{item.question}</span>
-                <span className="faq-arrow-icon"></span>
-              </button>
-              <div className="faq-answer-container">
-                <div className="faq-answer-content">
-                  <p>{item.answer}</p>
+                <button
+                  className="faq-question"
+                  onClick={() => setOpenIndex(openIndex === index ? null : index)}
+                >
+                  <span>{item.q}</span>
+                  <span className="faq-icon">
+                    <Plus size={20} />
+                  </span>
+                </button>
+                <div className="faq-answer">
+                  <div className="faq-answer-inner">
+                    <p>{item.a}</p>
+                  </div>
                 </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </main>
+              </Reveal>
+            ))}
+          </div>
+        )}
+
+        {/* CTA */}
+        <Reveal variant="up" className="faq-cta">
+          <h2>{t("faq.ctaTitle")}</h2>
+          <p>{t("faq.ctaText")}</p>
+          <Link to="/iletisim" className="cta-button">
+            {t("faq.ctaBtn")} <ArrowRight size={18} />
+          </Link>
+        </Reveal>
+      </section>
+
       <ScrollToTop />
     </div>
   );
