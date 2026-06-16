@@ -10,6 +10,7 @@ import LoginModal from "./components/LoginModal";
 import RegisterModal from "./components/RegisterModal";
 import SplashScreen from "./components/SplashScreen";
 import PageLoader from "./components/PageLoader";
+import ErrorBoundary from "./components/ErrorBoundary";
 import DesktopAuthPage from "./pages/DesktopAuthPage";
 import { AuthProvider, useAuth } from "./context/AuthContext";
 import { ThemeProvider } from "./context/ThemeContext";
@@ -55,6 +56,9 @@ const AdvisorProfil         = lazy(() => import("./pages/AdvisorProfil"));
 
 // Birleştirilmiş İşlem Sayfası
 const TradePage = lazy(() => import("./pages/TradePage"));
+
+// 404
+const NotFound = lazy(() => import("./pages/NotFound"));
 
 // ── Sabitler ────────────────────────────────────────────────────────────
 const isTauri = Boolean((window as Window & { __TAURI__?: unknown }).__TAURI__);
@@ -164,6 +168,9 @@ const AppContent: React.FC<AppContentProps> = ({
             {/* Ortak */}
             <Route path="/profil" element={user ? <Profil /> : <Navigate to="/" />} />
             <Route path="/raporlama" element={user?.isAdmin ? <Raporlama /> : <Navigate to="/" />} />
+
+            {/* 404 — bilinmeyen tüm yollar */}
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </Suspense>
       </main>
@@ -185,6 +192,7 @@ function App() {
   const handleSplashFinish = useCallback(() => setShowSplash(false), []);
 
   return (
+    <ErrorBoundary>
     <HelmetProvider>
       {showSplash && <SplashScreen onFinish={handleSplashFinish} />}
 
@@ -211,6 +219,7 @@ function App() {
         </Router>
       )}
     </HelmetProvider>
+    </ErrorBoundary>
   );
 }
 

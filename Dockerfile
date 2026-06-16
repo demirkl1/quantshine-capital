@@ -19,6 +19,9 @@ ENV REACT_APP_KEYCLOAK_REALM=$REACT_APP_KEYCLOAK_REALM
 ENV REACT_APP_KEYCLOAK_CLIENT_ID=$REACT_APP_KEYCLOAK_CLIENT_ID
 ENV CI=false
 ENV NODE_OPTIONS=--max-old-space-size=1536
+# Webpack runtime'ını ayrı dosyaya çıkar (inline <script> üretme) — böylece
+# CSP'den script-src 'unsafe-inline' kaldırılabilir.
+ENV INLINE_RUNTIME_CHUNK=false
 
 COPY tsconfig.json ./
 COPY public ./public
