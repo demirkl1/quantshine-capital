@@ -478,7 +478,7 @@ const YoneticiFon = () => {
                   <h2 className="fon-detail-title">{detailFund?.name || selectedDetailFon.name}</h2>
                   {detailFund?.type && <span className="fon-detail-type">{detailFund.type}</span>}
                 </div>
-                <button className="fon-detail-close" onClick={() => setSelectedDetailFon(null)}>✕</button>
+                <button aria-label="Kapat" className="fon-detail-close" onClick={() => setSelectedDetailFon(null)}>✕</button>
               </div>
 
               {loadingDetail ? (

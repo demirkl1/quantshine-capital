@@ -597,7 +597,7 @@ const handleAssign = async () => {
                   <h2 className="advisor-modal-name">{selectedDetailInvestor.fullName}</h2>
                   <span className="advisor-modal-role">Yatırımcı · {selectedDetailInvestor.tcNo}</span>
                 </div>
-                <button className="advisor-modal-close" onClick={() => setSelectedDetailInvestor(null)}>✕</button>
+                <button aria-label="Kapat" className="advisor-modal-close" onClick={() => setSelectedDetailInvestor(null)}>✕</button>
               </div>
 
               {/* Sekmeler */}

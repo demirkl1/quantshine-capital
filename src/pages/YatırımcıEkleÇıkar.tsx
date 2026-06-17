@@ -283,7 +283,7 @@ const YatırımcıEkleÇıkar = () => {
               <div className="modal-content">
                 <div className="modal-header">
                   <h3>💰 Varlık Tanımla</h3>
-                  <button className="close-x" onClick={() => setIsModalOpen(false)}>×</button>
+                  <button aria-label="Kapat" className="close-x" onClick={() => setIsModalOpen(false)}>×</button>
                 </div>
                 <div className="modal-body">
                   <p><strong>Yatırımcı:</strong> {selectedInvestor?.ad} {selectedInvestor?.soyad}</p>
