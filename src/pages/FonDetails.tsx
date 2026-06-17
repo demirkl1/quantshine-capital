@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useState, useEffect, useCallback } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -9,6 +8,7 @@ import {
   PieChart, Pie, Cell, Legend,
 } from "recharts";
 import api from "../api";
+import type { Fund, Advisor, Investor, Holding, Trade, ChartPoint, Report } from "../types/domain";
 import ScrollToTop from "../components/ScrollToTop";
 import "./FonDetails.css";
 
@@ -32,12 +32,12 @@ export default function FundDetail() {
   const { code } = useParams();
   const { t } = useTranslation();
 
-  const [fund, setFund] = useState(null);
-  const [chartData, setChartData] = useState([]);
+  const [fund, setFund] = useState<Fund | null>(null);
+  const [chartData, setChartData] = useState<ChartPoint[]>([]);
   const [period, setPeriod] = useState("1A");
   const [loadingFund, setLoadingFund] = useState(true);
   const [loadingChart, setLoadingChart] = useState(false);
-  const [fundError, setFundError] = useState(null);
+  const [fundError, setFundError] = useState<string | null>(null);
 
   const isValidCode = CODE_REGEX.test(code ?? "");
 
@@ -46,9 +46,9 @@ export default function FundDetail() {
     setLoadingFund(true);
     setFundError(null);
     try {
-      const { data } = await api.get(`/funds/${encodeURIComponent(code)}`, { signal });
+      const { data } = await api.get(`/funds/${encodeURIComponent(code || "")}`, { signal });
       setFund(data);
-    } catch (err) {
+    } catch (err: any) {
       if (err.name === "CanceledError" || err.name === "AbortError") return;
       setFundError(err.response?.status === 404 ? t("fundDetail.notFound") : t("fundDetail.loadError"));
     } finally {
@@ -60,9 +60,9 @@ export default function FundDetail() {
     if (!isValidCode || !fund) return;
     setLoadingChart(true);
     try {
-      const { data } = await api.get(`/funds/${encodeURIComponent(code)}/history`, { params: { period }, signal });
+      const { data } = await api.get(`/funds/${encodeURIComponent(code || "")}/history`, { params: { period }, signal });
       setChartData(Array.isArray(data) ? data : []);
-    } catch (err) {
+    } catch (err: any) {
       if (err.name === "CanceledError" || err.name === "AbortError") return;
       setChartData([]);
     } finally {
@@ -115,9 +115,9 @@ export default function FundDetail() {
 
   const perfItems = PERF_KEYS
     .map((k) => ({ label: t(`fundDetail.perf.${k}`), val: fund.performance?.[k] }))
-    .filter(({ val }) => val != null && !isNaN(parseFloat(val)));
+    .filter(({ val }) => val != null && !isNaN(parseFloat(String(val))));
 
-  const tefasYes = fund.tefas === true || fund.tefas === "Evet";
+  const tefasYes = fund.tefas === true || (fund.tefas as any) === "Evet";
 
   return (
     <div className="fd-page">
@@ -142,7 +142,7 @@ export default function FundDetail() {
           <div className="fd-stats">
             <div className="fd-stat">
               <span className="fd-stat-label">{t("fundDetail.price")}</span>
-              <span className="fd-stat-value">{parseFloat(fund.price).toFixed(4)} ₺</span>
+              <span className="fd-stat-value">{Number(fund.price ?? 0).toFixed(4)} ₺</span>
             </div>
             {fund.totalValue != null && (
               <div className="fd-stat">
@@ -236,9 +236,9 @@ export default function FundDetail() {
             <div className="fd-card-head"><h3>{t("fundDetail.allocationTitle")}</h3></div>
             <ResponsiveContainer width="100%" height={320}>
               <PieChart>
-                <Pie data={fund.allocation} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={110}
+                <Pie data={(fund.allocation ?? []) as any} dataKey="value" nameKey="name" cx="50%" cy="50%" outerRadius={110}
                   label={({ name, value }) => `${name}: %${value}`} labelLine={{ stroke: "rgba(255,255,255,0.2)" }}>
-                  {fund.allocation.map((_, i) => (
+                  {(fund.allocation ?? []).map((_, i) => (
                     <Cell key={`cell-${i}`} fill={PIE_COLORS[i % PIE_COLORS.length]} />
                   ))}
                 </Pie>

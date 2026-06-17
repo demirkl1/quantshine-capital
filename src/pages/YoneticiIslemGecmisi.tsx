@@ -1,6 +1,6 @@
-// @ts-nocheck
 import React, { useState, useEffect } from 'react';
 import api from '../api';
+import type { Fund, Advisor, Investor, Holding, Trade, ChartPoint, Report } from "../types/domain";
 import { useAuth } from '../context/AuthContext';
 import AdminSidebar from '../components/AdminSidebar';
 import { MdSearch } from 'react-icons/md';
@@ -9,7 +9,7 @@ import './YoneticiIslemGecmisi.css';
 const YoneticiIslemGecmisi = () => {
   const { isAuthenticated } = useAuth();
   const [searchTerm, setSearchTerm] = useState("");
-  const [history, setHistory] = useState([]);
+  const [history, setHistory] = useState<Trade[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -18,7 +18,7 @@ const YoneticiIslemGecmisi = () => {
         const res = await api.get('/trade/all-history');
         setHistory(Array.isArray(res.data) ? res.data : []);
         setLoading(false);
-      } catch (err) {
+      } catch (err: any) {
         console.error("İşlem geçmişi yüklenemedi:", err);
         setLoading(false);
       }
@@ -75,8 +75,8 @@ const YoneticiIslemGecmisi = () => {
                   const tcNo = item.investorTc || "-";
                   const name = item.investorName || "Bilinmiyor";
                   const lotCount = item.lotCount || item.lot || 0;
-                  const bPrice = parseFloat(item.unitPrice || item.boughtPrice || 0);
-                  const cPrice = parseFloat(item.currentPrice || 0);
+                  const bPrice = Number(item.unitPrice || item.boughtPrice || 0);
+                  const cPrice = Number(item.currentPrice || 0);
 
                   const profitRate = bPrice !== 0 && cPrice !== 0
                     ? (((cPrice - bPrice) / bPrice) * 100).toFixed(2)

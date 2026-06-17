@@ -1,6 +1,6 @@
-// @ts-nocheck
 import React, { useState, useEffect } from "react";
 import api from '../api';
+import type { Fund, Advisor, Investor, Holding, Trade, ChartPoint, Report } from "../types/domain";
 import toast from 'react-hot-toast';
 import "./YatırımcıEkleÇıkar.css";
 import { useAuth } from "../context/AuthContext";
@@ -14,13 +14,13 @@ const YatırımcıEkleÇıkar = () => {
 
   // --- STATE TANIMLARI ---
   const [activeTab, setActiveTab] = useState("pending");
-  const [istekler, setIstekler] = useState([]);
-  const [myInvestors, setMyInvestors] = useState([]);
+  const [istekler, setIstekler] = useState<Investor[]>([]);
+  const [myInvestors, setMyInvestors] = useState<Investor[]>([]);
   const [loading, setLoading] = useState(true);
-  const [otherAdvisors, setOtherAdvisors] = useState([]);
-  const [transferSelections, setTransferSelections] = useState({});
+  const [otherAdvisors, setOtherAdvisors] = useState<Advisor[]>([]);
+  const [transferSelections, setTransferSelections] = useState<Record<string, string>>({});
 
-  const [selectedInvestor, setSelectedInvestor] = useState(null);
+  const [selectedInvestor, setSelectedInvestor] = useState<Investor | null>(null);
   const [isWithdrawModalOpen, setIsWithdrawModalOpen] = useState(false);
   const [withdrawAmount, setWithdrawAmount] = useState("");
   const openWithdrawModal = (targetInvestor) => {
@@ -39,7 +39,7 @@ const YatırımcıEkleÇıkar = () => {
 
       const rawPrice = response.data.currentPrice !== undefined ? response.data.currentPrice : response.data;
       setFundPrice(Number(rawPrice));
-    } catch (err) {
+    } catch (err: any) {
       console.error("Fiyat çekilemedi:", err);
     }
   };
@@ -49,7 +49,7 @@ const YatırımcıEkleÇıkar = () => {
       setLoading(true);
       const response = await api.get('/admin/pending');
       setIstekler(response.data);
-    } catch (err) {
+    } catch (err: any) {
       console.error("Bekleyen kullanıcılar yüklenemedi:", err);
     } finally {
       setLoading(false);
@@ -61,7 +61,7 @@ const YatırımcıEkleÇıkar = () => {
     try {
       const response = await api.get('/admin/list-others');
       setOtherAdvisors(response.data);
-    } catch (err) {
+    } catch (err: any) {
       console.error("Admin listesi çekilemedi:", err);
     }
   };
@@ -97,7 +97,7 @@ const YatırımcıEkleÇıkar = () => {
       setDepositAmount("");
       fetchMyInvestors(); // Tablodaki rakamları anlık güncelle
 
-    } catch (err) {
+    } catch (err: any) {
       console.error("Güncelleme Hatası:", err);
       toast.error("Hata: " + (err.response?.data || "Sunucu hatası"));
     }
@@ -111,7 +111,7 @@ const YatırımcıEkleÇıkar = () => {
       status === 'ACCEPTED' ? toast.success("Onaylandı!") : toast.error("Reddedildi!");
       setIstekler(istekler.filter((i) => i.id !== investorId));
       fetchMyInvestors();
-    } catch (err) {
+    } catch (err: any) {
       toast.error("İşlem başarısız!");
     }
   };
@@ -127,7 +127,7 @@ const YatırımcıEkleÇıkar = () => {
         setIsWithdrawModalOpen(false);
         fetchMyInvestors();
       }
-    } catch (error) {
+    } catch (error: any) {
       toast.error("Hata: " + (error.response?.data?.error || error.response?.data?.message || "İşlem başarısız"));
     }
   };
@@ -135,7 +135,7 @@ const YatırımcıEkleÇıkar = () => {
     try {
       const response = await api.get('/admin/my-investors');
       setMyInvestors(response.data);
-    } catch (err) {
+    } catch (err: any) {
       console.error("Liste yüklenemedi:", err);
     }
   };
@@ -154,7 +154,7 @@ const YatırımcıEkleÇıkar = () => {
       toast.success("Transfer başarılı!");
       // Listeyi güncelle (Transfer edilen yatırımcıyı listeden çıkar)
       setMyInvestors(myInvestors.filter(inv => inv.id !== investorId));
-    } catch (err) {
+    } catch (err: any) {
       console.error("Transfer hatası:", err);
       toast.error("Transfer işlemi başarısız oldu.");
     }
@@ -173,7 +173,7 @@ const YatırımcıEkleÇıkar = () => {
 
   return (
     <div className="admin-wrapper">
-      <AdminSidebar isOpen={isSidebarOpen} toggleSidebar={toggleSidebar} />
+      <AdminSidebar {...({ isOpen: isSidebarOpen, toggleSidebar } as any)} />
 
       <main className={`admin-main ${isSidebarOpen ? "sidebar-open" : "sidebar-collapsed"}`}>
         <div className="admin-content">
@@ -251,8 +251,8 @@ const YatırımcıEkleÇıkar = () => {
                               color: '#1e293b',
                               fontSize: '0.85rem'
                             }}
-                            value={transferSelections[inv.id] || ""}
-                            onChange={(e) => handleSelectChange(inv.id, e.target.value)}
+                            value={transferSelections[inv.id!] || ""}
+                            onChange={(e) => handleSelectChange(inv.id!, e.target.value)}
                           >
                             <option value="" disabled>Admin Seç</option>
                             {otherAdvisors.map(adv => (
@@ -298,7 +298,7 @@ const YatırımcıEkleÇıkar = () => {
                     autoFocus
                   />
 
-                  {depositAmount > 0 && fundPrice > 0 && (
+                  {Number(depositAmount) > 0 && fundPrice > 0 && (
                     <div style={{
                       marginTop: '15px',
                       padding: '12px',
@@ -312,7 +312,7 @@ const YatırımcıEkleÇıkar = () => {
                       </div>
                       <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '1.1rem', color: '#22c55e' }}>
                         <span>Tanımlanacak Lot:</span>
-                        <strong>{(depositAmount / fundPrice).toFixed(4)}</strong>
+                        <strong>{(Number(depositAmount) / fundPrice).toFixed(4)}</strong>
                       </div>
                     </div>
                   )}
@@ -341,7 +341,7 @@ const YatırımcıEkleÇıkar = () => {
                           onChange={(e) => setWithdrawAmount(e.target.value)}
                           placeholder="Çekilecek Tutar"
                         />
-                        <button onClick={() => handleWithdraw(selectedInvestor.email, withdrawAmount)}>Onayla</button>
+                        <button onClick={() => handleWithdraw(selectedInvestor!.email, withdrawAmount)}>Onayla</button>
                         <button onClick={() => setIsWithdrawModalOpen(false)}>İptal</button>
                       </div>
                     </div>

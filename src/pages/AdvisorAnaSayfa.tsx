@@ -1,6 +1,6 @@
-// @ts-nocheck
 import React, { useState, useEffect } from 'react';
 import api from '../api';
+import type { Fund, Advisor, Investor, Holding, Trade, ChartPoint, Report } from "../types/domain";
 import { useAuth } from '../context/AuthContext';
 import AdvisorSidebar from '../components/AdvisorSidebar';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
@@ -10,7 +10,7 @@ const AdvisorAnaSayfa = () => {
   const { isAuthenticated } = useAuth();
   const [activeFilter, setActiveFilter] = useState("1A");
   const [loading, setLoading] = useState(true);
-  const [realFundCode, setRealFundCode] = useState(null);
+  const [realFundCode, setRealFundCode] = useState<string | null>(null);
   const [fundCodeFetched, setFundCodeFetched] = useState(false);
 
   const [stats, setStats] = useState({
@@ -19,7 +19,7 @@ const AdvisorAnaSayfa = () => {
     fonKarZararYuzde: "0.00"
   });
   const [fonBilgi, setFonBilgi] = useState({ totalLot: null, price: null });
-  const [chartData, setChartData] = useState([]);
+  const [chartData, setChartData] = useState<any[]>([]);
 
   // İlk yüklemede backend'den gerçek fon kodunu çek
   useEffect(() => {
@@ -28,7 +28,7 @@ const AdvisorAnaSayfa = () => {
       try {
         const { data: backendUser } = await api.get('/users/me');
         setRealFundCode(backendUser.managedFundCode || null);
-      } catch (err) {
+      } catch (err: any) {
         console.error("Kullanıcı bilgisi alınamadı:", err.message);
       } finally {
         setFundCodeFetched(true);
@@ -45,7 +45,7 @@ const AdvisorAnaSayfa = () => {
       try {
         const res = await api.get('/trade/advisor-stats');
         setStats(res.data);
-      } catch (err) {
+      } catch (err: any) {
         console.error("Stats Hatası:", err.response?.data || err.message);
       }
     };
@@ -65,7 +65,7 @@ const AdvisorAnaSayfa = () => {
           totalLot: res.data?.totalLot ?? null,
           price: res.data?.price ?? null
         });
-      } catch (err) {
+      } catch (err: any) {
         console.error("Fon bilgisi alınamadı:", err.message);
       }
     };
@@ -92,7 +92,7 @@ const AdvisorAnaSayfa = () => {
             .filter(d => d.name && Number.isFinite(d.fiyat))
             .sort((a, b) => String(a.name).localeCompare(String(b.name)))
         );
-      } catch (err) {
+      } catch (err: any) {
         console.error("Grafik Hatası:", err.response?.data || err.message);
       } finally {
         setLoading(false);
@@ -136,13 +136,13 @@ return (
               <p className="stat-value">
                 ₺{stats.sorumluFonBuyuklugu?.toLocaleString('tr-TR', { minimumFractionDigits: 2 })}
               </p>
-              {parseFloat(stats.fonKarZararTl) !== 0 && (
+              {Number(stats.fonKarZararTl) !== 0 && (
                 <div style={{ marginTop: 8, display: 'flex', gap: 12, alignItems: 'center', flexWrap: 'wrap' }}>
-                  <span style={{ fontSize: 12, fontWeight: 700, color: parseFloat(stats.fonKarZararTl) >= 0 ? '#22c55e' : '#f87171' }}>
-                    K/Z&nbsp;{parseFloat(stats.fonKarZararTl) >= 0 ? '+' : ''}₺{Number(stats.fonKarZararTl || 0).toLocaleString('tr-TR', { minimumFractionDigits: 2 })}
+                  <span style={{ fontSize: 12, fontWeight: 700, color: Number(stats.fonKarZararTl) >= 0 ? '#22c55e' : '#f87171' }}>
+                    K/Z&nbsp;{Number(stats.fonKarZararTl) >= 0 ? '+' : ''}₺{Number(stats.fonKarZararTl || 0).toLocaleString('tr-TR', { minimumFractionDigits: 2 })}
                   </span>
-                  <span className={parseFloat(stats.fonKarZararYuzde) >= 0 ? "text-profit" : "text-loss"}>
-                    {parseFloat(stats.fonKarZararYuzde) >= 0 ? '▲' : '▼'} %{stats.fonKarZararYuzde}
+                  <span className={Number(stats.fonKarZararYuzde) >= 0 ? "text-profit" : "text-loss"}>
+                    {Number(stats.fonKarZararYuzde) >= 0 ? '▲' : '▼'} %{stats.fonKarZararYuzde}
                   </span>
                 </div>
               )}
@@ -168,14 +168,14 @@ return (
               <span style={{ fontSize: 12, color: '#94a3b8' }}>Birim Fiyat ({realFundCode || 'FON'})</span>
             </div>
 
-            <div className="stat-card" style={{ borderTop: `4px solid ${parseFloat(stats.fonKarZararYuzde) >= 0 ? '#10b981' : '#ef4444'}` }}>
+            <div className="stat-card" style={{ borderTop: `4px solid ${Number(stats.fonKarZararYuzde) >= 0 ? '#10b981' : '#ef4444'}` }}>
               <h3>FON KÂR/ZARAR</h3>
               <p className="stat-value">
-                {parseFloat(stats.fonKarZararTl) >= 0 ? '+' : ''}
+                {Number(stats.fonKarZararTl) >= 0 ? '+' : ''}
                 ₺{stats.fonKarZararTl?.toLocaleString('tr-TR', { minimumFractionDigits: 2 })}
               </p>
-              <span className={parseFloat(stats.fonKarZararYuzde) >= 0 ? "text-profit" : "text-loss"}>
-                {parseFloat(stats.fonKarZararYuzde) >= 0 ? '▲' : '▼'} %{stats.fonKarZararYuzde}
+              <span className={Number(stats.fonKarZararYuzde) >= 0 ? "text-profit" : "text-loss"}>
+                {Number(stats.fonKarZararYuzde) >= 0 ? '▲' : '▼'} %{stats.fonKarZararYuzde}
               </span>
             </div>
           </div>
@@ -227,7 +227,7 @@ return (
                   <YAxis
                     stroke="#2d3748"
                     domain={['auto', 'auto']}
-                    tickFormatter={(value) => `₺${parseFloat(value).toFixed(2)}`}
+                    tickFormatter={(value) => `₺${parseFloat(String(value)).toFixed(2)}`}
                     tick={{ fontSize: 11, fill: '#94a3b8' }}
                     width={70}
                     axisLine={false}
@@ -242,7 +242,7 @@ return (
                       color: '#fff' 
                     }}
                     labelFormatter={(label) => new Date(label).toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' })}
-                    formatter={(value) => [`₺${parseFloat(value).toFixed(4)}`, "Birim Fiyat"]}
+                    formatter={(value) => [`₺${parseFloat(String(value)).toFixed(4)}`, "Birim Fiyat"]}
                   />
                   
                   <Area

@@ -1,6 +1,6 @@
-// @ts-nocheck
 import React, { useState, useEffect } from 'react';
 import api from '../api';
+import type { Fund, Advisor, Investor, Holding, Trade, ChartPoint, Report } from "../types/domain";
 import { useAuth } from '../context/AuthContext';
 import InvestorSidebar from '../components/InvestorSidebar';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
@@ -8,7 +8,7 @@ import './Portfoyum.css';
 
 const Portfoyum = () => {
   const { isAuthenticated, user } = useAuth();
-  const [myFunds, setMyFunds] = useState([]);
+  const [myFunds, setMyFunds] = useState<string[]>([]);
   const [selectedFon, setSelectedFon] = useState("");
   const [activeFilter, setActiveFilter] = useState("1A");
   const [loading, setLoading] = useState(true);
@@ -18,10 +18,13 @@ const Portfoyum = () => {
     toplamLot: 0,
     karZararTl: 0,
     guncelDeger: 0,
-    toplamPortfoyBuyuklugu: 0
+    toplamPortfoyBuyuklugu: 0,
+    toplamMaliyet: 0,
+    karZararYuzde: '0',
+    genelKarZararYuzde: '0'
   });
-  const [birimFiyat, setBirimFiyat] = useState(null);
-  const [chartData, setChartData] = useState([]);
+  const [birimFiyat, setBirimFiyat] = useState<number | null>(null);
+  const [chartData, setChartData] = useState<any[]>([]);
 
   // 1. ADIM: Sayfa açıldığında yatırımcının fon listesini çekiyoruz
   useEffect(() => {
@@ -38,7 +41,7 @@ const Portfoyum = () => {
         } else if (res.data.length === 0) {
           setLoading(false);
         }
-      } catch (err) {
+      } catch (err: any) {
         console.error("Fon listesi çekilemedi:", err);
         setLoading(false);
       }
@@ -71,7 +74,7 @@ const Portfoyum = () => {
 
         setChartData(formattedData);
 
-      } catch (err) {
+      } catch (err: any) {
         console.error("Veri çekme hatası:", err);
       } finally {
         setLoading(false);
@@ -141,11 +144,11 @@ const Portfoyum = () => {
 
   <div className="stat-card" style={{ borderTop: `4px solid ${getFonColor(selectedFon)}` }}>
     <h3>KÂR / ZARAR (SEÇİLİ FON)</h3>
-    <p className={`stat-value ${parseFloat(stats.karZararTl) >= 0 ? 'text-profit' : 'text-loss'}`}>
-      {parseFloat(stats.karZararTl) >= 0 ? '+' : ''}₺{stats.karZararTl?.toLocaleString('tr-TR')}
+    <p className={`stat-value ${Number(stats.karZararTl) >= 0 ? 'text-profit' : 'text-loss'}`}>
+      {Number(stats.karZararTl) >= 0 ? '+' : ''}₺{stats.karZararTl?.toLocaleString('tr-TR')}
     </p>
-    <span className={parseFloat(stats.karZararYuzde) >= 0 ? "text-profit" : "text-loss"}>
-      {parseFloat(stats.karZararYuzde) >= 0 ? '▲' : '▼'} %{stats.karZararYuzde}
+    <span className={Number(stats.karZararYuzde) >= 0 ? "text-profit" : "text-loss"}>
+      {Number(stats.karZararYuzde) >= 0 ? '▲' : '▼'} %{stats.karZararYuzde}
     </span>
   </div>
 
@@ -166,11 +169,11 @@ const Portfoyum = () => {
 
   <div className="stat-card static-card">
     <h3>TOPLAM KÂR / ZARAR (GENEL)</h3>
-    <p className={`stat-value ${parseFloat(stats.genelKarZararYuzde) >= 0 ? 'text-profit' : 'text-loss'}`}>
+    <p className={`stat-value ${Number(stats.genelKarZararYuzde) >= 0 ? 'text-profit' : 'text-loss'}`}>
       ₺{(stats.toplamPortfoyBuyuklugu - (stats.toplamMaliyet || 0))?.toLocaleString('tr-TR')}
     </p>
-    <span className={parseFloat(stats.genelKarZararYuzde) >= 0 ? "text-profit" : "text-loss"}>
-      {parseFloat(stats.genelKarZararYuzde) >= 0 ? '▲' : '▼'} %{stats.genelKarZararYuzde}
+    <span className={Number(stats.genelKarZararYuzde) >= 0 ? "text-profit" : "text-loss"}>
+      {Number(stats.genelKarZararYuzde) >= 0 ? '▲' : '▼'} %{stats.genelKarZararYuzde}
     </span>
   </div>
 </div>
@@ -230,7 +233,7 @@ const Portfoyum = () => {
   <Tooltip
     contentStyle={{ backgroundColor: '#161b2c', border: '1px solid #2d3748', borderRadius: '10px', color: '#fff' }}
     labelStyle={{ color: '#94a3b8', marginBottom: 4 }}
-    formatter={(value) => [`₺${parseFloat(value).toFixed(4)}`, "Birim Fiyat"]}
+    formatter={(value) => [`₺${parseFloat(String(value)).toFixed(4)}`, "Birim Fiyat"]}
   />
 
   <Area
