@@ -7,7 +7,7 @@ import { MdPerson, MdEventAvailable } from 'react-icons/md';
 import './HaftalikRapor.css';
 
 const HaftalikRapor = () => {
-  const { token } = useAuth();
+  const { isAuthenticated } = useAuth();
   const [reports, setReports] = useState([]);
   const [filteredReports, setFilteredReports] = useState([]);
   const [advisors, setAdvisors] = useState([]);
@@ -16,7 +16,7 @@ const HaftalikRapor = () => {
 
   useEffect(() => {
     const fetchReports = async () => {
-      if (!token) return;
+      if (!isAuthenticated) return;
       try {
         await api.get('/users/me'); // Kullanıcıyı DB'ye sync et
         const res = await api.get('/reports/my-reports');
@@ -45,8 +45,8 @@ const HaftalikRapor = () => {
       }
     };
 
-    if (token) fetchReports();
-  }, [token]);
+    if (isAuthenticated) fetchReports();
+  }, [isAuthenticated]);
 
   // Filtreleme mantığı
   useEffect(() => {

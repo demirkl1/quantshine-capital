@@ -9,7 +9,7 @@ import toast from 'react-hot-toast';
 import './Profil.css';
 
 const Profil = () => {
-  const { token, user: authUser } = useAuth();
+  const { isAuthenticated, user: authUser } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(true);
   
@@ -34,8 +34,8 @@ const Profil = () => {
         setLoading(false);
       }
     };
-    if (token) fetchProfile();
-  }, [token]);
+    if (isAuthenticated) fetchProfile();
+  }, [isAuthenticated]);
 
   const handleSave = async () => {
     try {

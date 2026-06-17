@@ -8,7 +8,7 @@ import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import './AdminAnasayfa.css';
 
 const AdminAnasayfa = () => {
-  const { token, user } = useAuth();
+  const { isAuthenticated, user } = useAuth();
   const [activeFilter, setActiveFilter] = useState("1A");
   const [loading, setLoading] = useState(true);
   const [selectedFonlar, setSelectedFonlar] = useState<string[] | null>(null);
@@ -44,16 +44,16 @@ const AdminAnasayfa = () => {
   // Admin DB kaydını senkronize et (Keycloak'ta oluşturulmuş kullanıcılar için gerekli)
   useEffect(() => {
     const syncAdmin = async () => {
-      if (!token) return;
+      if (!isAuthenticated) return;
       try { await api.get('/users/me'); } catch (e) { console.error("Admin sync hatası:", (e as Error).message); }
     };
     syncAdmin();
-  }, [token]);
+  }, [isAuthenticated]);
 
   // Stats (portföy değeri + K/Z) — her 60 saniyede bir yenilenir
   useEffect(() => {
     const fetchStats = async () => {
-      if (!token) return;
+      if (!isAuthenticated) return;
       try {
         const res = await api.get('/trade/admin-stats');
         setFinancials(res.data);
@@ -63,7 +63,7 @@ const AdminAnasayfa = () => {
     fetchStats();
     const interval = setInterval(fetchStats, 60000);
     return () => clearInterval(interval);
-  }, [token]);
+  }, [isAuthenticated]);
 
   // selectedFonlar'ı kullanıcı veya fon listesi yüklenince başlat
   useEffect(() => {
@@ -78,7 +78,7 @@ const AdminAnasayfa = () => {
   // Fon listesi
   useEffect(() => {
     const fetchFunds = async () => {
-      if (!token) return;
+      if (!isAuthenticated) return;
       try {
         const res = await api.get('/funds/all-details');
         setFonListesi(res.data);
@@ -86,12 +86,12 @@ const AdminAnasayfa = () => {
       setLoading(false);
     };
     fetchFunds();
-  }, [token]);
+  }, [isAuthenticated]);
 
   // Fon geçmiş verileri — ham olarak sakla (normalize için)
   useEffect(() => {
     const fetchFundSeries = async () => {
-      if (!token || !selectedFonlar || selectedFonlar.length === 0) return;
+      if (!isAuthenticated || !selectedFonlar || selectedFonlar.length === 0) return;
       try {
         const results = await Promise.all(
           selectedFonlar.map(code =>
@@ -119,7 +119,7 @@ const AdminAnasayfa = () => {
       } catch (e) { console.error("Fon grafik hatası:", e); }
     };
     fetchFundSeries();
-  }, [token, selectedFonlar, activeFilter]);
+  }, [isAuthenticated, selectedFonlar, activeFilter]);
 
   // BIST 100 + USD/TRY geçmiş verileri — backend proxy üzerinden (CORS sorunu olmaz)
   useEffect(() => {

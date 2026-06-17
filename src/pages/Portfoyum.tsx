@@ -7,7 +7,7 @@ import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import './Portfoyum.css';
 
 const Portfoyum = () => {
-  const { token, user } = useAuth();
+  const { isAuthenticated, user } = useAuth();
   const [myFunds, setMyFunds] = useState([]);
   const [selectedFon, setSelectedFon] = useState("");
   const [activeFilter, setActiveFilter] = useState("1A");
@@ -26,7 +26,7 @@ const Portfoyum = () => {
   // 1. ADIM: Sayfa açıldığında yatırımcının fon listesini çekiyoruz
   useEffect(() => {
     const fetchMyFunds = async () => {
-      if (!token) return;
+      if (!isAuthenticated) return;
       try {
         await api.get('/users/me'); // Kullanıcıyı DB'ye sync et
         const res = await api.get('/trade/my-funds');
@@ -44,11 +44,11 @@ const Portfoyum = () => {
       }
     };
     fetchMyFunds();
-  }, [token]);
+  }, [isAuthenticated]);
 
   useEffect(() => {
     const fetchPortfolioDetails = async () => {
-      if (!token || !selectedFon) return;
+      if (!isAuthenticated || !selectedFon) return;
       
       setLoading(true);
       try {
@@ -79,7 +79,7 @@ const Portfoyum = () => {
     };
 
     fetchPortfolioDetails();
-  }, [token, selectedFon, activeFilter]);
+  }, [isAuthenticated, selectedFon, activeFilter]);
 
   // Fon bazlı renk yönetimi
   const getFonColor = (code) => {

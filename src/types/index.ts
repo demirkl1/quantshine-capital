@@ -11,29 +11,23 @@ export interface User {
   isAuthenticated: boolean;
 }
 
-export interface AuthTokenData {
-  access_token?: string;
-  refresh_token?: string;
-  token?: string;
-}
-
-export interface DecodedToken {
-  sub: string;
-  exp: number;
-  iat: number;
+// Backend /api/auth/login ve /api/users/me yanıtının (User entity) şekli.
+// Token'lar artık gövdede DÖNMEZ; HttpOnly cookie'lerde taşınır.
+export interface BackendUser {
+  id?: number;
+  keycloakId?: string;
   email: string;
-  name?: string;
-  given_name?: string;
-  family_name?: string;
-  realm_access?: { roles: string[] };
+  firstName?: string;
+  lastName?: string;
+  role?: string; // 'ADMIN' | 'ADVISOR' | 'INVESTOR'
   managedFundCode?: string;
 }
 
 export interface AuthContextValue {
   user: User | null;
-  token: string | null;
+  isAuthenticated: boolean;
   loading: boolean;
-  login: (data: AuthTokenData) => void;
+  login: (data: BackendUser) => void;
   logout: () => Promise<void>;
 }
 

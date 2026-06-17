@@ -17,7 +17,7 @@ import './InvestorSidebar.css';
 const InvestorSidebar = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { token, logout } = useAuth();
+  const { isAuthenticated, logout } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
 
   const handleLogout = async () => {
@@ -28,9 +28,9 @@ const InvestorSidebar = () => {
 
   // Yatırımcı DB kaydını senkronize et (Keycloak'ta var ama DB'de yoksa oluşturur)
   useEffect(() => {
-    if (!token) return;
+    if (!isAuthenticated) return;
     api.get('/users/me').catch(() => {});
-  }, [token]);
+  }, [isAuthenticated]);
 
   const menuItems = [
     { path: '/yatirimci-anasayfa', name: 'Portföyüm', icon: <MdAccountBalanceWallet /> },

@@ -7,7 +7,7 @@ import { MdSearch } from 'react-icons/md';
 import './YoneticiIslemGecmisi.css';
 
 const YoneticiIslemGecmisi = () => {
-  const { token } = useAuth();
+  const { isAuthenticated } = useAuth();
   const [searchTerm, setSearchTerm] = useState("");
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -23,8 +23,8 @@ const YoneticiIslemGecmisi = () => {
         setLoading(false);
       }
     };
-    if (token) fetchAllHistory();
-  }, [token]);
+    if (isAuthenticated) fetchAllHistory();
+  }, [isAuthenticated]);
 
   const filteredHistory = history.filter(item =>
     (item.investorTc && item.investorTc.includes(searchTerm)) || 

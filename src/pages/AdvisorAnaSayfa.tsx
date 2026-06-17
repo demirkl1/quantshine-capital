@@ -7,7 +7,7 @@ import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import './AdvisorAnaSayfa.css';
 
 const AdvisorAnaSayfa = () => {
-  const { token } = useAuth();
+  const { isAuthenticated } = useAuth();
   const [activeFilter, setActiveFilter] = useState("1A");
   const [loading, setLoading] = useState(true);
   const [realFundCode, setRealFundCode] = useState(null);
@@ -24,7 +24,7 @@ const AdvisorAnaSayfa = () => {
   // İlk yüklemede backend'den gerçek fon kodunu çek
   useEffect(() => {
     const fetchFundCode = async () => {
-      if (!token) return;
+      if (!isAuthenticated) return;
       try {
         const { data: backendUser } = await api.get('/users/me');
         setRealFundCode(backendUser.managedFundCode || null);
@@ -35,13 +35,13 @@ const AdvisorAnaSayfa = () => {
       }
     };
     fetchFundCode();
-  }, [token]);
+  }, [isAuthenticated]);
 
   // Fon kodu veya filtre değiştiğinde grafik ve istatistikleri güncelle
   // Stats (portföy değeri + K/Z) — her 60 saniyede bir yenilenir
   useEffect(() => {
     const fetchStats = async () => {
-      if (!token || !realFundCode) return;
+      if (!isAuthenticated || !realFundCode) return;
       try {
         const res = await api.get('/trade/advisor-stats');
         setStats(res.data);
@@ -53,12 +53,12 @@ const AdvisorAnaSayfa = () => {
     fetchStats();
     const interval = setInterval(fetchStats, 60000);
     return () => clearInterval(interval);
-  }, [token, realFundCode]);
+  }, [isAuthenticated, realFundCode]);
 
   // Fon detayları (toplam lot + birim fiyat) — her 60 saniyede bir yenilenir
   useEffect(() => {
     const fetchFonBilgi = async () => {
-      if (!token || !realFundCode) return;
+      if (!isAuthenticated || !realFundCode) return;
       try {
         const res = await api.get(`/funds/${realFundCode}`);
         setFonBilgi({
@@ -73,12 +73,12 @@ const AdvisorAnaSayfa = () => {
     fetchFonBilgi();
     const interval = setInterval(fetchFonBilgi, 60000);
     return () => clearInterval(interval);
-  }, [token, realFundCode]);
+  }, [isAuthenticated, realFundCode]);
 
   // Grafik verisi — filtre veya fon kodu değişince yenilenir
   useEffect(() => {
     const fetchChart = async () => {
-      if (!token || !fundCodeFetched) return;
+      if (!isAuthenticated || !fundCodeFetched) return;
       if (!realFundCode) {
         setLoading(false);
         return;
@@ -100,7 +100,7 @@ const AdvisorAnaSayfa = () => {
     };
 
     fetchChart();
-  }, [token, realFundCode, fundCodeFetched, activeFilter]);
+  }, [isAuthenticated, realFundCode, fundCodeFetched, activeFilter]);
 
   const formatXAxis = (tickItem) => {
     if (!tickItem) return "";

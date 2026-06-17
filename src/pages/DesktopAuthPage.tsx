@@ -1,7 +1,6 @@
 // @ts-nocheck
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { jwtDecode } from 'jwt-decode';
 import api from '../api';
 import { useAuth } from '../context/AuthContext';
 import toast from 'react-hot-toast';
@@ -29,11 +28,12 @@ const LoginForm = ({ onSwitchToRegister }) => {
     try {
       const res = await api.post('/auth/login', formData);
       login(res.data);
-      const roles = jwtDecode(res.data.access_token).realm_access?.roles || [];
+      // Token artık cookie'de; yönlendirme login yanıtındaki role göre yapılır.
+      const role = res.data?.role;
       setTimeout(() => {
-        if (roles.includes('ADMIN'))        navigate('/admin-anasayfa');
-        else if (roles.includes('ADVISOR')) navigate('/danisman-anasayfa');
-        else                                navigate('/yatirimci-anasayfa');
+        if (role === 'ADMIN')        navigate('/admin-anasayfa');
+        else if (role === 'ADVISOR') navigate('/danisman-anasayfa');
+        else                         navigate('/yatirimci-anasayfa');
       }, 400);
     } catch {
       setError('E-posta veya şifre hatalı.');

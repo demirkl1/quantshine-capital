@@ -7,7 +7,7 @@ import toast from 'react-hot-toast';
 import './AdvisorProfil.css';
 
 const AdvisorProfil = () => {
-  const { token } = useAuth();
+  const { isAuthenticated } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(true);
   
@@ -32,8 +32,8 @@ const AdvisorProfil = () => {
         setLoading(false);
       }
     };
-    if (token) fetchProfile();
-  }, [token]);
+    if (isAuthenticated) fetchProfile();
+  }, [isAuthenticated]);
 
   const handleSave = async () => {
     try {
