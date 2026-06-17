@@ -5,11 +5,13 @@ import { MapPin, Phone, Mail, Clock, Send } from "lucide-react";
 import Reveal from "../components/Reveal";
 import ScrollToTop from "../components/ScrollToTop";
 import Seo from "../components/Seo";
+import api from "../api";
 import "./Iletisim.css";
 
 const Iletisim: React.FC = () => {
   const { t } = useTranslation();
   const [form, setForm] = useState({ name: "", email: "", phone: "", message: "" });
+  const [sending, setSending] = useState(false);
 
   const INFO = [
     {
@@ -42,14 +44,22 @@ const Iletisim: React.FC = () => {
     setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.name || !form.email || !form.message) {
       toast.error(t("contact.errorMsg"));
       return;
     }
-    toast.success(t("contact.successMsg"));
-    setForm({ name: "", email: "", phone: "", message: "" });
+    setSending(true);
+    try {
+      await api.post("/contact", form);
+      toast.success(t("contact.successMsg"));
+      setForm({ name: "", email: "", phone: "", message: "" });
+    } catch {
+      toast.error(t("contact.errorMsg"));
+    } finally {
+      setSending(false);
+    }
   };
 
   return (
@@ -141,7 +151,7 @@ const Iletisim: React.FC = () => {
                   placeholder={t("contact.messagePlaceholder")}
                 />
               </div>
-              <button type="submit" className="contact-submit">
+              <button type="submit" className="contact-submit" disabled={sending}>
                 {t("contact.send")} <Send size={18} />
               </button>
             </form>
