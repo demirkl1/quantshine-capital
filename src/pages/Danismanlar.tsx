@@ -103,7 +103,7 @@ const Danismanlar = () => {
                     {selectedAdvisor.managedFund && ` · ${selectedAdvisor.managedFund}`}
                   </span>
                 </div>
-                <button className="advisor-modal-close" onClick={() => setSelectedAdvisor(null)}>✕</button>
+                <button aria-label="Kapat" className="advisor-modal-close" onClick={() => setSelectedAdvisor(null)}>✕</button>
               </div>
 
               <div className="advisor-modal-body">

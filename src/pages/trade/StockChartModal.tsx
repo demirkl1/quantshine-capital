@@ -144,7 +144,7 @@ const StockChartModal: React.FC<StockChartModalProps> = ({ stock, onClose, onBuy
             }}>
               ▼ SATIŞ
             </button>
-            <button onClick={onClose} style={{
+            <button aria-label="Kapat" onClick={onClose} style={{
               width:34, height:34, border:`1px solid ${tv.border}`,
               borderRadius:6, background:tv.panel, color:tv.textDim,
               cursor:'pointer', fontSize:16,

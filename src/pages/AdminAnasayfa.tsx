@@ -310,7 +310,7 @@ const calculatePerc = (profit, total) => {
               {(selectedFonlar || []).map((code, i) => (
                 <span key={code} className="fon-chip" style={{ borderColor: CHART_COLORS[i % CHART_COLORS.length], color: CHART_COLORS[i % CHART_COLORS.length] }}>
                   {code}
-                  <button className="fon-chip-remove" onClick={() => toggleFon(code)}>×</button>
+                  <button aria-label="Kaldır" className="fon-chip-remove" onClick={() => toggleFon(code)}>×</button>
                 </span>
               ))}
               {showBist && marketData.bist.length > 0 && (
