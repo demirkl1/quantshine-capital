@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import api from '../api';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import ForgotPasswordModal from './ForgotPasswordModal';
 import './LoginModal.css';
 
 const LoginModal = ({ isOpen, onClose }) => {
@@ -11,6 +12,7 @@ const LoginModal = ({ isOpen, onClose }) => {
   const [formData, setFormData] = useState({ email: '', password: '' });
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const [showForgot, setShowForgot] = useState(false);
 
   if (!isOpen) return null;
 
@@ -113,8 +115,16 @@ const LoginModal = ({ isOpen, onClose }) => {
           <button type="submit" className="btn primary login-btn" disabled={loading}>
             {loading ? 'Kontrol Ediliyor...' : 'Giriş Yap'}
           </button>
+          <button
+            type="button"
+            onClick={() => setShowForgot(true)}
+            style={{ marginTop: 12, background: 'none', border: 'none', color: '#3b82f6', cursor: 'pointer', fontSize: '0.88rem', width: '100%' }}
+          >
+            Şifremi unuttum?
+          </button>
         </form>
       </div>
+      <ForgotPasswordModal isOpen={showForgot} onClose={() => setShowForgot(false)} />
     </div>
   );
 };
