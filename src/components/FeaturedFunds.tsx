@@ -49,12 +49,12 @@ const FeaturedFunds: React.FC = () => {
       .then(({ data }) => {
         if (Array.isArray(data) && data.length) {
           setFunds(data.slice(0, 3));
-        } else if (process.env.NODE_ENV === "development") {
+        } else if (import.meta.env.DEV) {
           setFunds(DEMO_FUNDS);
         }
       })
       .catch(() => {
-        if (process.env.NODE_ENV === "development") setFunds(DEMO_FUNDS);
+        if (import.meta.env.DEV) setFunds(DEMO_FUNDS);
       });
     return () => controller.abort();
   }, []);

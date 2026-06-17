@@ -9,9 +9,9 @@ const Boom = (): React.JSX.Element => {
 
 describe('ErrorBoundary', () => {
   // Hata sınırı testlerinde React, yakalanan hatayı yine de console.error'a yazar.
-  let consoleError: jest.SpyInstance;
+  let consoleError: ReturnType<typeof vi.spyOn>;
   beforeEach(() => {
-    consoleError = jest.spyOn(console, 'error').mockImplementation(() => {});
+    consoleError = vi.spyOn(console, 'error').mockImplementation(() => {});
   });
   afterEach(() => {
     consoleError.mockRestore();

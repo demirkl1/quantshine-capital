@@ -2,15 +2,15 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import NotFound from './NotFound';
 
-// react-router-dom v7 yalnızca ESM dağıttığı için CRA'nın Jest yapılandırması
-// onu çözemiyor. Test için Link'i basit bir <a> ile mock'luyoruz.
-jest.mock('react-router-dom', () => ({
+// Test için react-router-dom'un Link'ini basit bir <a> ile mock'luyoruz
+// (yönlendirme davranışı bu birim testinin kapsamı dışında).
+vi.mock('react-router-dom', () => ({
   Link: ({ to, children, ...rest }: { to: string; children: React.ReactNode }) => (
     <a href={to} {...rest}>
       {children}
     </a>
   ),
-}), { virtual: true });
+}));
 
 describe('NotFound', () => {
   it('404 mesajını ve ana sayfa bağlantısını gösterir', () => {

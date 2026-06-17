@@ -8,25 +8,17 @@ WORKDIR /app
 COPY package.json package-lock.json .npmrc ./
 RUN npm ci --silent
 
-ARG REACT_APP_API_BASE_URL
-ARG REACT_APP_KEYCLOAK_URL
-ARG REACT_APP_KEYCLOAK_REALM
-ARG REACT_APP_KEYCLOAK_CLIENT_ID
-
-ENV REACT_APP_API_BASE_URL=$REACT_APP_API_BASE_URL
-ENV REACT_APP_KEYCLOAK_URL=$REACT_APP_KEYCLOAK_URL
-ENV REACT_APP_KEYCLOAK_REALM=$REACT_APP_KEYCLOAK_REALM
-ENV REACT_APP_KEYCLOAK_CLIENT_ID=$REACT_APP_KEYCLOAK_CLIENT_ID
-ENV CI=false
+# Vite build-time env (import.meta.env.VITE_*). Yalnızca API base path gerekli;
+# keycloak değişkenleri Faz 1 cookie-BFF göçünde kaldırıldı.
+ARG VITE_API_BASE_URL
+ENV VITE_API_BASE_URL=$VITE_API_BASE_URL
 ENV NODE_OPTIONS=--max-old-space-size=1536
-# Webpack runtime'ını ayrı dosyaya çıkar (inline <script> üretme) — böylece
-# CSP'den script-src 'unsafe-inline' kaldırılabilir.
-ENV INLINE_RUNTIME_CHUNK=false
 
-COPY tsconfig.json ./
+COPY tsconfig.json vite.config.ts index.html ./
 COPY public ./public
 COPY src ./src
 
+# Vite inline <script> üretmez (modulePreload.polyfill=false) → CSP 'self' yeterli.
 RUN npm run build
 
 # =============================================================================

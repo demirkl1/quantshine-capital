@@ -6,7 +6,7 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 
 // Üretim ortamında console çıktısını kapat (kaynak kod/hata bilgisi sızmasını önler)
-if (process.env.NODE_ENV === 'production') {
+if (import.meta.env.PROD) {
   // eslint-disable-next-line no-console
   console.log = () => {};
   // eslint-disable-next-line no-console
