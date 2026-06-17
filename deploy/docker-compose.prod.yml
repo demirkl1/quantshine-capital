@@ -81,6 +81,10 @@ services:
       ENCRYPTION_SALT: ${ENCRYPTION_SALT}
       FINNHUB_API_KEY: ${FINNHUB_API_KEY}
       NEWSAPI_KEY: ${NEWSAPI_KEY}
+      # İletişim formu e-posta (Gmail SMTP); değerler .env'den
+      MAIL_USERNAME: ${MAIL_USERNAME:-}
+      MAIL_PASSWORD: ${MAIL_PASSWORD:-}
+      CONTACT_TO: ${CONTACT_TO:-dkilic6606@gmail.com}
       # t3.micro için heap küçültme
       JAVA_TOOL_OPTIONS: "-Xms128m -Xmx256m"
     mem_limit: 350m
