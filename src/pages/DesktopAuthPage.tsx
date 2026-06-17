@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import api from '../api';
 import { useAuth } from '../context/AuthContext';
 import toast from 'react-hot-toast';
+import ForgotPasswordModal from '../components/ForgotPasswordModal';
 import './DesktopAuthPage.css';
 
 /* ─── Giriş Formu ─────────────────────────────────────── */
@@ -14,6 +15,7 @@ const LoginForm = ({ onSwitchToRegister }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [showPass, setShowPass] = useState(false);
+  const [showForgot, setShowForgot] = useState(false);
 
   const handleChange = (e) => {
     setError('');
@@ -103,12 +105,19 @@ const LoginForm = ({ onSwitchToRegister }) => {
         </button>
       </form>
 
+      <p className="dap-switch-text" style={{ marginTop: 8 }}>
+        <button className="dap-switch-link" type="button" onClick={() => setShowForgot(true)}>
+          Şifremi unuttum?
+        </button>
+      </p>
+
       <p className="dap-switch-text">
         Hesabınız yok mu?{' '}
         <button className="dap-switch-link" onClick={onSwitchToRegister}>
           Kayıt Olun
         </button>
       </p>
+      <ForgotPasswordModal isOpen={showForgot} onClose={() => setShowForgot(false)} />
     </div>
   );
 };
