@@ -84,6 +84,13 @@ services:
       # t3.micro için heap küçültme
       JAVA_TOOL_OPTIONS: "-Xms128m -Xmx256m"
     mem_limit: 350m
+    # Sağlık: public /api/funds 200 dönüyorsa ayakta (actuator yok; wget alpine'de mevcut)
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:8081/api/funds || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+      start_period: 90s
     depends_on:
       postgres:
         condition: service_healthy
@@ -96,6 +103,13 @@ services:
     container_name: quantshine-frontend
     restart: unless-stopped
     mem_limit: 64m
+    # Sağlık: SPA kök sayfası 200 dönüyorsa ayakta
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://127.0.0.1:80/ || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
     networks: [quantshine]
 
   nginx:
@@ -112,9 +126,12 @@ services:
       - letsencrypt:/etc/letsencrypt:ro
       - certbot_webroot:/var/www/certbot:ro
     depends_on:
-      - frontend
-      - backend
-      - keycloak
+      frontend:
+        condition: service_healthy
+      backend:
+        condition: service_healthy
+      keycloak:
+        condition: service_started
     networks: [quantshine]
 
   certbot:
