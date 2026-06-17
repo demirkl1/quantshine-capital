@@ -2,6 +2,9 @@
 # Login/kimlik doğrulama uç noktaları için brute-force koruması.
 # Bu dosya http{} bağlamına include edildiğinden limit_req_zone burada geçerli.
 limit_req_zone $binary_remote_addr zone=auth_limit:10m rate=10r/m;
+# Genel API kötüye-kullanım/scraping koruması — cömert (SPA çok istek atar; 30s
+# istemci cache + 10/s + büyük burst meşru kullanımı etkilemez, sürekli abuse'u keser).
+limit_req_zone $binary_remote_addr zone=api_limit:10m rate=600r/m;
 # Rate aşıldığında 503 yerine 429 döndür (istemci tarafı 429'u zaten işliyor).
 limit_req_status 429;
 
@@ -42,6 +45,7 @@ server {
     add_header X-Frame-Options "SAMEORIGIN" always;
     add_header X-Content-Type-Options "nosniff" always;
     add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+    add_header Permissions-Policy "geolocation=(), camera=(), microphone=(), payment=(), usb=()" always;
     add_header Content-Security-Policy "default-src 'self'; script-src 'self' https://s3.tradingview.com https://*.tradingview.com https://*.tradingview-widget.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://*.tradingview.com https://*.tradingview-widget.com; font-src 'self' https://fonts.gstatic.com https://*.tradingview.com https://*.tradingview-widget.com; connect-src 'self' https://${DOMAIN} https://tradingview.com https://*.tradingview.com https://*.tradingview-widget.com wss://tradingview.com wss://*.tradingview.com; img-src 'self' data: blob: https:; frame-src 'self' https://tradingview.com https://*.tradingview.com https://*.tradingview-widget.com https://www.google.com https://maps.google.com; object-src 'none'; base-uri 'self'; form-action 'self';" always;
 
     client_max_body_size 20m;
@@ -61,6 +65,7 @@ server {
 
     # Backend API
     location /api/ {
+        limit_req zone=api_limit burst=120 nodelay;
         proxy_pass         http://backend:8081/api/;
         proxy_http_version 1.1;
         proxy_set_header   Host              $host;
