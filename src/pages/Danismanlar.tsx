@@ -1,15 +1,15 @@
-// @ts-nocheck
 import React, { useState, useEffect } from 'react';
 import api from '../api';
+import type { Fund, Advisor, Investor, Holding, Trade, ChartPoint, Report } from "../types/domain";
 import { useAuth } from '../context/AuthContext';
 import AdminSidebar from '../components/AdminSidebar';
 import './Danismanlar.css';
 
 const Danismanlar = () => {
   const { isAuthenticated } = useAuth();
-  const [advisors, setAdvisors] = useState([]);
+  const [advisors, setAdvisors] = useState<Advisor[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedAdvisor, setSelectedAdvisor] = useState(null);
+  const [selectedAdvisor, setSelectedAdvisor] = useState<Advisor | null>(null);
 
   useEffect(() => {
     if (isAuthenticated) fetchAdvisors();
@@ -19,7 +19,7 @@ const Danismanlar = () => {
     try {
       const res = await api.get('/users/advisors');
       setAdvisors(res.data);
-    } catch (err) {
+    } catch (err: any) {
       console.error("Danışmanlar getirilirken hata oluştu:", err);
     } finally {
       setLoading(false);
@@ -53,7 +53,7 @@ const Danismanlar = () => {
                 </thead>
                 <tbody>
                   {advisors.map((adv, index) => {
-                    const profitValue = parseFloat(adv.performance) || 0;
+                    const profitValue = Number(adv.performance) || 0;
                     const isProfit = profitValue >= 0;
 
                     return (
@@ -128,8 +128,8 @@ const Danismanlar = () => {
                   </div>
                   <div className="advisor-info-item">
                     <span className="advisor-info-label">Fon Performansı</span>
-                    <span className={`advisor-info-value ${parseFloat(selectedAdvisor.performance) >= 0 ? 'text-profit' : 'text-loss'}`}>
-                      {parseFloat(selectedAdvisor.performance) >= 0 ? '↑' : '↓'} %{Math.abs(parseFloat(selectedAdvisor.performance) || 0).toFixed(2)}
+                    <span className={`advisor-info-value ${Number(selectedAdvisor.performance) >= 0 ? 'text-profit' : 'text-loss'}`}>
+                      {Number(selectedAdvisor.performance) >= 0 ? '↑' : '↓'} %{Math.abs(Number(selectedAdvisor.performance) || 0).toFixed(2)}
                     </span>
                   </div>
                 </div>

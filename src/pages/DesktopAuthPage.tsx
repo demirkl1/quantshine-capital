@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../api';
@@ -138,7 +137,7 @@ const RegisterForm = ({ onSwitchToLogin }) => {
       await api.post('/auth/pending/register', payload);
       toast.success('Kayıt isteğiniz gönderildi. Admin onayı bekleniyor.');
       onSwitchToLogin();
-    } catch (err) {
+    } catch (err: any) {
       const status = err.response?.status;
       const msg = status === 409
         ? 'Bu e-posta veya TC No zaten kayıtlı.'
@@ -191,7 +190,7 @@ const RegisterForm = ({ onSwitchToLogin }) => {
           <label>TC Kimlik No</label>
           <div className="dap-input-wrap">
             <svg className="dap-input-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="2" y="4" width="20" height="16" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
-            <input type="text" name="tcNo" placeholder="11 haneli TC kimlik" maxLength="11" value={formData.tcNo} onChange={handleChange} required />
+            <input type="text" name="tcNo" placeholder="11 haneli TC kimlik" maxLength={11} value={formData.tcNo} onChange={handleChange} required />
           </div>
         </div>
 

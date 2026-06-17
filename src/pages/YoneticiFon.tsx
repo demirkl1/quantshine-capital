@@ -1,4 +1,3 @@
-// @ts-nocheck
 import React, { useState, useEffect } from 'react';
 import api from '../api';
 import { useAuth } from '../context/AuthContext';
@@ -9,27 +8,28 @@ import {
   PieChart, Pie, Cell, Legend
 } from 'recharts';
 import './YoneticiFon.css';
+import type { Fund, Advisor, Investor, ChartPoint } from '../types/domain';
 
 const YoneticiFon = () => {
   const { isAuthenticated } = useAuth();
-  const [funds, setFunds] = useState([]);
-  const [advisors, setAdvisors] = useState([]);
+  const [funds, setFunds] = useState<Fund[]>([]);
+  const [advisors, setAdvisors] = useState<Advisor[]>([]);
   const [showModal, setShowModal] = useState(false);
   const [modalMode, setModalMode] = useState("transfer");
-  const [selectedFon, setSelectedFon] = useState(null);
+  const [selectedFon, setSelectedFon] = useState<Fund | null>(null);
   const [selectedAdvisorTc, setSelectedAdvisorTc] = useState("");
   const [targetFundCode, setTargetFundCode] = useState("");
   const [deleting, setDeleting] = useState(false);
 
   const [newFund, setNewFund] = useState({ fundCode: '', fundName: '', currentPrice: '' });
-  const [investors, setInvestors] = useState([]);
+  const [investors, setInvestors] = useState<Investor[]>([]);
   const [selectedInvestorTc, setSelectedInvestorTc] = useState('');
   const [investorFundCode, setInvestorFundCode] = useState('');
 
   // Fon detay modalı
-  const [selectedDetailFon, setSelectedDetailFon] = useState(null);
-  const [detailFund, setDetailFund]         = useState(null);
-  const [detailChartData, setDetailChartData] = useState([]);
+  const [selectedDetailFon, setSelectedDetailFon] = useState<Fund | null>(null);
+  const [detailFund, setDetailFund]         = useState<Fund | null>(null);
+  const [detailChartData, setDetailChartData] = useState<ChartPoint[]>([]);
   const [detailPeriod, setDetailPeriod]     = useState('1A');
   const [loadingDetail, setLoadingDetail]   = useState(false);
 
@@ -56,7 +56,7 @@ const YoneticiFon = () => {
         ]);
         setDetailFund(detailRes.data);
         setDetailChartData(Array.isArray(histRes.data) ? histRes.data : []);
-      } catch (e) {
+      } catch (e: any) {
         if (e.name !== 'CanceledError' && e.name !== 'AbortError') console.error(e);
       } finally {
         setLoadingDetail(false);
@@ -76,7 +76,7 @@ const YoneticiFon = () => {
       setFunds(fundRes.data);
       setAdvisors(advisorRes.data);
       setInvestors(Array.isArray(investorRes.data) ? investorRes.data : []);
-    } catch (err) {
+    } catch (err: any) {
       console.error("Veriler yüklenemedi:", err);
     }
   };
@@ -85,7 +85,7 @@ const YoneticiFon = () => {
     if (isAuthenticated) fetchInitialData();
   }, [isAuthenticated]);
 
-  const handleOpenModal = (mode, fon = null) => {
+  const handleOpenModal = (mode: string, fon: Fund | null = null) => {
     setModalMode(mode);
     setSelectedFon(fon);
     setSelectedAdvisorTc("");
@@ -108,7 +108,7 @@ const YoneticiFon = () => {
       setShowModal(false);
       setNewFund({ fundCode: '', fundName: '', currentPrice: '' });
       fetchInitialData();
-    } catch (err) {
+    } catch (err: any) {
       toast.error("Hata: " + (err.response?.data || "Fon oluşturulamadı."));
     }
   };
@@ -116,7 +116,7 @@ const YoneticiFon = () => {
   const handleTransferOrAssign = async () => {
     if (!selectedAdvisorTc) { toast.error("Lütfen bir danışman seçin!"); return; }
 
-    const finalFundCode = modalMode === "transfer" ? targetFundCode : selectedFon.code;
+    const finalFundCode = modalMode === "transfer" ? targetFundCode : (selectedFon?.code || "");
     if (!finalFundCode) { toast.error("Hedef fon seçilmedi!"); return; }
 
     try {
@@ -126,7 +126,7 @@ const YoneticiFon = () => {
       toast.success("Atama işlemi başarıyla tamamlandı!");
       setShowModal(false);
       fetchInitialData();
-    } catch (err) {
+    } catch (err: any) {
       toast.error("Hata: " + (err.response?.data || "İşlem başarısız"));
     }
   };
@@ -140,7 +140,7 @@ const YoneticiFon = () => {
       toast.success("Danışman fondan çıkarıldı, artık boşta!");
       setShowModal(false);
       fetchInitialData();
-    } catch (err) {
+    } catch (err: any) {
       toast.error(err.response?.data || "İşlem başarısız!");
     }
   };
@@ -153,7 +153,7 @@ const YoneticiFon = () => {
       toast.success(`${selectedFon.code} fonu silindi.`);
       setShowModal(false);
       fetchInitialData();
-    } catch (err) {
+    } catch (err: any) {
       toast.error(err.response?.data || "Fon silinemedi.");
     } finally {
       setDeleting(false);
@@ -170,7 +170,7 @@ const YoneticiFon = () => {
       toast.success("Yatırımcı fondan çıkarıldı!");
       setShowModal(false);
       fetchInitialData();
-    } catch (err) {
+    } catch (err: any) {
       toast.error(err.response?.data || "İşlem başarısız!");
     }
   };
@@ -356,7 +356,7 @@ const YoneticiFon = () => {
                           // Yatırımcı değişince fonu sıfırla, ama eğer seçili fonda kaydı varsa onu seç
                           const inv = investors.find(i => i.tcNo === tc);
                           const hasCurrentFund = inv?.holdings?.some(h => h.fundCode === selectedFon?.code);
-                          setInvestorFundCode(hasCurrentFund ? selectedFon?.code : '');
+                          setInvestorFundCode(hasCurrentFund ? (selectedFon?.code || "") : '');
                         }}
                       >
                         <option value="">Seçiniz...</option>
@@ -646,7 +646,7 @@ const YoneticiFon = () => {
                   )}
 
                   {/* ── 6. MENKUL KIYMETler TABLOSU ── */}
-                  {detailFund?.securities?.length > 0 && (
+                  {(detailFund?.securities?.length ?? 0) > 0 && (
                     <div className="fon-section">
                       <p className="fon-section-label">Portföydeki Menkul Kıymetler</p>
                       <div style={{ overflowX: 'auto' }}>
@@ -662,7 +662,7 @@ const YoneticiFon = () => {
                             </tr>
                           </thead>
                           <tbody>
-                            {detailFund.securities.map((s, i) => (
+                            {(detailFund?.securities ?? []).map((s, i) => (
                               <tr key={i}>
                                 <td><span className="fon-code-badge">{s.symbol || s.ticker || '—'}</span></td>
                                 <td style={{ color: '#cbd5e1' }}>{s.name || '—'}</td>

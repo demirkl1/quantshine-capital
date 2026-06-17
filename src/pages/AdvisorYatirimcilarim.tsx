@@ -1,14 +1,14 @@
-// @ts-nocheck
 import React, { useState, useEffect } from 'react';
 import api from '../api';
+import type { Fund, Advisor, Investor, Holding, Trade, ChartPoint, Report } from "../types/domain";
 import { useAuth } from '../context/AuthContext';
 import AdvisorSidebar from '../components/AdvisorSidebar';
 import './AdvisorYatirimcilarim.css';
 
 const AdvisorYatirimcilar = () => {
   const { isAuthenticated } = useAuth();
-  const [investors, setInvestors] = useState([]);
-  const [portfolios, setPortfolios] = useState({});
+  const [investors, setInvestors] = useState<Investor[]>([]);
+  const [portfolios, setPortfolios] = useState<Record<string, Holding[]>>({});
   const [loading, setLoading] = useState(true);
 
   const fetchData = async () => {
@@ -60,7 +60,7 @@ const AdvisorYatirimcilar = () => {
         processedInvestors.forEach(inv => fetchPortfolio(inv.id));
       }
       setLoading(false);
-    } catch (err) {
+    } catch (err: any) {
       console.error("Veri çekme hatası:", err.response?.status, err.response?.data || err.message);
       setLoading(false);
     }
@@ -70,7 +70,7 @@ const AdvisorYatirimcilar = () => {
     try {
       const res = await api.get(`/users/${id}/portfolio`);
       setPortfolios(prev => ({ ...prev, [id]: res.data }));
-    } catch (err) {
+    } catch (err: any) {
       console.error("Portföy detay hatası:", err);
     }
   };
@@ -118,12 +118,12 @@ const AdvisorYatirimcilar = () => {
       <td className="text-highlight">{inv.firstName} {inv.lastName}</td>
       <td>{inv.email}</td>
       <td>
-        {portfolios[inv.id] && portfolios[inv.id].length > 0 ? (
+        {portfolios[inv.id!] && portfolios[inv.id!].length > 0 ? (
           <div className="portfolio-badges">
-            {portfolios[inv.id].map(p => (
-              <span key={p.id} className="badge-fon-view">
+            {portfolios[inv.id!].map(p => (
+              <span key={p.fundCode} className="badge-fon-view">
                
-                {p.fundCode}: {p.lotCount ? parseFloat(p.lotCount).toFixed(4) : "0.0000"} Lot
+                {p.fundCode}: {p.lotCount ? Number(p.lotCount).toFixed(4) : "0.0000"} Lot
               </span>
             ))}
           </div>
@@ -132,8 +132,8 @@ const AdvisorYatirimcilar = () => {
         )}
       </td>
       <td style={{ fontWeight: 'bold', color: '#10b981' }}>
-          {portfolios[inv.id]?.reduce((acc, curr) => {
-          const lotValue = parseFloat(curr.lotCount) || 0;
+          {portfolios[inv.id!]?.reduce((acc, curr) => {
+          const lotValue = Number(curr.lotCount) || 0;
           return acc + lotValue;
         }, 0).toFixed(4) || "0.0000"}
       </td>

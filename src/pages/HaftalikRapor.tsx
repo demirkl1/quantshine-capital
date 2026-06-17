@@ -1,6 +1,6 @@
-// @ts-nocheck
 import React, { useState, useEffect } from 'react';
 import api from '../api';
+import type { Fund, Advisor, Investor, Holding, Trade, ChartPoint, Report } from "../types/domain";
 import { useAuth } from '../context/AuthContext';
 import InvestorSidebar from '../components/InvestorSidebar';
 import { MdPerson, MdEventAvailable } from 'react-icons/md';
@@ -8,11 +8,11 @@ import './HaftalikRapor.css';
 
 const HaftalikRapor = () => {
   const { isAuthenticated } = useAuth();
-  const [reports, setReports] = useState([]);
-  const [filteredReports, setFilteredReports] = useState([]);
-  const [advisors, setAdvisors] = useState([]);
+  const [reports, setReports] = useState<Report[]>([]);
+  const [filteredReports, setFilteredReports] = useState<Report[]>([]);
+  const [advisors, setAdvisors] = useState<Advisor[]>([]);
   const [selectedAdvisorId, setSelectedAdvisorId] = useState("all");
-  const [expandedReportId, setExpandedReportId] = useState(null);
+  const [expandedReportId, setExpandedReportId] = useState<number | null>(null);
 
   useEffect(() => {
     const fetchReports = async () => {
@@ -22,25 +22,25 @@ const HaftalikRapor = () => {
         const res = await api.get('/reports/my-reports');
 
         const raw = Array.isArray(res.data) ? res.data : [];
-        const validReports = raw.filter(r => r && r.advisor && r.advisor.id != null);
+        const validReports = raw.filter(r => r && r.advisor && r.advisor?.id != null);
 
         setReports(validReports);
         setFilteredReports(validReports);
 
-        const uniqueAdvisors = [];
+        const uniqueAdvisors: Advisor[] = [];
         const map = new Map();
 
         for (const r of validReports) {
-          if (!map.has(r.advisor.id)) {
-            map.set(r.advisor.id, true);
+          if (!map.has(r.advisor?.id)) {
+            map.set(r.advisor?.id, true);
             uniqueAdvisors.push({
-              id: r.advisor.id,
+              id: r.advisor?.id,
               name: `${r.advisor.firstName ?? ''} ${r.advisor.lastName ?? ''}`.trim() || 'Danışman'
             });
           }
         }
         setAdvisors(uniqueAdvisors);
-      } catch (err) {
+      } catch (err: any) {
         console.error("Raporlar yüklenemedi:", err);
       }
     };
@@ -53,7 +53,7 @@ const HaftalikRapor = () => {
     if (selectedAdvisorId === "all") {
       setFilteredReports(reports);
     } else {
-      setFilteredReports(reports.filter(r => r.advisor.id === parseInt(selectedAdvisorId)));
+      setFilteredReports(reports.filter(r => r.advisor?.id === parseInt(selectedAdvisorId)));
     }
   }, [selectedAdvisorId, reports]);
 
@@ -87,15 +87,15 @@ const HaftalikRapor = () => {
               <div key={report.id} className="report-card">
                 <div className="report-header">
                   <span className="report-date">
-                    <MdEventAvailable /> {new Date(report.createdAt).toLocaleDateString('tr-TR')}
+                    <MdEventAvailable /> {new Date(report.createdAt || "").toLocaleDateString('tr-TR')}
                   </span>
                   <span className="report-badge">PDF HAZIR</span>
                 </div>
                 <h3>{report.title}</h3>
                 <p className="report-preview">
                   {expandedReportId === report.id
-                    ? report.content
-                    : (report.content.length > 100 ? report.content.substring(0, 100) + "..." : report.content)}
+                    ? (report.content || "")
+                    : ((report.content || "").length > 100 ? (report.content || "").substring(0, 100) + "..." : (report.content || ""))}
                 </p>
                 <div className="report-footer">
                   <div className="advisor-info">
@@ -108,7 +108,7 @@ const HaftalikRapor = () => {
                   </div>
                   <button
                     className="btn-read"
-                    onClick={() => setExpandedReportId(expandedReportId === report.id ? null : report.id)}
+                    onClick={() => setExpandedReportId(expandedReportId === report.id ? null : (report.id ?? null))}
                   >
                     {expandedReportId === report.id ? "Küçült" : "Raporu Görüntüle"}
                   </button>

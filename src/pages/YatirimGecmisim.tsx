@@ -1,13 +1,13 @@
-// @ts-nocheck
 import React, { useState, useEffect } from 'react';
 import api from '../api';
+import type { Fund, Advisor, Investor, Holding, Trade, ChartPoint, Report } from "../types/domain";
 import { useAuth } from '../context/AuthContext';
 import InvestorSidebar from '../components/InvestorSidebar';
 import './YatirimGecmisim.css';
 
 const YatirimGecmisim = () => {
   const { isAuthenticated } = useAuth();
-  const [historyData, setHistoryData] = useState([]);
+  const [historyData, setHistoryData] = useState<Trade[]>([]);
   const [loading, setLoading] = useState(true);
 
 
@@ -17,7 +17,7 @@ const YatirimGecmisim = () => {
         const res = await api.get('/trade/my-history');
         setHistoryData(Array.isArray(res.data) ? res.data : []);
         setLoading(false);
-      } catch (err) {
+      } catch (err: any) {
         console.error("Geçmiş yüklenemedi:", err);
         setLoading(false);
       }
@@ -60,7 +60,7 @@ const YatirimGecmisim = () => {
                   return (
                     <tr key={item.id}>
                       <td className="date-cell">
-                        {new Date(item.createdAt).toLocaleString('tr-TR')}
+                        {new Date(item.createdAt || "").toLocaleString('tr-TR')}
                       </td>
                       <td className="text-highlight">{item.fundCode}</td>
                       <td>
@@ -69,7 +69,7 @@ const YatirimGecmisim = () => {
                         </span>
                       </td>
                       <td>{item.lotCount}</td>
-                      <td className="text-white font-bold">₺{item.amount.toLocaleString()}</td>
+                      <td className="text-white font-bold">₺{(item.amount ?? 0).toLocaleString()}</td>
                       <td>₺{item.unitPrice}</td>
                       <td className={isProfit ? 'text-profit' : 'text-loss'} style={{ fontWeight: 'bold' }}>
         ₺{currentPrice.toFixed(2)}

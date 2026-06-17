@@ -1,6 +1,6 @@
-// @ts-nocheck
 import React, { useState, useEffect } from 'react';
 import api from '../api';
+import type { Fund, Advisor, Investor, Holding, Trade, ChartPoint, Report } from "../types/domain";
 import { useAuth } from '../context/AuthContext';
 import AdminSidebar from '../components/AdminSidebar';
 import toast from 'react-hot-toast';
@@ -12,15 +12,15 @@ const Yatirimcilar = () => {
   const [activeTab, setActiveTab] = useState('tum');
   const [showTransferModal, setShowTransferModal] = useState(false);
   const [showTradeModal, setShowTradeModal] = useState(false);
-  const [selectedYatirimci, setSelectedYatirimci] = useState(null);
+  const [selectedYatirimci, setSelectedYatirimci] = useState<Investor | null>(null);
   const [currentUnitPrice, setCurrentUnitPrice] = useState(0);
   const [currentFundCode, setCurrentFundCode] = useState("");
   
-  const [investors, setInvestors] = useState([]);
-  const [advisors, setAdvisors] = useState([]);
-  const [portfolios, setPortfolios] = useState({});
-  const [allAvailableFunds, setAllAvailableFunds] = useState([]);
-  const [selectedDetailInvestor, setSelectedDetailInvestor] = useState(null);
+  const [investors, setInvestors] = useState<Investor[]>([]);
+  const [advisors, setAdvisors] = useState<Advisor[]>([]);
+  const [portfolios, setPortfolios] = useState<Record<string, Holding[]>>({});
+  const [allAvailableFunds, setAllAvailableFunds] = useState<Fund[]>([]);
+  const [selectedDetailInvestor, setSelectedDetailInvestor] = useState<Investor | null>(null);
 
   const [targetAdvisorTc, setTargetAdvisorTc] = useState('');
   const [selectedFundCode, setSelectedFundCode] = useState('');
@@ -29,12 +29,12 @@ const Yatirimcilar = () => {
   const [lot, setLot] = useState(0);
   const [modalMode, setModalMode] = useState('transfer'); // 'transfer' | 'kayit' | 'bosalt'
 
-  const [deleteTarget, setDeleteTarget] = useState(null);   // silinecek yatırımcı
+  const [deleteTarget, setDeleteTarget] = useState<Investor | null>(null);   // silinecek yatırımcı
   const [deleteStep, setDeleteStep] = useState(1);          // 1: uyarı, 2: TC onayı
   const [deleteInput, setDeleteInput] = useState('');
   const [deleting, setDeleting] = useState(false);
 
-  const [investorHistory, setInvestorHistory] = useState([]);
+  const [investorHistory, setInvestorHistory] = useState<Trade[]>([]);
   const [historyLoading, setHistoryLoading] = useState(false);
   const [detailTab, setDetailTab] = useState('genel');
 
@@ -98,7 +98,7 @@ const Yatirimcilar = () => {
         });
         setPortfolios(newPortfolios);
 
-    } catch (err) {
+    } catch (err: any) {
         console.error("Veri çekme hatası:", err);
     }
 };
@@ -106,7 +106,7 @@ const fetchAllFunds = async () => {
     try {
         const res = await api.get('/funds');
         setAllAvailableFunds(Array.isArray(res.data) ? res.data : []);
-    } catch (err) {
+    } catch (err: any) {
         console.error("Tüm fonlar çekilemedi:", err);
     }
 };
@@ -129,7 +129,7 @@ useEffect(() => {
         item => String(item.investorTc) === String(selectedDetailInvestor.tcNo)
       );
       setInvestorHistory(filtered);
-    } catch (err) {
+    } catch (err: any) {
       console.error("İşlem geçmişi alınamadı:", err);
       setInvestorHistory([]);
     } finally {
@@ -160,7 +160,7 @@ const handleAdvisorChange = (e) => {
     try {
       const res = await api.get(`/users/${id}/portfolio`);
       setPortfolios(prev => ({ ...prev, [id]: res.data }));
-    } catch (err) {
+    } catch (err: any) {
       console.error("Portföy çekilemedi:", id, err);
     }
   };
@@ -173,7 +173,7 @@ useEffect(() => {
     try {
       const res = await api.get(`/funds/${currentFundCode}`);
       setCurrentUnitPrice(res.data.price ?? res.data.currentPrice ?? 0);
-    } catch (err) {
+    } catch (err: any) {
       console.error("Fiyat çekilemedi:", err);
       setCurrentUnitPrice(0);
     }
@@ -184,10 +184,10 @@ useEffect(() => {
 
 useEffect(() => {
   const numericAmount = parseFloat(price);
-  const numericUnitPrice = parseFloat(currentUnitPrice);
+  const numericUnitPrice = Number(currentUnitPrice);
 
   if (numericAmount > 0 && numericUnitPrice > 0) {
-    setLot((numericAmount / numericUnitPrice).toFixed(4));
+    setLot(Number((numericAmount / numericUnitPrice).toFixed(4)));
   } else {
     setLot(0);
   }
@@ -199,7 +199,7 @@ const handleAssign = async () => {
   try {
     await api.put('/users/assign-investment', null, {
       params: {
-        investorTc: selectedYatirimci.tcNo,
+        investorTc: selectedYatirimci!.tcNo,
         advisorTc: targetAdvisorTc,
         fundCode: selectedFundCode,
         isTransfer: modalMode === 'transfer'
@@ -209,7 +209,7 @@ const handleAssign = async () => {
     toast.success(modalMode === 'transfer' ? "Danışman başarıyla transfer edildi!" : "Yatırımcı yeni bir fona dahil edildi!");
     setShowTransferModal(false);
     fetchData();
-  } catch (err) {
+  } catch (err: any) {
     toast.error(err.response?.data || "İşlem başarısız!");
   }
 };
@@ -225,7 +225,7 @@ const handleAssign = async () => {
       setDeleteInput('');
       setSelectedDetailInvestor(null);
       fetchData();
-    } catch (err) {
+    } catch (err: any) {
       toast.error(err.response?.data || 'Yatırımcı silinemedi.');
     } finally {
       setDeleting(false);
@@ -239,7 +239,7 @@ const handleAssign = async () => {
     const cleanAmount = parseFloat(price).toFixed(2);
 
     await api.post('/trade/execute', {
-      investorTc: selectedYatirimci.tcNo,
+      investorTc: selectedYatirimci!.tcNo,
       fundCode: currentFundCode,
       amount: cleanAmount,
       type: tradeTab === 'alis' ? 'BUY' : 'SELL'
@@ -249,7 +249,7 @@ const handleAssign = async () => {
     setShowTradeModal(false);
     setPrice(''); // Inputu temizle
     fetchData(); // Dashboard'u yenile
-  } catch (err) {
+  } catch (err: any) {
     toast.error("Hata: " + (err.response?.data || "İşlem başarısız"));
   }
 };
@@ -319,7 +319,7 @@ const handleAssign = async () => {
             }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.9rem', color: '#f59e0b', fontWeight: 'bold' }}>
                 <span>Toplam Portföy:</span>
-                <span>₺{inv.totalPortfolioValue.toLocaleString('tr-TR')}</span>
+                <span>₺{(inv.totalPortfolioValue ?? 0).toLocaleString('tr-TR')}</span>
               </div>
             </div>
           </div>
@@ -576,7 +576,7 @@ const handleAssign = async () => {
 
       {/* ── Yatırımcı Detay Modalı ── */}
       {selectedDetailInvestor && (() => {
-        const sortedHist = [...investorHistory].sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
+        const sortedHist = [...investorHistory].sort((a, b) => new Date(a.createdAt || 0).getTime() - new Date(b.createdAt || 0).getTime());
         const ilkTarih = sortedHist[0]?.createdAt;
         const sonTarih = sortedHist[sortedHist.length - 1]?.createdAt;
         const pieData = (selectedDetailInvestor.holdings || [])
@@ -756,10 +756,10 @@ const handleAssign = async () => {
                         </thead>
                         <tbody>
                           {[...investorHistory]
-                            .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+                            .sort((a, b) => new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime())
                             .map((item, i) => (
                             <tr key={item.id || i}>
-                              <td>{new Date(item.createdAt).toLocaleDateString('tr-TR', { day: '2-digit', month: '2-digit', year: 'numeric' })}</td>
+                              <td>{new Date(item.createdAt || "").toLocaleDateString('tr-TR', { day: '2-digit', month: '2-digit', year: 'numeric' })}</td>
                               <td><span className="investor-holding-code">{item.fundCode}</span></td>
                               <td><span className={`status-badge-small ${item.type === 'BUY' ? 'buy' : 'sell'}`}>{item.type === 'BUY' ? 'ALIŞ' : 'SATIŞ'}</span></td>
                               <td style={{ color: '#cbd5e1' }}>{Number(item.lotCount || 0).toLocaleString('tr-TR', { minimumFractionDigits: 4 })}</td>

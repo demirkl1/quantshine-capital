@@ -1,14 +1,14 @@
-// @ts-nocheck
 import React, { useState, useEffect } from 'react';
 import AdminSidebar from '../components/AdminSidebar';
 import api from '../api';
+import type { Fund, Advisor, Investor, Holding, Trade, ChartPoint, Report } from "../types/domain";
 import { useAuth } from '../context/AuthContext';
 import toast from 'react-hot-toast';
 import './Istekler.css';
 
 const Istekler = () => {
   const { isAuthenticated } = useAuth();
-  const [pendingRequests, setPendingRequests] = useState([]);
+  const [pendingRequests, setPendingRequests] = useState<Investor[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -24,7 +24,7 @@ const Istekler = () => {
     try {
       const res = await api.get('/users/pending');
       setPendingRequests(res.data);
-    } catch (err) {
+    } catch (err: any) {
       console.error("API Hatası:", err.response?.status);
     } finally {
       setLoading(false);
@@ -37,7 +37,7 @@ const Istekler = () => {
         await api.post(`/users/${id}/approve`, {});
         toast.success("Kullanıcı başarıyla onaylandı!");
         setPendingRequests(pendingRequests.filter(user => user.id !== id));
-      } catch (err) {
+      } catch (err: any) {
         toast.error("Onaylama hatası: " + (err.response?.data || "Bilinmeyen hata"));
       }
     } else if (action === 'reject') {
@@ -48,7 +48,7 @@ const Istekler = () => {
         await api.delete(`/users/${id}/reject`);
         toast.success("İstek reddedildi ve kullanıcı silindi.");
         setPendingRequests(pendingRequests.filter(user => user.id !== id));
-      } catch (err) {
+      } catch (err: any) {
         toast.error("Reddetme hatası: " + (err.response?.data || "Bilinmeyen hata"));
       }
     }

@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-// @ts-nocheck
 import React, { useState, useEffect, useMemo } from 'react';
 import api from '../api';
 import { useAuth } from '../context/AuthContext';
@@ -38,14 +37,14 @@ const AdminAnasayfa = () => {
     fonBuyuklugu: 0,
     fonKarZararTl: 0
   });
-  const [fonListesi, setFonListesi] = useState<{ fundCode: string; fundName: string; totalLot?: number; [key: string]: unknown }[]>([]);
+  const [fonListesi, setFonListesi] = useState<{ fundCode?: string; fundName?: string; totalLot?: number; profitLossPercentage?: number; advisorCount?: number; investorCount?: number; currentPrice?: number }[]>([]);
 
 
   // Admin DB kaydını senkronize et (Keycloak'ta oluşturulmuş kullanıcılar için gerekli)
   useEffect(() => {
     const syncAdmin = async () => {
       if (!isAuthenticated) return;
-      try { await api.get('/users/me'); } catch (e) { console.error("Admin sync hatası:", (e as Error).message); }
+      try { await api.get('/users/me'); } catch (e: any) { console.error("Admin sync hatası:", (e as Error).message); }
     };
     syncAdmin();
   }, [isAuthenticated]);
@@ -57,7 +56,7 @@ const AdminAnasayfa = () => {
       try {
         const res = await api.get('/trade/admin-stats');
         setFinancials(res.data);
-      } catch (e) { console.error("Stats API Hatası:", (e as Error).message); }
+      } catch (e: any) { console.error("Stats API Hatası:", (e as Error).message); }
     };
 
     fetchStats();
@@ -71,7 +70,7 @@ const AdminAnasayfa = () => {
     if (user?.managedFundCode) {
       setSelectedFonlar([user.managedFundCode]);
     } else if (fonListesi.length > 0) {
-      setSelectedFonlar([fonListesi[0].fundCode]);
+      setSelectedFonlar([fonListesi[0].fundCode || ""]);
     }
   }, [user, selectedFonlar, fonListesi]);
 
@@ -82,7 +81,7 @@ const AdminAnasayfa = () => {
       try {
         const res = await api.get('/funds/all-details');
         setFonListesi(res.data);
-      } catch (e) { console.error("Tablo API Hatası:", (e as Error).message); }
+      } catch (e: any) { console.error("Tablo API Hatası:", (e as Error).message); }
       setLoading(false);
     };
     fetchFunds();
@@ -116,7 +115,7 @@ const AdminAnasayfa = () => {
             .sort((a, b) => a.date!.localeCompare(b.date!));
         });
         setFundSeriesData(newSeries);
-      } catch (e) { console.error("Fon grafik hatası:", e); }
+      } catch (e: any) { console.error("Fon grafik hatası:", e); }
     };
     fetchFundSeries();
   }, [isAuthenticated, selectedFonlar, activeFilter]);
@@ -231,8 +230,8 @@ const calculatePerc = (profit, total) => {
                 )}
                 {s.kzTl !== undefined && Number(s.kzTl) !== 0 && (
                   <div style={{ marginTop: 8, display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'center' }}>
-                    <span style={{ fontSize: 12, fontWeight: 700, color: parseFloat(s.kzTl) >= 0 ? '#22c55e' : '#f87171' }}>
-                      K/Z&nbsp;{parseFloat(s.kzTl) >= 0 ? '+' : ''}₺{Number(s.kzTl || 0).toLocaleString('tr-TR', { minimumFractionDigits: 2 })}
+                    <span style={{ fontSize: 12, fontWeight: 700, color: Number(s.kzTl) >= 0 ? '#22c55e' : '#f87171' }}>
+                      K/Z&nbsp;{Number(s.kzTl) >= 0 ? '+' : ''}₺{Number(s.kzTl || 0).toLocaleString('tr-TR', { minimumFractionDigits: 2 })}
                     </span>
                     <span className={parseFloat(s.kzPct) >= 0 ? "text-profit" : "text-loss"}>
                       {parseFloat(s.kzPct) >= 0 ? '▲' : '▼'} %{s.kzPct}
@@ -267,7 +266,7 @@ const calculatePerc = (profit, total) => {
                 {fonDropdownOpen && (
                   <div className="fon-dropdown-menu">
                     {fonListesi.map((f, i) => {
-                      const code = f.fundCode || f.fundName;
+                      const code = f.fundCode || f.fundName || "";
                       const selected = selectedFonlar?.includes(code);
                       return (
                         <div key={i} className={`fon-dropdown-item ${selected ? 'selected' : ''}`} onClick={() => toggleFon(code)}>
@@ -382,7 +381,7 @@ const calculatePerc = (profit, total) => {
                     contentStyle={{ backgroundColor: '#161b2c', border: '1px solid #222a3a', borderRadius: '10px', color: '#fff' }}
                     labelFormatter={label => {
                       const d = new Date(label);
-                      return isNaN(d) ? label : d.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' });
+                      return isNaN(d.getTime()) ? label : d.toLocaleDateString('tr-TR', { day: 'numeric', month: 'long', year: 'numeric' });
                     }}
                     formatter={(value, name) => {
                       if (name === 'BIST 100') return [Number(value).toLocaleString('tr-TR', { maximumFractionDigits: 0 }), name];
@@ -462,8 +461,8 @@ const calculatePerc = (profit, total) => {
                 {fonListesi.map((f, idx) => (
                   <tr key={idx}>
                     <td>{f.fundName}</td>
-                    <td className={f.profitLossPercentage >= 0 ? 'text-profit' : 'text-loss'}>
-                      {f.profitLossPercentage >= 0 ? '+' : ''}%{f.profitLossPercentage}
+                    <td className={(f.profitLossPercentage ?? 0) >= 0 ? 'text-profit' : 'text-loss'}>
+                      {(f.profitLossPercentage ?? 0) >= 0 ? '+' : ''}%{(f.profitLossPercentage ?? 0)}
                     </td>
                     <td>{f.advisorCount}</td>
                     <td>{f.investorCount}</td>

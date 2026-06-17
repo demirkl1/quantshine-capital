@@ -1,6 +1,6 @@
-// @ts-nocheck
 import React, { useState, useEffect } from 'react';
 import api from '../api';
+import type { Fund, Advisor, Investor, Holding, Trade, ChartPoint, Report } from "../types/domain";
 import { useAuth } from '../context/AuthContext';
 import InvestorSidebar from '../components/InvestorSidebar';
 import { MdEmail, MdWork, MdAccountCircle, MdArrowDropDown } from 'react-icons/md';
@@ -8,8 +8,8 @@ import './DanismanProfili.css';
 
 const DanismanProfili = () => {
   const { isAuthenticated } = useAuth();
-  const [advisors, setAdvisors] = useState([]);
-  const [selectedAdvisor, setSelectedAdvisor] = useState(null);
+  const [advisors, setAdvisors] = useState<Advisor[]>([]);
+  const [selectedAdvisor, setSelectedAdvisor] = useState<Advisor | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -27,7 +27,7 @@ const DanismanProfili = () => {
         const list = Array.from(seen.values());
         setAdvisors(list);
         if (list.length > 0) setSelectedAdvisor(list[0]);
-      } catch (err) {
+      } catch (err: any) {
         console.error(
           "Danışman profilleri yüklenemedi:",
           err.response?.status,
@@ -44,7 +44,7 @@ const DanismanProfili = () => {
   const handleSelectChange = (e) => {
     const selectedId = e.target.value;
     const adv = advisors.find(a => String(a.id) === String(selectedId));
-    setSelectedAdvisor(adv);
+    setSelectedAdvisor(adv ?? null);
   };
   if (loading) return <div className="loading">Profil Bilgileri Yükleniyor...</div>;
 

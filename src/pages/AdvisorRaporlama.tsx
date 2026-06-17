@@ -1,6 +1,6 @@
-// @ts-nocheck
 import React, { useState, useEffect } from 'react';
 import api from '../api';
+import type { Fund, Advisor, Investor, Holding, Trade, ChartPoint, Report } from "../types/domain";
 import { useAuth } from '../context/AuthContext';
 import AdvisorSidebar from '../components/AdvisorSidebar';
 import './AdvisorRaporlama.css';
@@ -9,7 +9,7 @@ import toast from 'react-hot-toast';
 
 const AdvisorRaporlama = () => {
   const { isAuthenticated } = useAuth();
-  const [investors, setInvestors] = useState([]);
+  const [investors, setInvestors] = useState<Investor[]>([]);
   const [selectedYatirimciId, setSelectedYatirimciId] = useState("");
   const [raporNotu, setRaporNotu] = useState("");
   const [title, setTitle] = useState("Danışman Bilgilendirme Notu");
@@ -54,7 +54,7 @@ const AdvisorRaporlama = () => {
       toast.success("Rapor yatırımcıya başarıyla iletildi!");
       setRaporNotu("");
       setSelectedYatirimciId("");
-    } catch (err) {
+    } catch (err: any) {
       const msg = err.response?.data?.message
         || err.response?.data?.error
         || (typeof err.response?.data === 'string' ? err.response.data : null)
