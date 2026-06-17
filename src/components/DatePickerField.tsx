@@ -58,10 +58,10 @@ const DatePickerField = ({ selected, onChange, placeholder }) => {
       {showCalendar && (
         <div className="calendar-popup">
           <div className="calendar-header">
-            <select value={currentDate.getMonth()} onChange={handleMonthChange}>
+            <select aria-label="Ay" value={currentDate.getMonth()} onChange={handleMonthChange}>
               {months.map((m, idx) => <option key={idx} value={idx}>{m}</option>)}
             </select>
-            <select value={currentDate.getFullYear()} onChange={handleYearChange}>
+            <select aria-label="Yıl" value={currentDate.getFullYear()} onChange={handleYearChange}>
               {years.map((y, idx) => <option key={idx} value={y}>{y}</option>)}
             </select>
           </div>
