@@ -6,13 +6,13 @@ import AdvisorSidebar from '../components/AdvisorSidebar';
 import './AdvisorYatirimcilarim.css';
 
 const AdvisorYatirimcilar = () => {
-  const { token } = useAuth();
+  const { isAuthenticated } = useAuth();
   const [investors, setInvestors] = useState([]);
   const [portfolios, setPortfolios] = useState({});
   const [loading, setLoading] = useState(true);
 
   const fetchData = async () => {
-    if (!token) return;
+    if (!isAuthenticated) return;
     try {
       const res = await api.get('/users/my-investors');
       const raw = Array.isArray(res.data) ? res.data : [];
@@ -77,7 +77,7 @@ const AdvisorYatirimcilar = () => {
 
   useEffect(() => {
     fetchData();
-  }, [token]);
+  }, [isAuthenticated]);
 
   if (loading) return <div className="loading">Yatırımcı Verileri Yükleniyor...</div>;
 

@@ -306,7 +306,7 @@ const TradePage = ({ role }) => {
   const Sidebar = isAdmin ? AdminSidebar : AdvisorSidebar;
   const statsEndpoint = isAdmin ? '/trade/admin-stats' : '/trade/advisor-stats';
 
-  const { token } = useAuth();
+  const { isAuthenticated } = useAuth();
 
   /* ── Hisse state'leri ── */
   const [hisseler,      setHisseler]      = useState([]);
@@ -422,7 +422,7 @@ const TradePage = ({ role }) => {
   }, []);
 
   useEffect(() => {
-    if (!token) return;
+    if (!isAuthenticated) return;
     fetchUserAndFund();
     fetchStocks();
     fetchCommodities();
@@ -431,7 +431,7 @@ const TradePage = ({ role }) => {
     const ivC = setInterval(fetchCommodities, 3_600_000);
     const ivU = setInterval(fetchUsdtry, 3_600_000);
     return () => { clearInterval(iv); clearInterval(ivC); clearInterval(ivU); };
-  }, [token, fetchUserAndFund, fetchStocks, fetchCommodities, fetchUsdtry]);
+  }, [isAuthenticated, fetchUserAndFund, fetchStocks, fetchCommodities, fetchUsdtry]);
 
   /* ── lot ↔ tutar sync (hisse) ── */
   const getPrice = useCallback(() => {

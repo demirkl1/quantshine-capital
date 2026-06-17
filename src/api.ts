@@ -16,22 +16,18 @@ const getCacheKey = (url: string | undefined, params: unknown): string =>
 const api = axios.create({
   baseURL: process.env.REACT_APP_API_BASE_URL || 'http://localhost:8081/api',
   timeout: 15000,          // 15 saniye zaman aşımı — sonsuz beklemeyi önler
-  withCredentials: false,  // CSRF'e maruz kalma riskini minimize et
+  withCredentials: true,   // Auth artık HttpOnly cookie ile taşınır → cookie'ler gönderilsin
   headers: {
     'Content-Type': 'application/json',
     'X-Requested-With': 'XMLHttpRequest', // CSRF koruması için sunucu tarafı kontrolü
   },
 });
 
-// ── Request Interceptor: Token ekleme + GET cache ─────────────────────────
+// ── Request Interceptor: GET cache ────────────────────────────────────────
+// Not: Token artık localStorage'da değil HttpOnly cookie'de; Authorization
+// header eklenmez — tarayıcı cookie'yi otomatik gönderir.
 api.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    const token = localStorage.getItem('token');
-    // Auth endpoint'lerine token eklenmez
-    if (token && !config.url?.includes('/auth/')) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-
     // Cache kontrolü — sadece GET istekleri için
     if (config.method === 'get') {
       const key = getCacheKey(config.url, config.params);
@@ -54,7 +50,25 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// ── Response Interceptor: Cache kaydetme + hata yönetimi ─────────────────
+// ── Şeffaf token yenileme (BFF) ───────────────────────────────────────────
+// 401 alındığında refresh cookie'siyle /auth/refresh denenir, ardından orijinal
+// istek bir kez tekrar edilir. Eşzamanlı 401'lerde tek refresh paylaşılır.
+let refreshPromise: Promise<boolean> | null = null;
+
+const isAuthEndpoint = (url?: string): boolean => !!url && url.includes('/auth/');
+
+const tryRefresh = (): Promise<boolean> => {
+  if (!refreshPromise) {
+    refreshPromise = api
+      .post('/auth/refresh')
+      .then(() => true)
+      .catch(() => false)
+      .finally(() => { refreshPromise = null; });
+  }
+  return refreshPromise;
+};
+
+// ── Response Interceptor: Cache kaydetme + 401 yenileme + hata yönetimi ────
 api.interceptors.response.use(
   (response: AxiosResponse) => {
     // Başarılı GET yanıtlarını cache'e yaz
@@ -64,15 +78,21 @@ api.interceptors.response.use(
     }
     return response;
   },
-  (error) => {
+  async (error) => {
     const status = error.response?.status as number | undefined;
+    const original = error.config as (InternalAxiosRequestConfig & { _retry?: boolean }) | undefined;
 
-    // Token geçersiz veya süresi dolmuş — oturumu kapat
-    if (status === 401) {
-      localStorage.removeItem('token');
-      localStorage.removeItem('refresh_token');
+    // Token süresi dolmuş olabilir → bir kez yenilemeyi dene, isteği tekrarla.
+    // Auth uçlarında (login/refresh/logout) ve ikinci denemede yenileme yapma.
+    if (status === 401 && original && !original._retry && !isAuthEndpoint(original.url)) {
+      original._retry = true;
+      const refreshed = await tryRefresh();
+      if (refreshed) {
+        return api(original);
+      }
+      // Yenileme başarısız — oturumu kapat
       window.dispatchEvent(new Event('auth:logout'));
-      window.location.href = '/';
+      return Promise.reject(error);
     }
 
     // Zaman aşımı

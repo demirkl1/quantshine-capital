@@ -7,7 +7,7 @@ import { MdEmail, MdWork, MdAccountCircle, MdArrowDropDown } from 'react-icons/m
 import './DanismanProfili.css';
 
 const DanismanProfili = () => {
-  const { token } = useAuth();
+  const { isAuthenticated } = useAuth();
   const [advisors, setAdvisors] = useState([]);
   const [selectedAdvisor, setSelectedAdvisor] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -37,8 +37,8 @@ const DanismanProfili = () => {
         setLoading(false);
       }
     };
-    if (token) fetchAdvisors();
-  }, [token]);
+    if (isAuthenticated) fetchAdvisors();
+  }, [isAuthenticated]);
 
 
   const handleSelectChange = (e) => {

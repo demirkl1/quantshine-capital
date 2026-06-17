@@ -11,7 +11,7 @@ import {
 import './YoneticiFon.css';
 
 const YoneticiFon = () => {
-  const { token } = useAuth();
+  const { isAuthenticated } = useAuth();
   const [funds, setFunds] = useState([]);
   const [advisors, setAdvisors] = useState([]);
   const [showModal, setShowModal] = useState(false);
@@ -82,8 +82,8 @@ const YoneticiFon = () => {
   };
 
   useEffect(() => {
-    if (token) fetchInitialData();
-  }, [token]);
+    if (isAuthenticated) fetchInitialData();
+  }, [isAuthenticated]);
 
   const handleOpenModal = (mode, fon = null) => {
     setModalMode(mode);

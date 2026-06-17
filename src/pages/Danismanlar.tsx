@@ -6,14 +6,14 @@ import AdminSidebar from '../components/AdminSidebar';
 import './Danismanlar.css';
 
 const Danismanlar = () => {
-  const { token } = useAuth();
+  const { isAuthenticated } = useAuth();
   const [advisors, setAdvisors] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedAdvisor, setSelectedAdvisor] = useState(null);
 
   useEffect(() => {
-    if (token) fetchAdvisors();
-  }, [token]);
+    if (isAuthenticated) fetchAdvisors();
+  }, [isAuthenticated]);
 
   const fetchAdvisors = async () => {
     try {

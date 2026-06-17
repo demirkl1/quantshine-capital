@@ -7,17 +7,17 @@ import toast from 'react-hot-toast';
 import './Istekler.css';
 
 const Istekler = () => {
-  const { token } = useAuth();
+  const { isAuthenticated } = useAuth();
   const [pendingRequests, setPendingRequests] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (token) {
+    if (isAuthenticated) {
       fetchPendingUsers();
     } else {
       setLoading(false);
     }
-  }, [token]);
+  }, [isAuthenticated]);
 
   const fetchPendingUsers = async () => {
     setLoading(true);

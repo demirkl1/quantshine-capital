@@ -8,7 +8,7 @@ import { PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer } from 'recha
 import './Yatirimcilar.css';
 
 const Yatirimcilar = () => {
-  const { token } = useAuth();
+  const { isAuthenticated } = useAuth();
   const [activeTab, setActiveTab] = useState('tum');
   const [showTransferModal, setShowTransferModal] = useState(false);
   const [showTradeModal, setShowTradeModal] = useState(false);
@@ -41,7 +41,7 @@ const Yatirimcilar = () => {
   const PIE_COLORS = ['#4f46e5', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4'];
 
  const fetchData = async () => {
-    if (!token) return;
+    if (!isAuthenticated) return;
     setInvestors([]); // Tab değişince eski veriyi temizle
 
     try {
@@ -111,11 +111,11 @@ const fetchAllFunds = async () => {
     }
 };
 useEffect(() => {
-  if (token) {
+  if (isAuthenticated) {
     fetchData();
     fetchAllFunds();
   }
-}, [token, activeTab]);
+}, [isAuthenticated, activeTab]);
 
 // Detay modalı açıldığında o yatırımcının işlem geçmişini çek
 useEffect(() => {
@@ -180,7 +180,7 @@ useEffect(() => {
   };
 
   fetchActualPrice();
-}, [showTradeModal, selectedYatirimci, currentFundCode, token]);
+}, [showTradeModal, selectedYatirimci, currentFundCode, isAuthenticated]);
 
 useEffect(() => {
   const numericAmount = parseFloat(price);

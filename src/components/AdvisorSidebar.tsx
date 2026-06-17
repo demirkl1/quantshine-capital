@@ -17,13 +17,13 @@ import './AdvisorSidebar.css';
 const AdvisorSidebar = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { token, logout } = useAuth();
+  const { isAuthenticated, logout } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
-    if (!token) return;
+    if (!isAuthenticated) return;
     api.get('/users/me').catch(() => {});
-  }, [token]);
+  }, [isAuthenticated]);
 
   const handleLogout = async () => {
     setIsOpen(false);

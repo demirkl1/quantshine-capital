@@ -6,7 +6,7 @@ import InvestorSidebar from '../components/InvestorSidebar';
 import './YatirimGecmisim.css';
 
 const YatirimGecmisim = () => {
-  const { token } = useAuth();
+  const { isAuthenticated } = useAuth();
   const [historyData, setHistoryData] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -22,8 +22,8 @@ const YatirimGecmisim = () => {
         setLoading(false);
       }
     };
-    if (token) fetchMyHistory();
-  }, [token]);
+    if (isAuthenticated) fetchMyHistory();
+  }, [isAuthenticated]);
 
   if (loading) return <div className="loading">Yatırım geçmişiniz yükleniyor...</div>;
 

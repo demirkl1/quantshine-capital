@@ -8,14 +8,14 @@ import { MdSend } from 'react-icons/md';
 import toast from 'react-hot-toast';
 
 const AdvisorRaporlama = () => {
-  const { token } = useAuth();
+  const { isAuthenticated } = useAuth();
   const [investors, setInvestors] = useState([]);
   const [selectedYatirimciId, setSelectedYatirimciId] = useState("");
   const [raporNotu, setRaporNotu] = useState("");
   const [title, setTitle] = useState("Danışman Bilgilendirme Notu");
 
   useEffect(() => {
-    if (token) {
+    if (isAuthenticated) {
       api.get('/users/my-investors')
       .then(res => {
         const raw = Array.isArray(res.data) ? res.data : [];
@@ -35,7 +35,7 @@ const AdvisorRaporlama = () => {
       })
       .catch(err => console.error("Yatırımcı listesi alınamadı:", err.response?.status, err.response?.data || err.message));
     }
-  }, [token]);
+  }, [isAuthenticated]);
 
   const handleGonder = async (e) => {
     e.preventDefault();

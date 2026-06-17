@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import api from '../api';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { jwtDecode } from 'jwt-decode';
 import './LoginModal.css';
 
 const LoginModal = ({ isOpen, onClose }) => {
@@ -47,12 +46,13 @@ const LoginModal = ({ isOpen, onClose }) => {
 
       login(res.data);
 
-      const roles = (jwtDecode(res.data.access_token) as { realm_access?: { roles: string[] } }).realm_access?.roles || [];
+      // Token artık cookie'de; yönlendirme için rol login yanıtının gövdesinden gelir.
+      const role = res.data?.role;
       setTimeout(() => {
         onClose();
-        if (roles.includes('ADMIN')) {
+        if (role === 'ADMIN') {
           navigate('/admin-anasayfa');
-        } else if (roles.includes('ADVISOR')) {
+        } else if (role === 'ADVISOR') {
           navigate('/danisman-anasayfa');
         } else {
           navigate('/yatirimci-anasayfa');
