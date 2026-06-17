@@ -1,304 +1,15 @@
-// @ts-nocheck
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import api from '../api';
+import type { Holding, Trade } from '../types/domain';
 import toast from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext';
 import AdminSidebar from '../components/AdminSidebar';
 import AdvisorSidebar from '../components/AdvisorSidebar';
+import { tv, G, fmt, fmtPct, pctColor, pctBg, now } from './trade/theme';
+import LiveDot from './trade/LiveDot';
+import Spark from './trade/Spark';
+import StockChartModal from './trade/StockChartModal';
 import './TradePage.css';
-
-/* ─── TradingView-inspired dark theme ─────────────────────────── */
-const tv = {
-  bg:        '#0b0e14',
-  surface:   '#111623',
-  panel:     '#171d2c',
-  border:    '#222a3a',
-  borderHi:  '#363a45',
-  accent:    '#3b82f6',
-  accentHo:  '#1e53e5',
-  green:     '#22c55e',
-  greenBg:   'rgba(38,166,154,0.12)',
-  red:       '#f87171',
-  redBg:     'rgba(239,83,80,0.12)',
-  gold:      '#f0b90b',
-  text:      '#cbd5e1',
-  textDim:   '#94a3b8',
-  textFaint: '#2a3346',
-  white:     '#ffffff',
-};
-
-const G = {
-  /* layout */
-  wrapper:   { display:'flex', minHeight:'100vh', background:tv.bg, fontFamily:"'Inter', sans-serif" },
-  main:      { flex:1, display:'flex', flexDirection:'column', gap:16, padding:'20px 24px', overflowX:'hidden' },
-
-  /* cards */
-  card:      { background:tv.surface, border:`1px solid ${tv.border}`, borderRadius:8, padding:20 },
-  cardTitle: { fontSize:11, fontWeight:700, letterSpacing:'0.12em', textTransform:'uppercase', color:tv.textDim, marginBottom:14 },
-
-  /* top bar */
-  topBar:    { display:'flex', alignItems:'center', justifyContent:'space-between', flexWrap:'wrap', gap:12 },
-  fundLabel: { fontSize:11, color:tv.textDim, letterSpacing:'0.1em', textTransform:'uppercase', marginBottom:4 },
-  bigNum:    { fontSize:28, fontWeight:700, color:tv.white, letterSpacing:'-0.02em', fontFamily:"'Inter', sans-serif" },
-  subRow:    { display:'flex', gap:24, marginTop:6, flexWrap:'wrap' },
-  subItem:   { fontSize:12, color:tv.textDim },
-  subVal:    { color:tv.text, fontWeight:600 },
-
-  /* ticker bar */
-  tickerBar:  { display:'flex', gap:20, alignItems:'center', padding:'10px 16px', background:tv.panel, borderRadius:6, borderBottom:`1px solid ${tv.border}`, flexWrap:'wrap' },
-  tickerItem: { display:'flex', flexDirection:'column', minWidth:80 },
-  tickerCode: { fontSize:10, fontWeight:700, letterSpacing:'0.08em', color:tv.textDim },
-  tickerPrice:{ fontSize:13, fontWeight:700, color:tv.text, fontFamily:"'Inter', sans-serif" },
-
-  /* grid */
-  grid:      { display:'grid', gridTemplateColumns:'380px 1fr', gap:16, alignItems:'start' },
-
-  /* trade panel */
-  tabRow:    { display:'grid', gridTemplateColumns:'1fr 1fr', gap:1, marginBottom:16, borderRadius:6, overflow:'hidden', border:`1px solid ${tv.border}` },
-
-  /* inputs */
-  label:     { fontSize:11, color:tv.textDim, marginBottom:4, letterSpacing:'0.08em', textTransform:'uppercase' },
-  input:     {
-    width:'100%', boxSizing:'border-box',
-    background:tv.panel, border:`1px solid ${tv.border}`,
-    borderRadius:6, padding:'10px 12px',
-    color:tv.text, fontSize:13, fontFamily:"'Inter', sans-serif",
-    outline:'none', transition:'border 0.15s',
-  },
-  select:    {
-    width:'100%', boxSizing:'border-box',
-    background:tv.panel, border:`1px solid ${tv.border}`,
-    borderRadius:6, padding:'10px 12px',
-    color:tv.text, fontSize:12, fontFamily:"'Inter', sans-serif",
-    outline:'none', cursor:'pointer', appearance:'none',
-  },
-
-  /* price badge */
-  priceBadge:{ padding:'10px 14px', background:tv.panel, borderRadius:6, border:`1px solid ${tv.border}`, display:'flex', justifyContent:'space-between', alignItems:'center' },
-
-  /* table */
-  table:     { width:'100%', borderCollapse:'collapse', fontSize:12 },
-  th:        { padding:'8px 12px', textAlign:'left', fontSize:10, fontWeight:700, letterSpacing:'0.1em', textTransform:'uppercase', color:tv.textDim, borderBottom:`1px solid ${tv.border}` },
-  td:        { padding:'9px 12px', borderBottom:`1px solid ${tv.textFaint}`, color:tv.text, fontFamily:"'Inter', sans-serif", fontSize:12 },
-  tdName:    { color:tv.white, fontWeight:700 },
-
-  /* status bar */
-  statusBar: { display:'flex', justifyContent:'space-between', alignItems:'center', padding:'8px 14px', background:tv.panel, borderRadius:6, fontSize:11, color:tv.textDim },
-};
-
-/* ─── helpers ──────────────────────────────────────────────────── */
-const fmt    = (n, d=2) => Number(n||0).toLocaleString('tr-TR', { minimumFractionDigits:d, maximumFractionDigits:d });
-const fmtPct = (n)      => `${Number(n||0) >= 0 ? '+' : ''}${fmt(n,2)}%`;
-const pctColor = (n)    => Number(n||0) >= 0 ? tv.green : tv.red;
-const pctBg    = (n)    => Number(n||0) >= 0 ? tv.greenBg : tv.redBg;
-const now      = ()     => new Date().toLocaleTimeString('tr-TR');
-
-/* ─── Bip dot component ────────────────────────────────────────── */
-const LiveDot = () => (
-  <span style={{ display:'inline-block', width:6, height:6, borderRadius:'50%', background:tv.green, marginRight:6,
-    boxShadow:`0 0 0 0 ${tv.green}`, animation:'pulse 2s infinite' }} />
-);
-
-/* ─── Stock Chart Modal — Investing.com ─────────────────────────
- * TradingView free embed bazı küçük BIST hisselerini göstermiyordu
- * (A1CAP → AAPL'a düşüyordu). Tüm BIST sembolleri için Investing.com
- * sslcharts widget'ına geçtik. Backend `/api/stocks/{code}/chart-meta`
- * endpoint'i pair_ID'yi bulup iframe URL'ini döndürüyor.
- */
-const StockChartModal = ({ stock, onClose, onBuy, onSell }) => {
-  const [chartUrl,  setChartUrl]  = useState(null);
-  const [chartState, setChartState] = useState('loading'); // 'loading' | 'ready' | 'missing'
-  const stockCode = stock?.stockCode;
-
-  useEffect(() => {
-    if (!stockCode) return;
-    let cancelled = false;
-    setChartState('loading');
-    setChartUrl(null);
-    (async () => {
-      try {
-        const { data } = await api.get(`/stocks/${stockCode}/chart-meta`);
-        if (cancelled) return;
-        if (data?.iframeUrl) {
-          setChartUrl(data.iframeUrl);
-          setChartState('ready');
-        } else {
-          setChartState('missing');
-        }
-      } catch (e) {
-        if (!cancelled) setChartState('missing');
-      }
-    })();
-    return () => { cancelled = true; };
-  }, [stockCode]);
-
-  if (!stock) return null;
-
-  const chgPct = parseFloat((stock.changePercent || '0').replace('%', ''));
-  const isPos  = chgPct >= 0;
-  const color  = isPos ? tv.green : tv.red;
-
-  return (
-    <div
-      onClick={onClose}
-      style={{
-        position:'fixed', inset:0, zIndex:9999,
-        background:'rgba(0,0,0,0.82)',
-        display:'flex', alignItems:'center', justifyContent:'center',
-        backdropFilter:'blur(4px)',
-        animation:'fadeIn 0.15s ease',
-      }}
-    >
-      <div
-        onClick={e => e.stopPropagation()}
-        style={{
-          width:'92vw', maxWidth:1320, height:'88vh',
-          background:tv.surface, border:`1px solid ${tv.border}`,
-          borderRadius:12, display:'flex', flexDirection:'column',
-          overflow:'hidden', boxShadow:'0 24px 80px rgba(0,0,0,0.6)',
-        }}
-      >
-        {/* ── Header ── */}
-        <div style={{
-          display:'flex', alignItems:'center', justifyContent:'space-between',
-          padding:'14px 20px', borderBottom:`1px solid ${tv.border}`,
-          background:tv.panel, flexShrink:0, flexWrap:'wrap', gap:10,
-        }}>
-          <div style={{display:'flex', alignItems:'center', gap:20, flexWrap:'wrap'}}>
-            <div>
-              <div style={{
-                fontSize:22, fontWeight:700, color:tv.white,
-                fontFamily:"'Inter', sans-serif", letterSpacing:'-0.01em',
-              }}>
-                {stock.stockCode}
-                <span style={{fontSize:12, color:tv.textDim, fontWeight:400, marginLeft:8}}>BIST</span>
-              </div>
-              <div style={{fontSize:11, color:tv.textDim, marginTop:2}}>{stock.stockName}</div>
-            </div>
-
-            <div style={{display:'flex', flexDirection:'column', gap:2}}>
-              <div style={{
-                fontSize:26, fontWeight:700, color:tv.white,
-                fontFamily:"'Inter', sans-serif", lineHeight:1,
-              }}>
-                ₺{Number(stock.currentPrice||0).toFixed(2)}
-              </div>
-              <div style={{display:'flex', gap:8, alignItems:'center'}}>
-                <span style={{
-                  fontSize:13, fontWeight:700, color,
-                  background: isPos ? tv.greenBg : tv.redBg,
-                  padding:'2px 8px', borderRadius:4,
-                  fontFamily:"'Inter', sans-serif",
-                }}>
-                  {isPos ? '+' : ''}{chgPct.toFixed(2)}%
-                </span>
-                {stock.change != null && (
-                  <span style={{fontSize:11, color, fontFamily:"'Inter', sans-serif"}}>
-                    {isPos ? '+' : ''}₺{Number(stock.change).toFixed(2)}
-                  </span>
-                )}
-              </div>
-            </div>
-
-            <div style={{fontSize:10, color:tv.textFaint, fontFamily:"'Inter', sans-serif", lineHeight:1.6}}>
-              <div>Son Güncelleme</div>
-              <div style={{color:tv.textDim}}>
-                {stock.lastUpdate
-                  ? new Date(stock.lastUpdate).toLocaleString('tr-TR',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'})
-                  : '—'}
-              </div>
-            </div>
-          </div>
-
-          <div style={{display:'flex', alignItems:'center', gap:8}}>
-            <button onClick={onBuy} style={{
-              padding:'9px 20px', border:'none', borderRadius:6, cursor:'pointer',
-              background:tv.green, color:'#fff', fontSize:13, fontWeight:700,
-              fontFamily:"'Inter', sans-serif", letterSpacing:'0.05em',
-            }}>
-              ▲ ALIŞ
-            </button>
-            <button onClick={onSell} style={{
-              padding:'9px 20px', border:'none', borderRadius:6, cursor:'pointer',
-              background:tv.red, color:'#fff', fontSize:13, fontWeight:700,
-              fontFamily:"'Inter', sans-serif", letterSpacing:'0.05em',
-            }}>
-              ▼ SATIŞ
-            </button>
-            <button onClick={onClose} style={{
-              width:34, height:34, border:`1px solid ${tv.border}`,
-              borderRadius:6, background:tv.panel, color:tv.textDim,
-              cursor:'pointer', fontSize:16,
-            }}>
-              ✕
-            </button>
-          </div>
-        </div>
-
-        {/* ── Chart area (Investing.com) ── */}
-        <div style={{ flex:1, minHeight:0, position:'relative', background:tv.surface,
-                      display:'flex', alignItems:'center', justifyContent:'center' }}>
-          {chartState === 'loading' && (
-            <div style={{color:tv.textDim, fontSize:13, fontFamily:"'Inter', sans-serif"}}>
-              Grafik yükleniyor…
-            </div>
-          )}
-          {chartState === 'missing' && (
-            <div style={{color:tv.textDim, fontSize:13, textAlign:'center', padding:20}}>
-              <div style={{color:tv.white, fontWeight:700, marginBottom:6}}>
-                {stock.stockCode}
-              </div>
-              Investing.com'da bu sembol için grafik bulunamadı.
-            </div>
-          )}
-          {chartState === 'ready' && chartUrl && (
-            <iframe
-              key={chartUrl}
-              src={chartUrl}
-              frameBorder="0"
-              scrolling="no"
-              // @ts-ignore
-              allowtransparency="true"
-              allow="fullscreen"
-              style={{
-                width:'100%',
-                height:'100%',
-                border:'none',
-                display:'block',
-                background:tv.surface,
-              }}
-              title={`${stock.stockCode} Investing Chart`}
-            />
-          )}
-        </div>
-
-        {/* ── Footer ── */}
-        <div style={{
-          display:'flex', justifyContent:'space-between', alignItems:'center',
-          padding:'8px 20px', borderTop:`1px solid ${tv.border}`,
-          background:tv.panel, flexShrink:0,
-          fontSize:10, color:tv.textFaint, fontFamily:"'Inter', sans-serif",
-        }}>
-          <span>Kaynak: Investing.com · Yatırım tavsiyesi değildir</span>
-          <span>ESC veya dışarı tıkla · kapat</span>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-/* ─── Mini sparkline using SVG ─────────────────────────────────── */
-const Spark = ({ positive }) => {
-  const color = positive ? tv.green : tv.red;
-  const path  = positive
-    ? 'M0,12 L6,9 L12,10 L18,6 L24,7 L30,3 L36,4 L42,1'
-    : 'M0,2  L6,5 L12,4 L18,8 L24,7 L30,11 L36,10 L42,13';
-  return (
-    <svg width={42} height={14} style={{ display:'block' }}>
-      <polyline points={path} fill="none" stroke={color} strokeWidth={1.5} strokeLinejoin="round" />
-    </svg>
-  );
-};
 
 /* ═══════════════════════════════════════════════════════════════ */
 const TradePage = ({ role }) => {
@@ -309,28 +20,28 @@ const TradePage = ({ role }) => {
   const { isAuthenticated } = useAuth();
 
   /* ── Hisse state'leri ── */
-  const [hisseler,      setHisseler]      = useState([]);
-  const [selectedHisse, setSelectedHisse] = useState(null);
+  const [hisseler,      setHisseler]      = useState<Holding[]>([]);
+  const [selectedHisse, setSelectedHisse] = useState<Holding | null>(null);
   const [fiyatTipi,     setFiyatTipi]     = useState('market');
   const [customFiyat,   setCustomFiyat]   = useState('');
   const [lot,           setLot]           = useState('');
   const [tutar,         setTutar]         = useState('');
-  const [portfolio,     setPortfolio]     = useState(null);
+  const [portfolio,     setPortfolio]     = useState<any>(null);
   const [islemTipi,     setIslemTipi]     = useState('BUY');
-  const [userInfo,      setUserInfo]      = useState(null);
+  const [userInfo,      setUserInfo]      = useState<any>(null);
   const [loading,       setLoading]       = useState(false);
   const [lastUpdate,    setLastUpdate]    = useState('--:--:--');
-  const [financials,    setFinancials]    = useState(null);
+  const [financials,    setFinancials]    = useState<any>(null);
   const [search,        setSearch]        = useState('');
   const [sortField,     setSortField]     = useState('stockCode');
   const [sortDir,       setSortDir]       = useState('asc');
   const [inputFocus,    setInputFocus]    = useState('');
   const [tradeSuccess,  setTradeSuccess]  = useState(false);
-  const [tradeHistory,  setTradeHistory]  = useState([]);
-  const [commodities,   setCommodities]   = useState([]);
+  const [tradeHistory,  setTradeHistory]  = useState<Trade[]>([]);
+  const [commodities,   setCommodities]   = useState<Holding[]>([]);
 
   /* ── Grafik modal state'i ── */
-  const [chartStock,        setChartStock]        = useState(null);
+  const [chartStock,        setChartStock]        = useState<Holding | null>(null);
 
   /* ── ESC ile modal kapat ── */
   useEffect(() => {
@@ -342,11 +53,11 @@ const TradePage = ({ role }) => {
   /* ── Emtia state'leri ── */
   const [activePanel,       setActivePanel]       = useState('hisse'); // 'hisse' | 'emtia'
   const [usdtry,            setUsdtry]            = useState(0);
-  const [selectedCommodity, setSelectedCommodity] = useState(null);
+  const [selectedCommodity, setSelectedCommodity] = useState<Holding | null>(null);
   const [cLot,              setCLot]              = useState('');
   const [cTutar,            setCTutar]            = useState('');      // TRY karşılığı
-  const [commodityHoldings, setCommodityHoldings] = useState([]);
-  const [commodityHistory,  setCommodityHistory]  = useState([]);
+  const [commodityHoldings, setCommodityHoldings] = useState<Holding[]>([]);
+  const [commodityHistory,  setCommodityHistory]  = useState<Trade[]>([]);
   const [islemTipiC,        setIslemTipiC]        = useState('BUY');
   const [tradeCSuccess,     setTradeCSuccess]      = useState(false);
   const [historyTab,        setHistoryTab]         = useState('hisse'); // 'hisse' | 'emtia'
@@ -359,7 +70,7 @@ const TradePage = ({ role }) => {
         : '/trade/stock-history';
       const { data } = await api.get(url);
       if (Array.isArray(data)) setTradeHistory(data);
-    } catch (e) { console.error(e); }
+    } catch (e: any) { console.error(e); }
   }, [isAdmin]);
 
   const fetchCommodityHoldings = useCallback(async (fundCode) => {
@@ -367,7 +78,7 @@ const TradePage = ({ role }) => {
     try {
       const { data } = await api.get(`/commodities/holdings?fundCode=${fundCode}`);
       if (Array.isArray(data)) setCommodityHoldings(data);
-    } catch (e) { console.error('Emtia holdings hatası:', e); }
+    } catch (e: any) { console.error('Emtia holdings hatası:', e); }
   }, []);
 
   const fetchCommodityHistory = useCallback(async (fundCode) => {
@@ -377,14 +88,14 @@ const TradePage = ({ role }) => {
         : '/commodities/history';
       const { data } = await api.get(url);
       if (Array.isArray(data)) setCommodityHistory(data);
-    } catch (e) { console.error('Emtia geçmişi hatası:', e); }
+    } catch (e: any) { console.error('Emtia geçmişi hatası:', e); }
   }, [isAdmin]);
 
   const fetchUsdtry = useCallback(async () => {
     try {
       const { data } = await api.get('/commodities/usdtry');
       if (data) setUsdtry(Number(data));
-    } catch (e) { console.error('USDTRY hatası:', e); }
+    } catch (e: any) { console.error('USDTRY hatası:', e); }
   }, []);
 
   const fetchUserAndFund = useCallback(async () => {
@@ -401,7 +112,7 @@ const TradePage = ({ role }) => {
       const { data: stats } = await api.get(statsEndpoint);
       setFinancials(stats);
       await fetchTradeHistory(fundCode);
-    } catch (e) { console.error(e); }
+    } catch (e: any) { console.error(e); }
   }, [statsEndpoint, fetchTradeHistory, fetchCommodityHoldings, fetchCommodityHistory]);
 
   const fetchStocks = useCallback(async () => {
@@ -411,14 +122,14 @@ const TradePage = ({ role }) => {
         setHisseler(data);
         setLastUpdate(now());
       }
-    } catch (e) { console.error(e); }
+    } catch (e: any) { console.error(e); }
   }, []);
 
   const fetchCommodities = useCallback(async () => {
     try {
       const { data } = await api.get('/commodities');
       if (Array.isArray(data)) setCommodities(data);
-    } catch (e) { console.error('Emtia hatası:', e); }
+    } catch (e: any) { console.error('Emtia hatası:', e); }
   }, []);
 
   useEffect(() => {
@@ -436,7 +147,7 @@ const TradePage = ({ role }) => {
   /* ── lot ↔ tutar sync (hisse) ── */
   const getPrice = useCallback(() => {
     if (!selectedHisse) return 0;
-    const p = parseFloat(selectedHisse.currentPrice);
+    const p = Number(selectedHisse.currentPrice);
     if (fiyatTipi === 'custom-up-0.5')   return p * 1.005;
     if (fiyatTipi === 'custom-down-0.5') return p * 0.995;
     if (fiyatTipi === 'manual')          return parseFloat(customFiyat) || 0;
@@ -458,7 +169,7 @@ const TradePage = ({ role }) => {
   /* ── lot ↔ tutar sync (emtia) ── */
   const getCommodityPriceTry = useCallback(() => {
     if (!selectedCommodity) return 0;
-    return parseFloat(selectedCommodity.currentPrice || 0) * usdtry;
+    return Number(selectedCommodity.currentPrice || 0) * usdtry;
   }, [selectedCommodity, usdtry]);
 
   useEffect(() => {
@@ -482,7 +193,7 @@ const TradePage = ({ role }) => {
     try {
       await api.post('/stocks/update-all', {});
       setTimeout(async () => { await fetchStocks(); setLoading(false); }, 3000);
-    } catch (e) {
+    } catch (e: any) {
       console.error(e); setLoading(false);
     }
   };
@@ -506,7 +217,7 @@ const TradePage = ({ role }) => {
       setTimeout(() => setTradeSuccess(false), 2500);
       setLot(''); setTutar(''); setSelectedHisse(null);
       await fetchUserAndFund();
-    } catch (e) {
+    } catch (e: any) {
       toast.error('Hata: ' + (e.response?.data || 'İşlem başarısız'));
     }
   };
@@ -523,7 +234,7 @@ const TradePage = ({ role }) => {
         fundCode:  userInfo.managedFundCode,
         symbol:    selectedCommodity.symbol,
         lot:       parseFloat(cLot),
-        priceUsd:  parseFloat(selectedCommodity.currentPrice || 0),
+        priceUsd:  Number(selectedCommodity.currentPrice || 0),
         usdtryRate: usdtry,
         type:      islemTipiC
       });
@@ -531,7 +242,7 @@ const TradePage = ({ role }) => {
       setTimeout(() => setTradeCSuccess(false), 2500);
       setCLot(''); setCTutar(''); setSelectedCommodity(null);
       await fetchUserAndFund();
-    } catch (e) {
+    } catch (e: any) {
       toast.error('Hata: ' + (e.response?.data || 'Emtia işlemi başarısız'));
     }
   };
@@ -545,7 +256,7 @@ const TradePage = ({ role }) => {
   const cashBalance     = dbCash > 0 ? dbCash : Math.max(0, statsFallback - stocksValue);
 
   const commodityHoldingsValue = commodityHoldings.reduce(
-    (s, h) => s + (parseFloat(h.marketValueTry) || 0), 0);
+    (s, h) => s + (Number(h.marketValueTry) || 0), 0);
 
   const totalPF         = cashBalance + stocksValue + commodityHoldingsValue;
   const totalProfitLoss = parseFloat(portfolio?.totalProfitLoss || financials?.fonKarZararTl || 0);
@@ -587,13 +298,13 @@ const TradePage = ({ role }) => {
       if (t.stockCode) counts[t.stockCode] = (counts[t.stockCode] || 0) + 1;
     });
     return Object.entries(counts)
-      .sort(([, a], [, b]) => b - a)
+      .sort(([, a]: any, [, b]: any) => Number(b) - Number(a))
       .slice(0, 8)
       .map(([code, count]) => {
         const stock = hisseler.find(h => h.stockCode === code);
         return stock ? { ...stock, tradeCount: count } : null;
       })
-      .filter(Boolean);
+      .filter((s): s is any => s !== null);
   }, [tradeHistory, hisseler]);
 
   /* ── panel/history tab style helper ── */
@@ -1141,8 +852,8 @@ const TradePage = ({ role }) => {
 
                     {/* emtia holdingleri */}
                     {commodityHoldings.map((h, i) => {
-                      const costTry    = parseFloat(h.totalCostTry || 0);
-                      const marketTry  = parseFloat(h.marketValueTry || 0);
+                      const costTry    = Number(h.totalCostTry || 0);
+                      const marketTry  = Number(h.marketValueTry || 0);
                       const kz  = marketTry - costTry;
                       const pct = costTry > 0 ? (kz / costTry * 100) : 0;
                       return (
@@ -1268,7 +979,7 @@ const TradePage = ({ role }) => {
                         </td>
                       </tr>
                     ) : filteredStocks.map(h => {
-                      const chg    = parseFloat(h.change || 0);
+                      const chg    = Number(h.change || 0);
                       const chgPct = parseFloat((h.changePercent||'0').replace('%',''));
                       const isPos  = chg >= 0;
                       const isSelected = selectedHisse?.stockCode === h.stockCode;
