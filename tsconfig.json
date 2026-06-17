@@ -7,7 +7,7 @@
     "noImplicitAny": false,
     "moduleResolution": "bundler",
     "allowJs": true,
-    "types": ["jest", "node"],
+    "types": ["vitest/globals", "vite/client", "node"],
     "esModuleInterop": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,

@@ -14,7 +14,7 @@ const getCacheKey = (url: string | undefined, params: unknown): string =>
 
 // ── Axios instance ────────────────────────────────────────────────────────
 const api = axios.create({
-  baseURL: process.env.REACT_APP_API_BASE_URL || 'http://localhost:8081/api',
+  baseURL: import.meta.env.VITE_API_BASE_URL || 'http://localhost:8081/api',
   timeout: 15000,          // 15 saniye zaman aşımı — sonsuz beklemeyi önler
   withCredentials: true,   // Auth artık HttpOnly cookie ile taşınır → cookie'ler gönderilsin
   headers: {
