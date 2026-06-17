@@ -51,6 +51,13 @@ export interface Holding {
   weight?: number;
   quantity?: number;
   value?: number;
+  change?: number;
+  changePercent?: string;
+  lastUpdate?: string;
+  marketValueTry?: number;
+  id?: number;
+  nameTr?: string;
+  totalCostTry?: number;
 }
 
 export interface Fund extends FundPerformance {
@@ -136,6 +143,15 @@ export interface Trade {
   suanDeger?: number;
   toplamMaliyet?: number;
   currentPrice?: number;
+  stockCode?: string;
+  stockName?: string;
+  tradeDate?: string;
+  totalAmount?: number;
+  nameTr?: string;
+  symbol?: string;
+  priceUsd?: number;
+  usdtryRate?: number;
+  totalAmountTry?: number;
 }
 
 export interface ChartPoint {
