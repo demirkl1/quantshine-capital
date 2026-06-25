@@ -5,6 +5,15 @@
   box-sizing: border-box;
 }
 
+/* ════════════════════════════════════════════════════════════════════
+   Global tipografi: tüm site Times New Roman.
+   İkonlar lucide-react / react-icons (SVG) olduğundan font-family'den
+   etkilenmez; bu kural yalnızca metin fontlarını değiştirir.
+   ════════════════════════════════════════════════════════════════════ */
+* {
+  font-family: 'Times New Roman', Times, serif !important;
+}
+
 html {
   overflow-x: hidden;
   scroll-behavior: smooth;
