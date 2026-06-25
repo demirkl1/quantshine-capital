@@ -1,16 +1,10 @@
 /* src/pages/LandingPage.css */
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&display=swap');
 
+/* Renkler artık tek kaynaktan: src/styles/variables.css (mavi sistem).
+   Aşağıdaki yerel takma ad landing'e özel; global token'lara bağlıdır. */
 .landing-page-container {
-  --bg-dark: #0b0e14;
-  --bg-elevated: rgba(17, 22, 35, 0.7);
-  --primary-blue: #1e40af;
-  --secondary-blue: #1d4ed8;
-  --accent-blue: #3b82f6;
-  --text-bright: #ffffff;
-  --text-soft: #cbd5e1;
-  --text-dim: #94a3b8;
-  --glass-bg: rgba(17, 22, 35, 0.7);
-  --glass-border: rgba(255, 255, 255, 0.1);
+  --bg-dark: var(--bg-base);
 
   position: relative;
   width: 100%;
@@ -109,8 +103,8 @@
   gap: 8px;
   padding: 8px 18px;
   border-radius: 50px;
-  background: rgba(59, 130, 246, 0.1);
-  border: 1px solid rgba(59, 130, 246, 0.25);
+  background: var(--accent-soft);
+  border: 1px solid var(--accent-line);
   color: var(--text-soft);
   font-size: 0.85rem;
   font-weight: 600;
@@ -128,13 +122,13 @@
 }
 
 .hero-main-title {
-  font-family: 'Poppins', sans-serif;
-  font-size: clamp(2.6rem, 6.2vw, 5rem);
-  font-weight: 800;
-  line-height: 1.08;
+  font-family: 'Fraunces', Georgia, 'Times New Roman', serif;
+  font-size: clamp(3rem, 7vw, 6rem);
+  font-weight: 600;
+  line-height: 1.04;
   letter-spacing: -1.5px;
-  margin: 0 0 22px;
-  background: linear-gradient(180deg, #ffffff 35%, #93b4f0 120%);
+  margin: 0 0 24px;
+  background: linear-gradient(180deg, #ffffff 30%, #93b4f0 130%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -157,10 +151,12 @@
 
 /* CTA butonları */
 .cta-button {
+  position: relative;
+  overflow: hidden;
   display: inline-flex;
   align-items: center;
   gap: 10px;
-  background: linear-gradient(135deg, var(--secondary-blue), var(--accent-blue));
+  background: linear-gradient(135deg, var(--accent-deep), var(--accent));
   color: #fff;
   padding: 15px 34px;
   border-radius: 12px;
@@ -176,6 +172,42 @@
 .cta-button:hover {
   transform: translateY(-3px);
   box-shadow: 0 16px 40px rgba(37, 99, 235, 0.5);
+}
+
+.cta-button:active {
+  transform: translateY(-1px) scale(0.99);
+}
+
+/* İçindeki ok hover'da hafif kayar */
+.cta-button svg {
+  transition: transform 0.25s ease;
+}
+
+.cta-button:hover svg {
+  transform: translateX(4px);
+}
+
+/* Hover'da parlama süpürmesi (shimmer) */
+.cta-button::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -130%;
+  width: 60%;
+  height: 100%;
+  background: linear-gradient(
+    110deg,
+    transparent,
+    rgba(255, 255, 255, 0.35),
+    transparent
+  );
+  transform: skewX(-20deg);
+  pointer-events: none;
+  transition: left 0.65s ease;
+}
+
+.cta-button:hover::after {
+  left: 150%;
 }
 
 .cta-button--ghost {
@@ -225,7 +257,7 @@
   width: 4px;
   height: 8px;
   border-radius: 4px;
-  background: var(--accent-blue);
+  background: var(--accent);
   animation: scrollWheel 1.8s ease-in-out infinite;
 }
 
@@ -263,15 +295,15 @@
 
 .stat-card:hover {
   transform: translateY(-6px);
-  border-color: rgba(59, 130, 246, 0.4);
+  border-color: var(--accent-line);
 }
 
 .stat-value {
-  font-family: 'Poppins', sans-serif;
-  font-size: clamp(2rem, 3.4vw, 2.8rem);
-  font-weight: 800;
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: clamp(2.1rem, 3.6vw, 3rem);
+  font-weight: 600;
   line-height: 1;
-  background: linear-gradient(135deg, #fff, #60a5fa);
+  background: linear-gradient(135deg, #fff, var(--accent-bright));
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -292,11 +324,11 @@
 }
 
 .section-title {
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Fraunces', Georgia, serif;
   color: var(--text-bright);
-  font-size: clamp(1.9rem, 3.5vw, 2.6rem);
-  font-weight: 800;
-  letter-spacing: -0.8px;
+  font-size: clamp(2rem, 3.7vw, 2.9rem);
+  font-weight: 600;
+  letter-spacing: -0.6px;
   margin: 0 0 16px;
 }
 
@@ -331,12 +363,12 @@
 }
 
 .chart-header-info h3 {
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Fraunces', Georgia, serif;
   color: var(--text-bright);
-  font-size: 1.7rem;
-  font-weight: 700;
+  font-size: 1.8rem;
+  font-weight: 600;
   margin: 0 0 6px;
-  letter-spacing: -0.5px;
+  letter-spacing: -0.4px;
 }
 
 .chart-subtitle {
@@ -400,7 +432,7 @@
 }
 
 .why-brand {
-  background: linear-gradient(135deg, #3b82f6, #60a5fa);
+  background: linear-gradient(135deg, var(--accent), var(--accent-bright));
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -426,7 +458,7 @@
 .why-glass {
   background: rgba(255, 255, 255, 0.02);
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(59, 130, 246, 0.2);
+  border: 1px solid var(--accent-line);
   border-radius: 32px;
   padding: 50px;
   box-shadow: 0 30px 60px rgba(0, 0, 0, 0.55);
@@ -443,10 +475,46 @@
   filter: drop-shadow(0 0 20px rgba(59, 130, 246, 0.15));
 }
 
+/* Bento düzeni: 1 büyük + 2 küçük + 1 geniş banner */
 .social-proof-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 26px;
+  grid-template-columns: repeat(3, 1fr);
+  grid-auto-rows: minmax(150px, auto);
+  gap: 22px;
+}
+
+.social-proof-grid .grid-item:nth-child(1) {
+  grid-column: span 2;
+  grid-row: span 2;
+  justify-content: flex-end;
+  display: flex;
+  flex-direction: column;
+  background:
+    radial-gradient(500px 280px at 100% 0%, rgba(59, 130, 246, 0.14), transparent 65%),
+    var(--glass-bg);
+}
+
+.social-proof-grid .grid-item:nth-child(4) {
+  grid-column: span 3;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+/* Büyük kutu: daha iri ikon ve başlık */
+.social-proof-grid .grid-item:nth-child(1) .grid-icon-box {
+  width: 68px;
+  height: 68px;
+  border-radius: 18px;
+}
+
+.social-proof-grid .grid-item:nth-child(1) h4 {
+  font-size: 1.9rem;
+}
+
+.social-proof-grid .grid-item:nth-child(1) p {
+  font-size: 1.08rem;
+  max-width: 460px;
 }
 
 .grid-item {
@@ -460,7 +528,7 @@
 
 .grid-item:hover {
   transform: translateY(-8px);
-  border-color: rgba(59, 130, 246, 0.4);
+  border-color: var(--accent-line);
   box-shadow: 0 24px 50px rgba(0, 0, 0, 0.4);
 }
 
@@ -472,16 +540,16 @@
   height: 56px;
   border-radius: 14px;
   background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(30, 64, 175, 0.12));
-  border: 1px solid rgba(59, 130, 246, 0.25);
-  color: #60a5fa;
+  border: 1px solid var(--accent-line);
+  color: var(--accent-bright);
   margin-bottom: 20px;
 }
 
 .grid-item h4 {
   color: var(--text-bright);
-  font-family: 'Poppins', sans-serif;
-  font-size: 1.3rem;
-  font-weight: 700;
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: 1.35rem;
+  font-weight: 600;
   margin: 0 0 12px;
 }
 
@@ -512,10 +580,10 @@
 }
 
 .dual-panel h3 {
-  font-family: 'Poppins', sans-serif;
-  font-size: clamp(1.5rem, 2.4vw, 2rem);
-  font-weight: 800;
-  letter-spacing: -0.5px;
+  font-family: 'Fraunces', Georgia, serif;
+  font-size: clamp(1.6rem, 2.5vw, 2.2rem);
+  font-weight: 600;
+  letter-spacing: -0.4px;
   margin: 0 0 18px;
   line-height: 1.2;
 }
@@ -541,6 +609,18 @@
   padding: 60px 44px;
 }
 
+/* Üstte ince altın aksan çizgisi — premium dokunuş */
+.dual-panel--full::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 120px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+}
+
 .dual-panel--full p {
   max-width: 760px;
 }
@@ -559,18 +639,19 @@
 .dual-panel--light p { color: #475569; }
 
 .dual-panel--light .cta-button {
-  background: linear-gradient(135deg, #1d4ed8, #2563eb);
+  background: linear-gradient(135deg, var(--accent-deep), var(--accent));
+  color: #fff;
 }
 
 .dual-panel--light .cta-button--ghost {
   background: transparent;
-  color: #1d4ed8;
-  border: 1px solid rgba(29, 78, 216, 0.4);
+  color: var(--accent-deep);
+  border: 1px solid var(--accent-line);
 }
 
 .dual-panel--light .cta-button--ghost:hover {
   background: rgba(29, 78, 216, 0.08);
-  border-color: #1d4ed8;
+  border-color: var(--accent-deep);
 }
 
 /* Koyu panel */
@@ -579,8 +660,8 @@
   overflow: hidden;
   background:
     radial-gradient(600px 300px at 80% 10%, rgba(59, 130, 246, 0.28), transparent 60%),
-    linear-gradient(160deg, #16223f 0%, #0d1320 100%);
-  border: 1px solid rgba(59, 130, 246, 0.25);
+    linear-gradient(160deg, #1a2238 0%, #0d1320 100%);
+  border: 1px solid var(--accent-line);
 }
 
 .dual-panel--dark h3 { color: #fff; }
@@ -625,6 +706,21 @@
 
   .dual-panel-section {
     grid-template-columns: 1fr;
+  }
+
+  /* Bento → tek sütun */
+  .social-proof-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .social-proof-grid .grid-item:nth-child(1),
+  .social-proof-grid .grid-item:nth-child(4) {
+    grid-column: span 1;
+    grid-row: span 1;
+  }
+
+  .social-proof-grid .grid-item:nth-child(1) h4 {
+    font-size: 1.5rem;
   }
 }
 
@@ -683,5 +779,64 @@
   .cta-button {
     width: 100%;
     justify-content: center;
+  }
+}
+
+/* ═══════════════════ SPOTLIGHT (imleci takip eden ışık) ═══════════════════ */
+.stat-card,
+.grid-item {
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-card::before,
+.grid-item::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    240px circle at var(--mx, 50%) var(--my, -20%),
+    rgba(59, 130, 246, 0.20),
+    transparent 62%
+  );
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.stat-card:hover::before,
+.grid-item:hover::before {
+  opacity: 1;
+}
+
+/* İçerik ışığın üstünde kalsın */
+.stat-card > *,
+.grid-item > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* ═══════════════════ ERİŞİLEBİLİRLİK ═══════════════════ */
+/* Hareket hassasiyeti olan kullanıcılar için animasyonları durdur. */
+@media (prefers-reduced-motion: reduce) {
+  .hero-orb,
+  .scroll-mouse::before,
+  .pulse-dot,
+  .hero-badge-dot {
+    animation: none !important;
+  }
+
+  .cta-button,
+  .cta-button svg,
+  .cta-button::after,
+  .stat-card,
+  .grid-item {
+    transition: none !important;
+  }
+
+  .cta-button:hover::after {
+    left: -130%;
   }
 }

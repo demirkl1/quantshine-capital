@@ -33,6 +33,14 @@
     "subtitle": "Anlık portföy ve market verileri",
     "live": "CANLI VERİ AKIŞI"
   },
+  "trust": {
+    "title": "Güvenle yatırım yapın",
+    "subtitle": "Düzenlenmiş, denetlenen ve şeffaf bir portföy yönetimi",
+    "item1": "SPK Lisanslı Portföy Yönetimi",
+    "item2": "Takasbank Saklama Güvencesi",
+    "item3": "Bağımsız Denetimden Geçer",
+    "item4": "BIST & TEFAS Üyesi"
+  },
   "featured": {
     "title": "Öne Çıkan Fonlar",
     "all": "Tüm Fonlar",
