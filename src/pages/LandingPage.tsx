@@ -10,16 +10,20 @@ import {
 } from "lucide-react";
 import MarketTicker from "../components/MarketTicker";
 import MarketChart from "../components/MarketChart";
+import HeroChart from "../components/HeroChart";
 import NewsSection from "../components/NewsSection";
 import FeaturedFunds from "../components/FeaturedFunds";
+import TrustStrip from "../components/TrustStrip";
 import Reveal from "../components/Reveal";
 import CountUp from "../components/CountUp";
 import Seo from "../components/Seo";
+import { useCardSpotlight } from "../components/useCardSpotlight";
 import "./LandingPage.css";
 
 const LandingPage = () => {
   const { t } = useTranslation();
   const [scrolled, setScrolled] = useState(false);
+  useCardSpotlight(".stat-card, .grid-item, .ff-card");
 
   const FEATURES = [
     { icon: TrendingUp, title: t("why.feature1Title"), text: t("why.feature1Text") },
@@ -49,6 +53,7 @@ const LandingPage = () => {
           <div className="hero-orb hero-orb--1" />
           <div className="hero-orb hero-orb--2" />
         </div>
+        <HeroChart />
 
         <div className="hero-foreground">
           <Reveal variant="up">
@@ -120,6 +125,9 @@ const LandingPage = () => {
 
         {/* 5. ÖNE ÇIKAN FONLAR */}
         <FeaturedFunds />
+
+        {/* 5b. GÜVEN ŞERİDİ — sosyal kanıt */}
+        <TrustStrip />
 
         {/* 6. NEDEN QUANTSHINE? — metin + görsel */}
         <section className="why-section">

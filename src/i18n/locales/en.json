@@ -33,6 +33,14 @@
     "subtitle": "Real-time portfolio and market data",
     "live": "LIVE DATA FEED"
   },
+  "trust": {
+    "title": "Invest with confidence",
+    "subtitle": "Regulated, audited and transparent portfolio management",
+    "item1": "CMB-Licensed Portfolio Management",
+    "item2": "Takasbank Custody Assurance",
+    "item3": "Independently Audited",
+    "item4": "BIST & TEFAS Member"
+  },
   "featured": {
     "title": "Featured Funds",
     "all": "All Funds",

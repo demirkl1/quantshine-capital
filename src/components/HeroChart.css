@@ -1,0 +1,85 @@
+/* ── HeroChart — hero arkası dekoratif portföy çizgisi ── */
+.hero-chart {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 48%;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.55;
+  /* Kenarlarda yumuşak silinme → metinle çakışmasın */
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 12%, #000 88%, transparent);
+}
+
+.hero-chart-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* Çizgi: tek seferlik çizilme animasyonu */
+.hero-chart-line {
+  stroke-dasharray: 2600;
+  stroke-dashoffset: 2600;
+  filter: drop-shadow(0 0 8px rgba(59, 130, 246, 0.5));
+  animation: heroChartDraw 2.6s ease-out 0.3s forwards;
+}
+
+@keyframes heroChartDraw {
+  to { stroke-dashoffset: 0; }
+}
+
+/* Dolgu: çizgi çizildikten sonra belirir */
+.hero-chart-area {
+  opacity: 0;
+  animation: heroChartFade 1.2s ease-out 2.2s forwards;
+}
+
+@keyframes heroChartFade {
+  to { opacity: 1; }
+}
+
+/* Uçtaki nokta + nabız */
+.hero-chart-dot {
+  fill: #93c5fd;
+  opacity: 0;
+  animation: heroChartFade 0.6s ease-out 2.7s forwards;
+}
+
+.hero-chart-pulse {
+  fill: #3b82f6;
+  transform-origin: center;
+  transform-box: fill-box;
+  opacity: 0;
+  animation: heroChartPulse 2.4s ease-out 2.9s infinite;
+}
+
+@keyframes heroChartPulse {
+  0% { transform: scale(1); opacity: 0.5; }
+  70% { transform: scale(3.2); opacity: 0; }
+  100% { transform: scale(3.2); opacity: 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-chart-line {
+    stroke-dashoffset: 0;
+    animation: none;
+  }
+  .hero-chart-area,
+  .hero-chart-dot {
+    opacity: 1;
+    animation: none;
+  }
+  .hero-chart-pulse {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero-chart {
+    height: 38%;
+    opacity: 0.4;
+  }
+}

@@ -9,6 +9,7 @@ import Footer from "./components/Footer";
 import LoginModal from "./components/LoginModal";
 import RegisterModal from "./components/RegisterModal";
 import SplashScreen from "./components/SplashScreen";
+import ScrollProgress from "./components/ScrollProgress";
 import PageLoader from "./components/PageLoader";
 import ErrorBoundary from "./components/ErrorBoundary";
 import DesktopAuthPage from "./pages/DesktopAuthPage";
@@ -92,7 +93,7 @@ const AppContent: React.FC<AppContentProps> = ({
 
   if (loading) {
     return (
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', background: '#020b18' }}>
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', background: '#0b0e14' }}>
         <h2 style={{ color: '#94a3b8', fontFamily: 'Poppins, sans-serif', fontWeight: 400 }}>Quantshine Sistem Yükleniyor...</h2>
       </div>
     );
@@ -106,6 +107,7 @@ const AppContent: React.FC<AppContentProps> = ({
 
   return (
     <>
+      <ScrollProgress />
       {showHeaderAndFooter && (
         <Header
           showAuthButtons={!user}
@@ -187,7 +189,9 @@ const AppContent: React.FC<AppContentProps> = ({
 function App() {
   const [isLoginModalOpen, setLoginModalOpen] = useState(false);
   const [isRegisterModalOpen, setRegisterModalOpen] = useState(false);
-  const [showSplash, setShowSplash] = useState(isTauri);
+  // Splash: masaüstünde ve web'de her tam sayfa yüklemesinde/yenilemesinde
+  // gösterilir (SPA içi navigasyon App'i remount etmediği için tekrarlamaz).
+  const [showSplash, setShowSplash] = useState(true);
 
   const handleSplashFinish = useCallback(() => setShowSplash(false), []);
 

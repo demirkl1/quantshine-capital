@@ -1,0 +1,74 @@
+/* ── TrustStrip — güven / sosyal kanıt şeridi ── */
+.trust-strip-section {
+  padding: 0 8% 90px;
+}
+
+.trust-strip-head {
+  text-align: center;
+  max-width: 720px;
+  margin: 0 auto 40px;
+}
+
+.trust-strip {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 18px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.trust-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 22px 24px;
+  background: var(--glass-bg);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+  transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.trust-item:hover {
+  transform: translateY(-4px);
+  border-color: var(--accent-line);
+}
+
+.trust-item-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  flex-shrink: 0;
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(59, 130, 246, 0.20), rgba(30, 64, 175, 0.10));
+  border: 1px solid var(--accent-line);
+  color: var(--accent-bright);
+}
+
+.trust-item-label {
+  color: var(--text-soft);
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+@media (max-width: 1024px) {
+  .trust-strip {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .trust-strip-section {
+    padding: 0 5% 64px;
+  }
+}
+
+@media (max-width: 520px) {
+  .trust-strip {
+    grid-template-columns: 1fr;
+  }
+}

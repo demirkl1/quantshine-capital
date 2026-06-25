@@ -1,16 +1,10 @@
 import React from 'react';
+import './PageLoader.css';
 
 const PageLoader: React.FC = () => (
-  <div style={{
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: '60vh',
-    background: '#020b18',
-  }}>
-    <h2 style={{ color: '#94a3b8', fontFamily: 'Poppins, sans-serif', fontWeight: 400 }}>
-      Yükleniyor...
-    </h2>
+  <div className="page-loader" role="status" aria-live="polite">
+    <span className="page-loader-spinner" aria-hidden="true" />
+    <p className="page-loader-text">Yükleniyor</p>
   </div>
 );
 

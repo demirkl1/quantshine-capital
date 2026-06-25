@@ -1,12 +1,41 @@
-/* src/styles/variables.css */
+/* src/styles/variables.css
+   ════════════════════════════════════════════════════════════════════
+   TEK KAYNAK renk sistemi — "Lacivert + Mavi" (mevcut marka kimliği).
+   Tüm yeni stiller bu token'ları kullanmalı; hardcoded hex eklemeyin.
+   ════════════════════════════════════════════════════════════════════ */
 :root {
-  --primary-dark-blue: #1A202C; /* Koyu lacivert */
-  --secondary-white: #FFFFFF; /* Beyaz */
-  --text-light-gray: #E2E8F0; /* Açık gri metinler için */
-  --text-dark-gray: #4A5568; /* Koyu gri metinler için */
-  --accent-green: #38A169; /* Satın al butonu veya pozitif değişim için */
-  --accent-red: #E53E3E; /* Satış butonu veya negatif değişim için */
-  --border-color: #2D3748; /* Kenarlıklar için daha koyu bir ton */
+  /* ── Marka kimliği: zemin (koyu lacivert) ── */
+  --bg-base:      #0B0E14; /* en koyu zemin */
+  --bg-deep:      #0D1320; /* hero gradient orta tonu */
+  --bg-elevated:  rgba(17, 22, 35, 0.70); /* glass kart zemini */
+  --bg-elevated-solid: #141A28;
+
+  /* ── İmza aksan: mavi ── */
+  --accent:        #3b82f6; /* ana mavi */
+  --accent-bright: #60a5fa; /* açık mavi (gradient üst) */
+  --accent-deep:   #1d4ed8; /* koyu mavi (gradient alt) */
+  --accent-soft:   rgba(59, 130, 246, 0.10); /* zemin tint */
+  --accent-line:   rgba(59, 130, 246, 0.30); /* kenarlık */
+
+  /* ── Metin (beyaz skala) ── */
+  --text-bright:  #FFFFFF; /* başlık / yüksek vurgu */
+  --text-soft:    #CBD5E1; /* gövde metni */
+  --text-dim:     #94A3B8; /* ikincil / etiket */
+
+  /* ── Cam yüzeyler ── */
+  --glass-bg:     rgba(17, 22, 35, 0.70);
+  --glass-border: rgba(255, 255, 255, 0.10);
+
+  /* ── Durum renkleri ── */
+  --accent-green: #38A169; /* pozitif / satın al */
+  --accent-red:   #E53E3E; /* negatif / sat */
+
+  /* ── Geriye dönük uyumluluk (eski isimler) ── */
+  --primary-dark-blue: #0B0E14;
+  --secondary-white: #FFFFFF;
+  --text-light-gray: #E2E8F0;
+  --text-dark-gray: #4A5568;
+  --border-color: #2D3748;
 }
 body {
   font-family: 'Inter', sans-serif; /* Modern ve okunaklı bir font */
